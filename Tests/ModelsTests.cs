@@ -1,13 +1,13 @@
 namespace BlackjackGame.Models;
 
-class ModelsTests
+public class ModelsTests
 {
-    void Execute(string[] args)
+    public static void Execute(string[] args)
     {
         test_Hand_Deck();
     }
 
-    void test_Hand_Deck()
+    static void test_Hand_Deck()
     {
         // Hand hand = new();
 
