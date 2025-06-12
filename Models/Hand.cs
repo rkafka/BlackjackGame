@@ -9,7 +9,7 @@ public class Hand
     public List<Card> cardList;
     public bool isDealer;
 
-    public Hand(bool isDealer)
+    public Hand(bool isDealer=false)
     {
         this.isDealer = isDealer;
 
@@ -26,7 +26,7 @@ public class Hand
         this.cardList.Add(newCard);
     }
 
-    public static List<Card> createDeck()
+    public static List<Card> createDeck(bool doShuffle=true)
     {
         List<Card> newDeck = [];
         foreach (string suitValue in Card.suitDict.Keys)
