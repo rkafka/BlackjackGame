@@ -47,7 +47,7 @@ public class Hand
         // PERFORM A FISHER YATES SHUFFLE
         Random rng = new();
         int randomIndex = rng.Next(0, deck.Count);
-        for (int iterativeIndex = 0; iterativeIndex < deck.Count; iterativeIndex++)
+        for (int iterativeIndex = 0; iterativeIndex < deck.Count-1; iterativeIndex++)
         {
             randomIndex = rng.Next(iterativeIndex+1, deck.Count);
             (deck[iterativeIndex], deck[randomIndex]) = (deck[randomIndex], deck[iterativeIndex]);
