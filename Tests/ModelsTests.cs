@@ -11,11 +11,13 @@ public class ModelsTests
     {
         // Hand hand = new();
 
-        Hand.printDeck();
-        Console.WriteLine();
+        Hand.printDeck(title:"Unshuffled Deck");
 
-        Hand.shuffleDeck();
-        Hand.printDeck();
+        for (int i = 0; i < 5; i++)
+        {
+            Hand.shuffleDeck();
+            Hand.printDeck(title: $"Current Deck (Shuffled {i}x)");
+        }
     }
 }
 
