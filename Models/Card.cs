@@ -34,7 +34,13 @@ public class Card
         Rank = rank;
         if (rank < 1 || rank > 13)
             throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be in range [1,13]");
-        Value = getValue(rank);   
+        Value = getValue(rank);
+    }
+    public override string ToString()
+    {
+        if (Rank == 0)
+            throw new ArgumentOutOfRangeException("Rank of Zero was assigned to a card, this is not allowed.");
+        return $"{rankToStr[Rank]} of {suitDict[Suit]}s";
     }
 
 
@@ -79,14 +85,4 @@ public class Card
         //         throw new ArgumentOutOfRangeException("getValue() -- ranks greater than 13 are not supported.");
         // }
     }
-
-    /**
-     */
-    public string getCardName()
-    {
-        if (Rank == 0)
-            throw new ArgumentOutOfRangeException("Rank of Zero was assigned to a card, this is not allowed.");
-        return $"{rankToStr[Rank]} of {suitDict[Suit]}s";
-    }
-
 }
