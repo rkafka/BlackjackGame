@@ -7,7 +7,7 @@ public class Card
 {
     // Static fields (shared across all Card objects)
     public static readonly Dictionary<string, string> suitDict = new Dictionary<string, string> {
-        { "♠", "Spade" }, { "♠", "Club" },
+        { "♠", "Spade" }, { "♣", "Club" },
         { "♥", "Heart" }, { "♦", "Diamond" },
     };
     public const int MinAllowedRank = 1;
