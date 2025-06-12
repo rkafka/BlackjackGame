@@ -1,8 +1,7 @@
 namespace BlackjackGame.Utils;
 
 class Startup {
-    public const string ascii_Title = @"
-                                                                                                         
+    public const string ascii_Title = @"                                                                           
   88          88                       88        88                       88                     88 88 88  
   88          88                       88        """"                       88                     88 88 88  
   88          88                       88                                 88                     88 88 88  
@@ -15,7 +14,6 @@ class Startup {
                                               888P""                                                        
 ";
     public const string ascii_Hand = @"
-    
                                 _____________________
                                |                     |
                                |                     |
@@ -50,7 +48,22 @@ MMMMMMMMMMMMMMMMMMMMMMMMMA.
 MMMMMMMMMMMMMMMMMMMMMMMMMMM
 MMMMMMMMMMMMMMMMMMMMMMMMMV'
 ";
-
+    public const string ascii_HandCropped = @"
+                                _____________________
+                               |           ___  __   |
+                               |          |__ \/_ |  |
+                    _.---------|.--.         ) || |  |
+                 .-'  `       .'/  ``       / / | |  |
+              .-'           .' |    /|     / /_ | |  |
+           .-'         |   /   `.__//     |____||_|  |
+        .-'           _.--/        /                 |
+       |        _  .-'   /        /      /\          |
+       |     ._  \      /     `  /      /  \         |
+       |        ` .    /     `  /      /    \        |
+       |         \ \ '/        /       \    /        |
+       |        - \  /        /|        \__/         |
+       |        '  .'        / |         __          |
+       |          '         |.'|        /  \         |";
     public const string ascii_TestQueen = @"
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡄⢤⣀⣯⣠⡄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⡿⠿⢿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -73,13 +86,34 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
 ⠀⠈⠀⠀⠀⣿⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⣧⣀⠀⠀⠀⡇⠀
 ";
 
+    public const string ascii_PressEnterToStart = @"
+ ____                      _____       _            
+|  _ \ _ __ ___  ___ ___  | ____|_ __ | |_ ___ _ __ 
+| |_) | '__/ _ \/ __/ __| |  _| | '_ \| __/ _ \ '__|
+|  __/| | |  __/\__ \__ \ | |___| | | | ||  __/ |   
+|_|   |_|__\___||___/___/_|_____|_| |_|\__\___|_|   
+      |_   _|__   / ___|| |_ __ _ _ __| |_          
+        | |/ _ \  \___ \| __/ _` | '__| __|         
+        | | (_) |  ___) | || (_| | |  | |_          
+        |_|\___/  |____/ \__\__,_|_|   \__|         ";
 
     public static void PrintTitle(bool waitForInput = true)
     {
         Console.Clear();
         Console.WriteLine("\n" + ascii_Title);
-        Console.WriteLine("\n\n\n");
-        Console.Write(ascii_Hand);
+
+        int middleWhiteSpace = Console.WindowHeight - (ascii_Title.Split("\n").Length + 1);
+        middleWhiteSpace -= ascii_HandCropped.Split("\n").Length;
+        // if (middleWhiteSpace > ascii_PressEnterToStart.Split("\n").Length + 2)
+        // {
+        //     middleWhiteSpace -= (ascii_PressEnterToStart.Split("\n").Length + 2);
+        //     Console.Write("".PadLeft(middleWhiteSpace / 2 + middleWhiteSpace % 2, '\n'));
+        //     middleWhiteSpace /= 2;
+        //     Console.Write(ascii_PressEnterToStart);
+        // }
+        Console.Write("".PadRight(middleWhiteSpace, '\n'));
+
+        Console.Write(ascii_HandCropped);
         if (waitForInput) { Console.ReadLine(); }
     }
 };
