@@ -31,7 +31,7 @@ public class Hand
         List<Card> newDeck = [];
         foreach (string suitValue in Card.suitDict.Keys)
         {
-            for (int rankValue = 1; rankValue < Card.numberOfRanks; rankValue++)
+            for (int rankValue = Card.MinAllowedRank; rankValue <= Card.MaxAllowedRank; rankValue++)
             {
                 newDeck.Add(new Card(suitValue, rankValue));
             }
