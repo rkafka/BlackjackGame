@@ -46,20 +46,20 @@ public class Hand
 
         // PERFORM A FISHER YATES SHUFFLE
         Random rng = new();
+        int randomIndex = rng.Next(0, deck.Count);
         for (int iterativeIndex = 0; iterativeIndex < deck.Count; iterativeIndex++)
         {
-            int randomIndex = rng.Next(0, deck.Count);
+            randomIndex = rng.Next(iterativeIndex+1, deck.Count);
             (deck[iterativeIndex], deck[randomIndex]) = (deck[randomIndex], deck[iterativeIndex]);
-            iterativeIndex++;
         }
     }
 
-    public static void printDeck(int cardsPerLine = 4)
+    public static void printDeck(int cardsPerLine = 4, string title="Current Deck")
     {
         // TO-DO: add bounds for cardsPerLine (base on console window width?)
         int longestCardNameLength = "Queen of Diamonds".Length;
 
-        Console.Write("\nCurrent Deck:  \n| ");
+        Console.Write($"\n{title}:  \n| ");
         for (int i = 0; i < deck.Count; i++)
         {
             Console.Write($"({(i+1).ToString().PadRight(2)}) {deck[i].ToString().PadRight((longestCardNameLength), ' ')} | ");
