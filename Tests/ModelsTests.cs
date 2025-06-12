@@ -9,7 +9,13 @@ class ModelsTests
 
     void test_Hand_Deck()
     {
-        Hand hand = new Hand(false);
+        // Hand hand = new();
+
+        Hand.printDeck();
+        Console.WriteLine();
+
+        Hand.shuffleDeck();
+        Hand.printDeck();
     }
 }
 
