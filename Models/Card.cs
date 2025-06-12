@@ -10,7 +10,9 @@ public class Card
         { "♠", "Spade" }, { "♠", "Club" },
         { "♥", "Heart" }, { "♦", "Diamond" },
     };
-    public const int numberOfRanks = 13;
+    public const int MinAllowedRank = 1;
+    public const int MaxAllowedRank = 13;
+    public const int numberOfRanks = MaxAllowedRank - MinAllowedRank + 1;
     public static readonly string[] rankToStr = [
         "Joker",    // 0
         "Ace",      // 1
