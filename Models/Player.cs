@@ -9,9 +9,9 @@ public class Player
     public Hand _hand;
 
     /// <summary>Constructor for the Player class.</summary>
-    public Player()
+    public Player(bool isDealer=false)
     {
-        this._hand = new();
+        this._hand = new Hand(isDealer:isDealer);
     }
 
 }
@@ -28,7 +28,7 @@ public class User : Player
 
     int numLoses;
 
-    public User(int startingMoney = 15) : base()
+    public User(int startingMoney = 15) : base(false)
     {
         this.startingMoney = startingMoney;
         this.currentMoney = startingMoney;
@@ -40,7 +40,7 @@ public class User : Player
 /// </summary>
 public class Dealer : Player
 {
-    public Dealer() : base()
+    public Dealer() : base(true)
     {
         
     }
