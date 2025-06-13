@@ -1,6 +1,9 @@
+using BlackjackGame.Models;
+
 namespace BlackjackGame.Utils;
 
-class Startup {
+class Startup
+{
     public const string ascii_Title = @"                                                                           
   88          88                       88        88                       88                     88 88 88  
   88          88                       88        """"                       88                     88 88 88  
@@ -115,5 +118,24 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
 
         Console.Write(ascii_HandCropped);
         if (waitForInput) { Console.ReadLine(); }
+    }
+
+    public static void UI_Hands(User user, Dealer dealer)
+    {
+        int height = 10;
+        int yCoord_UIsectionTop = Console.WindowHeight - height;
+        Console.SetCursorPosition(0, yCoord_UIsectionTop);
+        Console.Write("".PadRight(Console.WindowWidth, '-'));
+        Console.Write("".PadRight(Console.WindowWidth * (height - 1), ' '));
+
+        Console.SetCursorPosition(0, yCoord_UIsectionTop-Utils.ASCII.ascii_User.Split('\n').Length);
+        Utils.ASCII.DisplayASCII(Utils.ASCII.ascii_User);
+
+        Console.SetCursorPosition(0, yCoord_UIsectionTop + 1);
+        Utils.ASCII.DisplayASCII(user._hand.cardList[0].GetASCII());
+
+        Utils.ASCII.DisplayASCII(user._hand.cardList[1].GetASCII());
+        
+
     }
 };
