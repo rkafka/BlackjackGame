@@ -4,19 +4,20 @@ public class ModelsTests
 {
     public static void Execute(string[] args)
     {
-        test_Hand_Deck();
+        TEST_Deck();
     }
 
-    static void test_Hand_Deck()
+    static void TEST_Deck()
     {
         // Hand hand = new();
+        Deck d = new Deck(doShuffle:false);
 
-        Hand.printDeck(title:"Unshuffled Deck");
+        d.Print(title:"Unshuffled Deck");
 
         for (int i = 0; i < 5; i++)
         {
-            Hand.shuffleDeck();
-            Hand.printDeck(title: $"Current Deck (Shuffled {i}x)");
+            d.Shuffle();
+            d.Print(title: $"Current Deck (Shuffled {i}x)");
         }
     }
 }
