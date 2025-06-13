@@ -21,6 +21,9 @@ public class Game
     }
     public void DisplayHands()
     {
-        
+        Console.Clear();
+        Utils.Startup.UI_Hands(_user, _dealer);
+        Console.SetCursorPosition(0, Console.WindowHeight - 1);
+        Console.WriteLine();
     }
 }
