@@ -34,6 +34,54 @@ if(args[0] == "debug")
             - Dealer busts if over 21
 */
 
+/// 1. Initial Deal
+///     - Dealer gives 2 cards to each player (face up)
+///     - Dealer gets 2 cards: one face up, one face down (the “hole” card)
+Deck deck = new Deck(doShuffle:true); 
+User user = new();
+Dealer dealer = new();
+
+deck.Print();
+
+user._hand.AddCard(deck);
+user._hand.AddCard(deck);
+dealer._hand.AddCard(deck);
+dealer._hand.AddCard(deck);
+
+
+
+
+Console.ForegroundColor = ConsoleColor.Blue;
+Console.Write(""); // TO-DO: WRITE HEADER for USER
+
+Console.ForegroundColor = ConsoleColor.White;
+int x, y;
+(x, y) = Console.GetCursorPosition();
+
+string cardToPrint = user._hand.cardList[0].GetASCII();
+// Console.WriteLine(user._hand.cardList[0].GetASCII());
+ASCII.DisplayASCII(cardToPrint);
+
+x += cardToPrint.Split("\n")[0].Length;
+y -= cardToPrint.Split("\n").Length;
+Console.SetCursorPosition(x, y);
+ASCII.DisplayASCII(cardToPrint);
+// Console.WriteLine(user._hand.cardList[1].GetASCII());
+
+deck.Print();
+
 // WIN CONDITIONS
 /* 
+    Player busts    ------->    Player loses
+    Dealer busts	------->    Player wins
+    Player > Dealer (≤21) ->    Player wins
+    Dealer > Player (≤21) ->    Player loses
+    Player == Dealer  ----->    Push (tie, no win or loss)
+*/
+
+// PAYOUTS
+/*
+    Regular win:    1:1 (bet $10, win $10)
+    Blackjack:      3:2 (bet $10, win $15)
+    Insurance:      2:1 (side bet if dealer shows an Ace — not recommended!)
 */

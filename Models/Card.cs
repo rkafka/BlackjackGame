@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Reflection.Metadata;
 
@@ -24,23 +25,23 @@ public class Card
 
 
     // Instance fields (unique to each instance of a Card object)
-    public string Suit { get; }
-    public int Rank { get; }
-    public int Value;
+    public string _suit { get; }
+    public int _rank { get; }
+    public int _value;
 
     public Card(string suit, int rank)
     {
-        Suit = suit;
-        Rank = rank;
+        _suit = suit;
+        _rank = rank;
         if (rank < 1 || rank > 13)
             throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be in range [1,13]");
-        Value = getValue(rank);
+        _value = getValue(rank);
     }
     public override string ToString()
     {
-        if (Rank == 0)
+        if (_rank == 0)
             throw new ArgumentOutOfRangeException("Rank of Zero was assigned to a card, this is not allowed.");
-        return $"{rankToStr[Rank]} of {suitDict[Suit]}s";
+        return $"{rankToStr[_rank]} of {suitDict[_suit]}s";
     }
 
 
@@ -84,5 +85,35 @@ public class Card
         //     default:
         //         throw new ArgumentOutOfRangeException("getValue() -- ranks greater than 13 are not supported.");
         // }
+    }
+
+    public string GetASCII()
+    {
+        // adapted from https://github.com/naivoder/ascii_cards/blob/main/ascii_cards/cards.py
+        // modified to C#
+        string lineTop    = "┌───────┐";
+        string lineMiddle = "│       │";
+        string lineBottom = "└───────┘";
+
+        string rankTopLeft;
+        string rankBottomRight;
+
+        if (_rank == 10)  // Ten is the only rank with two digits
+        {
+            rankTopLeft = _rank.ToString();
+            rankBottomRight = _rank.ToString();
+        }
+        else
+        {
+            rankTopLeft = $" {_rank}";
+            rankBottomRight = $"{_rank} ";
+        }
+
+        string lineSuit = $"│   {_suit}   │";
+        string lineRankTopLeft = $"│{((_rank == 10) ? _rank : $" {_rank}")}     │";
+        string lineRankBottomRight = $"│     {((_rank == 10) ? _rank : $"{_rank} ")}│";
+        string card_ascii = $"{lineTop}\n{lineRankTopLeft}\n{lineMiddle}\n{lineSuit}\n{lineMiddle}\n{lineRankBottomRight}\n{lineBottom}";
+
+        return card_ascii;
     }
 }

@@ -111,7 +111,7 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
         //     middleWhiteSpace /= 2;
         //     Console.Write(ascii_PressEnterToStart);
         // }
-        Console.Write("".PadRight(middleWhiteSpace, '\n'));
+        Console.Write("".PadRight((middleWhiteSpace > 0 ? middleWhiteSpace : 0), '\n'));
 
         Console.Write(ascii_HandCropped);
         if (waitForInput) { Console.ReadLine(); }
