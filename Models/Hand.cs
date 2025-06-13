@@ -5,7 +5,6 @@ public class Hand
     public static List<Card> deck = createDeck();
 
 
-    public int currentScore;
     public List<Card> cardList;
     public bool isDealer;
 
@@ -22,7 +21,8 @@ public class Hand
     public void addCard()
     {
         Random rng = new();
-        Card newCard = deck[rng.Next(Card.MinAllowedRank, Card.MaxAllowedRank)];
+        int randomIndex = rng.Next(Card.MinAllowedRank, Card.MaxAllowedRank);
+        Card newCard = deck[randomIndex];
         this.cardList.Add(newCard);
     }
 
