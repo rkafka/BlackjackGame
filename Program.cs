@@ -4,8 +4,10 @@ using BlackjackGame.Utils;
 
 
 Startup.PrintTitle();
-if(args[0] == "debug")
-    ModelsTests.Execute(args);
+// if(args[0] == "debug")
+//     ModelsTests.Execute(args);
+ModelsTests.Execute(args);
+
 
 // GAMEPLAY SEQUENCE
 /*
@@ -37,38 +39,40 @@ if(args[0] == "debug")
 /// 1. Initial Deal
 ///     - Dealer gives 2 cards to each player (face up)
 ///     - Dealer gets 2 cards: one face up, one face down (the “hole” card)
-Deck deck = new Deck(doShuffle:true); 
+Deck deck = new Deck(doShuffle:true);
+deck.Print();
+
 User user = new();
 Dealer dealer = new();
+Game game = new(deck, user, dealer);
 
-deck.Print();
-
-user._hand.AddCard(deck);
-user._hand.AddCard(deck);
-dealer._hand.AddCard(deck);
-dealer._hand.AddCard(deck);
-
-
+// user._hand.AddCard(deck);
+// user._hand.AddCard(deck);
+// dealer._hand.AddCard(deck);
+// dealer._hand.AddCard(deck);
+game.InitialDraw();
 
 
-Console.ForegroundColor = ConsoleColor.Blue;
-Console.Write(""); // TO-DO: WRITE HEADER for USER
+// Console.ForegroundColor = ConsoleColor.Blue;
+// Console.Write(""); // TO-DO: WRITE HEADER for USER
 
-Console.ForegroundColor = ConsoleColor.White;
+// Console.ForegroundColor = ConsoleColor.White;
 int x, y;
 (x, y) = Console.GetCursorPosition();
+game.DisplayHands();
 
-string cardToPrint = user._hand.cardList[0].GetASCII();
-// Console.WriteLine(user._hand.cardList[0].GetASCII());
-ASCII.DisplayASCII(cardToPrint);
 
-x += cardToPrint.Split("\n")[0].Length;
-y -= cardToPrint.Split("\n").Length;
-Console.SetCursorPosition(x, y);
-ASCII.DisplayASCII(cardToPrint);
+// string cardToPrint = user._hand.cardList[0].GetASCII();
+// // Console.WriteLine(user._hand.cardList[0].GetASCII());
+// ASCII.DisplayASCII(cardToPrint);
+
+// x += cardToPrint.Split("\n")[0].Length;
+// y -= cardToPrint.Split("\n").Length;
+// Console.SetCursorPosition(x, y);
+// ASCII.DisplayASCII(cardToPrint);
 // Console.WriteLine(user._hand.cardList[1].GetASCII());
 
-deck.Print();
+// deck.Print();
 
 // WIN CONDITIONS
 /* 
