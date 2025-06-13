@@ -4,5 +4,36 @@ using BlackjackGame.Utils;
 
 
 Startup.PrintTitle();
+if(args[0] == "debug")
+    ModelsTests.Execute(args);
 
-ModelsTests.Execute(args);
+// GAMEPLAY SEQUENCE
+/*
+    1. Initial Deal
+        - Dealer gives 2 cards to each player (face up)
+        - Dealer gets 2 cards: one face up, one face down (the “hole” card)
+
+    2. Blackjack Check
+        - If a player or dealer has an Ace + 10-value card → it’s a Blackjack
+        - Blackjack pays 3:2 (e.g., bet $10, win $15)
+        - If both player and dealer have Blackjack → Push (tie)
+
+    3. Player Actions
+        - For each hand, players choose:
+            Hit – take another card
+            Stand – keep current hand
+            Double Down – double your bet, take one card only
+            Split – if you have a pair, split into 2 hands (each gets another card)
+            Surrender – (if allowed) forfeit half your bet and end the hand
+        Players can continue hitting until they stand or bust (go over 21).
+
+    4. Dealer’s Turn
+        - Dealer reveals the face-down card
+        - Dealer must hit until total is 17 or higher
+            - Most casinos force dealer to stand on soft 17 (A+6)
+            - Dealer busts if over 21
+*/
+
+// WIN CONDITIONS
+/* 
+*/
