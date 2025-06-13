@@ -95,24 +95,37 @@ public class Card
         string lineMiddle = "│       │";
         string lineBottom = "└───────┘";
 
-        string rankTopLeft;
-        string rankBottomRight;
+        string rankTopLeft      = $" {_rank}";
+        string rankBottomRight  = $"{_rank} ";
+        string sRank = _rank.ToString();
 
         if (_rank == 10)  // Ten is the only rank with two digits
         {
-            rankTopLeft = _rank.ToString();
-            rankBottomRight = _rank.ToString();
+            rankTopLeft = sRank;
+            rankBottomRight = sRank;
         }
         else
         {
-            rankTopLeft = $" {_rank}";
-            rankBottomRight = $"{_rank} ";
+            sRank = _rank switch
+            {
+                13 => "K",
+                12 => "Q",
+                11 => "J",
+                10 => sRank,
+                9 or 8 or 7 or 6 or 5 or 4 or 3 or 2 or 1 => sRank,
+                _ => throw new ArgumentOutOfRangeException(nameof(_rank), $"value was {_rank} when it should be in the range 1-13"),
+            };
+            rankTopLeft = " " + sRank;
+            rankBottomRight = sRank + " ";
         }
 
+        // Card lines containing unique card characteristics (suit, rank)
         string lineSuit = $"│   {_suit}   │";
-        string lineRankTopLeft = $"│{((_rank == 10) ? _rank : $" {_rank}")}     │";
-        string lineRankBottomRight = $"│     {((_rank == 10) ? _rank : $"{_rank} ")}│";
-        string card_ascii = $"{lineTop}\n{lineRankTopLeft}\n{lineMiddle}\n{lineSuit}\n{lineMiddle}\n{lineRankBottomRight}\n{lineBottom}";
+        string lineRankTopLeft = $"│{rankTopLeft}     │";
+        string lineRankBottomRight = $"│     {rankBottomRight}│";
+
+        string card_ascii = $"{lineTop}\n{lineRankTopLeft}\n{lineMiddle}\n{lineSuit}"
+                            + $"\n{lineMiddle}\n{lineRankBottomRight}\n{lineBottom}";
 
         return card_ascii;
     }
