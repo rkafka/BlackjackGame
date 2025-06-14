@@ -2,18 +2,18 @@ namespace BlackjackGame.Models;
 
 public class Hand
 {
-    public List<Card> cardList;
-    public bool isDealer;
+    public List<Card> _cards;
+    public bool _isDealer;
 
     public Hand(bool isDealer=false)
     {
-        this.isDealer = isDealer;
+        this._isDealer = isDealer;
 
-        cardList = [];
+        _cards = [];
     }
 
     public void AddCard(Deck deck)
     {
-        this.cardList.Add(deck.PullCard());
+        this._cards.Add(deck.PullCard());
     }
 }
