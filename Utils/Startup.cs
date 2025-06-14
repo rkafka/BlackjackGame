@@ -100,11 +100,16 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
         | | (_) |  ___) | || (_| | |  | |_          
         |_|\___/  |____/ \__\__,_|_|   \__|         ";
 
-    public static void PrintTitle(bool waitForInput = true)
+    public static void PrintTitle()
+    {
+        Console.WriteLine("\n" + ascii_Title);
+    }
+
+    public static void BootSequence(bool waitForInput=true)
     {
         Console.Clear();
-        Console.WriteLine("\n" + ascii_Title);
-
+        PrintTitle();
+        
         int middleWhiteSpace = Console.WindowHeight - (ascii_Title.Split("\n").Length + 1);
         middleWhiteSpace -= ascii_HandCropped.Split("\n").Length;
         // if (middleWhiteSpace > ascii_PressEnterToStart.Split("\n").Length + 2)
@@ -118,24 +123,6 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
 
         Console.Write(ascii_HandCropped);
         if (waitForInput) { Console.ReadLine(); }
-    }
-
-    public static void UI_Hands(User user, Dealer dealer)
-    {
-        int height = 10;
-        int yCoord_UIsectionTop = Console.WindowHeight - height;
-        Console.SetCursorPosition(0, yCoord_UIsectionTop);
-        Console.Write("".PadRight(Console.WindowWidth, '-'));
-        Console.Write("".PadRight(Console.WindowWidth * (height - 1), ' '));
-
-        Console.SetCursorPosition(0, yCoord_UIsectionTop-Utils.ASCII.ascii_User.Split('\n').Length);
-        Utils.ASCII.DisplayASCII(Utils.ASCII.ascii_User);
-
-        Console.SetCursorPosition(0, yCoord_UIsectionTop + 1);
-        Utils.ASCII.DisplayASCII(user._hand.cardList[0].GetASCII());
-
-        Utils.ASCII.DisplayASCII(user._hand.cardList[1].GetASCII());
-        
-
+        Console.Clear();
     }
 };
