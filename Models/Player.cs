@@ -40,8 +40,9 @@ public class User : Player
 /// </summary>
 public class Dealer : Player
 {
-    public Dealer() : base(true)
+    public bool _doHideFirstCard;
+    public Dealer(bool doHideFirst=true) : base(true)
     {
-        
+        _doHideFirstCard = doHideFirst;
     }
 }
