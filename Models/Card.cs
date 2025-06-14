@@ -14,6 +14,8 @@ public class Card
     public const int MinAllowedRank = 1;
     public const int MaxAllowedRank = 13;
     public const int numberOfRanks = MaxAllowedRank - MinAllowedRank + 1;
+    public const int ASCII_WIDTH = 9;
+    public const int ASCII_HEIGHT = 7;
     public static readonly string[] rankToStr = [
         "Joker",    // 0
         "Ace",      // 1
@@ -28,14 +30,16 @@ public class Card
     public string _suit { get; }
     public int _rank { get; }
     public int _value;
+    public bool _hidden;
 
-    public Card(string suit, int rank)
+    public Card(string suit, int rank, bool hidden = false)
     {
         _suit = suit;
         _rank = rank;
         if (rank < 1 || rank > 13)
             throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be in range [1,13]");
         _value = getValue(rank);
+        _hidden = hidden;
     }
     public override string ToString()
     {
@@ -49,17 +53,19 @@ public class Card
      */
     public static int getValue(int rank, int currentHandValue = 0)
     {
+        // if (_hidden)
+        //     return 0;
         return rank switch
-        {
-            // JOKER
-            0 => throw new ArgumentOutOfRangeException(nameof(rank), "JOKER of RANK 0 is not supported"),
-            // ACE
-            1 => ((currentHandValue > 10) ? 1 : 11),// assumes you want highest value unless 
-            2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 10 => rank,
-            // JACK
-            11 or 12 or 13 => 10,
-            _ => throw new ArgumentOutOfRangeException(nameof(rank), "Ranks greater than 13 are not supported."),
-        };
+            {
+                // JOKER
+                0 => throw new ArgumentOutOfRangeException(nameof(rank), "JOKER of RANK 0 is not supported"),
+                // ACE
+                1 => ((currentHandValue > 10) ? 1 : 11),// assumes you want highest value unless 
+                2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 or 10 => rank,
+                // JACK
+                11 or 12 or 13 => 10,
+                _ => throw new ArgumentOutOfRangeException(nameof(rank), "Ranks greater than 13 are not supported."),
+            };
         // OLD VERSION
         // switch (rank)
         // {
@@ -127,6 +133,11 @@ public class Card
         string card_ascii = $"{lineTop}\n{lineRankTopLeft}\n{lineMiddle}\n{lineSuit}"
                             + $"\n{lineMiddle}\n{lineRankBottomRight}\n{lineBottom}";
 
-        return card_ascii;
+        if (card_ascii.Split('\n')[0].Length != ASCII_WIDTH)
+            throw new Exception("Card ASCII width does not match the constant required.");
+        else if (card_ascii.Split('\n').Length != ASCII_HEIGHT)
+            throw new Exception("Card ASCII height does not match the constant required.");
+        else
+            return card_ascii;
     }
 }
