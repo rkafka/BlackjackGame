@@ -4,9 +4,8 @@ using BlackjackGame.Utils;
 
 
 Startup.PrintTitle();
-// if(args[0] == "debug")
-//     ModelsTests.Execute(args);
-ModelsTests.Execute(args);
+if(args.Length > 0 && args[0] == "debug")
+    ModelsTests.Execute(args);
 
 
 // GAMEPLAY SEQUENCE
@@ -59,7 +58,10 @@ game.InitialDraw();
 // Console.ForegroundColor = ConsoleColor.White;
 int x, y;
 (x, y) = Console.GetCursorPosition();
-game.DisplayHands();
+Startup.BootSequence();
+Console.Clear();
+Startup.PrintTitle();
+game.UI_Hands();
 
 
 // string cardToPrint = user._hand.cardList[0].GetASCII();
