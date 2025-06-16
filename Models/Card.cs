@@ -38,7 +38,7 @@ public class Card
         _rank = rank;
         if (rank < 1 || rank > 13)
             throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be in range [1,13]");
-        _value = getValue(rank);
+        _value = GetValue(rank);
         _hidden = hidden;
     }
     public override string ToString()
@@ -51,7 +51,7 @@ public class Card
 
     /**
      */
-    public static int getValue(int rank, int currentHandValue = 0)
+    public static int GetValue(int rank, int currentHandValue = 0)
     {
         // if (_hidden)
         //     return 0;

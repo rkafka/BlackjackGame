@@ -53,38 +53,55 @@ int x, y;
 Startup.BootSequence();
 Console.Clear();
 
-// Initial Deal
-Startup.PrintTitle();
-game.InitialDraw();
-
-game.PrintAllHandsAsText();
-// game.UI_Hands();
-// Blackjack Check
-int roundStatus = game.BlackjackCheck();
-switch (roundStatus)
+bool gameOver = false;
+while (!gameOver)
 {
-    case 0:
-        // nobody wins, continue
-        break;
-    case 1:
-        // user wins! :) end round
-        break;
-    case 2:
-        // dealer wins... :( end round
-        break;
-    case 3:
-        // BOTH got blackjack
-        // end round, no winner
-        break;
-    default:
-        throw new ArgumentOutOfRangeException(nameof(roundStatus), "accepted values are 0, 1, 2, and 3");
+    // Initial Deal
+    Startup.PrintTitle();
+    game.InitialDraw();
+
+    game.PrintAllHandsAsText();
+    // game.UI_Hands();
+    // Blackjack Check
+    int roundStatus = game.BlackjackCheck();
+    bool roundOver = false;
+    switch (roundStatus)
+    {
+        case 0:
+            // nobody wins, continue
+            break;
+        case 1:
+            // user wins! :) end round
+            roundOver = true;
+            game._user._currentMoney--; // TO-DO: add betting
+            break;
+        case 2:
+            // dealer wins... :( end round
+            roundOver = true;
+            game._user._currentMoney++; // TO-DO: add betting
+            break;
+        case 3:
+            // BOTH got blackjack
+            // end round, no winner
+            roundOver = true;
+            break;
+        default:
+            throw new ArgumentOutOfRangeException(nameof(roundStatus), "returned invalid value from BlackjackCheck(). Accepted values are 0, 1, 2, and 3");
+    }
+
+    // Player Actions
+    int resultFromPlayerActions = game.PlayerActions();
+
+    // Dealer's turn
+    game.DealersTurn();
+
+    game.DecideWinner();
+
+    if (game._user._currentMoney <= 0)
+    {
+        gameOver = true;
+    }
 }
-
-// Player Actions
-game.PlayerActions();
-
-// Dealer's turn
-
 
 // WIN CONDITIONS
 /* 

@@ -123,7 +123,7 @@ public class Game
             }
         }
         Console.WriteLine();
-        return playerChoiceNum;
+        return playerChoiceNum; // TO-DO: URGENT: update return code from playerActions
     }
 
     public void UpdateHands()
@@ -191,35 +191,21 @@ public class Game
         Console.SetCursorPosition(0, Console.WindowHeight - 1);
     }
 
-    public void PrintAllHandsAsText()
+
+
+    public void PrintAllHandsAsText(bool hideDealersFirstCard = true)
     {
-        // int cardPadding = 18;
-        // int currentScore = 0;
-        // Console.WriteLine($"\nUSER'S HAND:");
-        // foreach (Card card in _user._hand._cards)
-        // {
-        //     Console.WriteLine(card.ToString().PadRight(cardPadding) + $"({card._value})");
-        //     currentScore += card._value;
-        // }
-        // _user._hand._currentScore = currentScore;
-        // Console.WriteLine($"|------------ SCORE: {_user._hand._currentScore} |");
+        // Print user's hand of cards, with scores included
         PrintSingleHandAsText(_user);
 
         Console.WriteLine("\nVS.");
 
-        PrintSingleHandAsText(_dealer);
+        // Print dealer's hand of cards, with scores included
+        PrintSingleHandAsText(_dealer, hideFirstCard: hideDealersFirstCard);
 
-        // currentScore = 0;
-        // Console.WriteLine("\nDEALER'S HAND");
-        // foreach (Card card in _dealer._hand._cards)
-        // {
-        //     Console.WriteLine("|" + card.ToString().PadRight(cardPadding) + $"({card._value}) |");
-        //     currentScore += card._value;
-        // }
-        // _dealer._hand._currentScore = currentScore;
-        // Console.WriteLine($"|----------- SCORE: {_dealer._hand._currentScore} |");
+        Console.WriteLine();
     }
-    public void PrintSingleHandAsText(Player player)
+    public void PrintSingleHandAsText(Player player, bool hideFirstCard = false)
     {
         int cardPadding = 18;
         int sectionWidth = 24;
@@ -227,13 +213,58 @@ public class Game
         string playerName = ((player._hand._isDealer) ? "DEALER" : "USER");
         int currentScore = 0;
         Console.WriteLine("\n" + $"{playerName}'S HAND:".PadRight(sectionWidth - 1, '-') + ".");
-        foreach (Card card in player._hand._cards)
+        for (int i = 0; i < player._hand._cards.Count; i++) // foreach(Card card in player._hand._cards)
         {
-            Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + card._value.ToString()}".PadRight(sectionWidth - 4) + " |");
-            currentScore += card._value;
+            var card = player._hand._cards[i];
+            if (hideFirstCard && i == 0)
+                Console.WriteLine($"| [HIDDEN]          ?? |");
+            else
+            {
+                Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + card._value.ToString()}".PadRight(sectionWidth - 4) + " |");
+                currentScore += card._value;
+            }
         }
-        player._hand._currentScore = currentScore;
-        Console.WriteLine($"|___________ SCORE: {player._hand._currentScore}".PadRight(sectionWidth-1) + "|");
-        Console.WriteLine();
+        if (hideFirstCard)
+            Console.WriteLine($"|________ SCORE: {currentScore}".PadRight(sectionWidth - 5) + "+ ? |");
+        else
+            Console.WriteLine($"|___________ SCORE: {player._hand._currentScore}".PadRight(sectionWidth - 1) + "|");
+    }
+
+    public void DealersTurn()
+    {
+        /*
+        1. Reveal Hidden Card
+            After all players have completed their turns, the dealer flips over their facedown card to reveal the full hand.
+        2. Must Hit Until 17 or More
+            - The dealer must continue drawing cards (hit) until their hand totals 17 or more.
+                - This includes “soft 17” (e.g., Ace + 6 = 17), unless the rules require hitting on soft 17.
+        3. Must Stand on 17 or Higher
+            - If the dealer has 17, 18, 19, 20, or 21, they must stand—no exceptions.
+            - Some casinos require dealers to hit soft 17 (varies by house rules).
+        4. Bust if Over 21
+            - If the dealer's hand goes over 21, they bust. All remaining players win.
+        */
+
+        // Reveal Hidden Card
+        PrintAllHandsAsText(hideDealersFirstCard: false);
+        Thread.Sleep(5000);
+
+        while (_dealer._hand._currentScore < 17)
+        {
+            Console.Clear();
+            _user._hand.AddCard(_deck);
+            Console.WriteLine($"\nThe dealer drew the {_user._hand._cards.Last()} (value: {_user._hand._cards.Last()._value})\n");
+            Thread.Sleep(500);
+            PrintAllHandsAsText(hideDealersFirstCard:false);
+            Thread.Sleep(2000);
+        }
+
+
+    }
+
+    public void DecideWinner()
+    {
+        Console.WriteLine("\n\n'DecideWinner()' is not implemented yet.\nPress enter to continue...");
+        Console.ReadLine();
     }
 }

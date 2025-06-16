@@ -17,5 +17,6 @@ public class Hand
     public void AddCard(Deck deck)
     {
         this._cards.Add(deck.PullCard());
+        _currentScore += Card.GetValue(this._cards.Last()._rank, _currentScore);
     }
 }
