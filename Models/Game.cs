@@ -39,14 +39,14 @@ public class Game
 
     public void UI_Hands()//(User user, Dealer dealer)
     {
-        int height = 10;
-        int yCoord_UserLine = Console.WindowHeight - height;
+        int distanceFromBottom = 10;
+        int yCoord_UserLine = Console.WindowHeight - distanceFromBottom;
         Console.SetCursorPosition(0, yCoord_UserLine);
         Console.Write("".PadRight(Console.WindowWidth, '_'));
 
         // Make sure the space representing the user's hand area is cleared
         Console.BackgroundColor = ConsoleColor.DarkBlue;
-        Console.Write("".PadRight(Console.WindowWidth * (height - 3), ' '));
+        Console.Write("".PadRight(Console.WindowWidth * (distanceFromBottom - 3), ' '));
         Console.BackgroundColor = ASCII.DEFAULT_BACKGROUND;
 
         // USER TITLE
@@ -69,8 +69,8 @@ public class Game
         Console.Write("".PadRight(Console.WindowWidth, '_'));
         // Make sure the space representing the dealer's hand area is cleared
         Console.BackgroundColor = COLOR_B_DEALER;
-        Console.SetCursorPosition(0, yCoord_DealerLine - (height - 3));
-        Console.Write("".PadRight(Console.WindowWidth * (height - 3), ' '));
+        Console.SetCursorPosition(0, yCoord_DealerLine - (distanceFromBottom - 3));
+        Console.Write("".PadRight(Console.WindowWidth * (distanceFromBottom - 3), ' '));
         Console.BackgroundColor = ASCII.DEFAULT_BACKGROUND;
 
         // DEALER TITLE
