@@ -26,7 +26,7 @@ if(args.Length > 0 && args[0] == "debug")
             Double Down – double your bet, take one card only
             Split – if you have a pair, split into 2 hands (each gets another card)
             Surrender – (if allowed) forfeit half your bet and end the hand
-        Players can continue hitting until they stand or bust (go over 21).
+        - Players can continue hitting until they stand or bust (go over 21).
 
     4. Dealer’s Turn
         - Dealer reveals the face-down card
@@ -34,6 +34,7 @@ if(args.Length > 0 && args[0] == "debug")
             - Most casinos force dealer to stand on soft 17 (A+6)
             - Dealer busts if over 21
 */
+
 
 /// 1. Initial Deal
 ///     - Dealer gives 2 cards to each player (face up)
@@ -45,36 +46,45 @@ User user = new();
 Dealer dealer = new();
 Game game = new(deck, user, dealer);
 
-// user._hand.AddCard(deck);
-// user._hand.AddCard(deck);
-// dealer._hand.AddCard(deck);
-// dealer._hand.AddCard(deck);
-game.InitialDraw();
-
-
-// Console.ForegroundColor = ConsoleColor.Blue;
-// Console.Write(""); // TO-DO: WRITE HEADER for USER
 
 // Console.ForegroundColor = ConsoleColor.White;
 int x, y;
 (x, y) = Console.GetCursorPosition();
 Startup.BootSequence();
 Console.Clear();
+
+// Initial Deal
 Startup.PrintTitle();
-game.UI_Hands();
+game.InitialDraw();
 
+game.PrintAllHandsAsText();
+// game.UI_Hands();
+// Blackjack Check
+int roundStatus = game.BlackjackCheck();
+switch (roundStatus)
+{
+    case 0:
+        // nobody wins, continue
+        break;
+    case 1:
+        // user wins! :) end round
+        break;
+    case 2:
+        // dealer wins... :( end round
+        break;
+    case 3:
+        // BOTH got blackjack
+        // end round, no winner
+        break;
+    default:
+        throw new ArgumentOutOfRangeException(nameof(roundStatus), "accepted values are 0, 1, 2, and 3");
+}
 
-// string cardToPrint = user._hand.cardList[0].GetASCII();
-// // Console.WriteLine(user._hand.cardList[0].GetASCII());
-// ASCII.DisplayASCII(cardToPrint);
+// Player Actions
+game.PlayerActions();
 
-// x += cardToPrint.Split("\n")[0].Length;
-// y -= cardToPrint.Split("\n").Length;
-// Console.SetCursorPosition(x, y);
-// ASCII.DisplayASCII(cardToPrint);
-// Console.WriteLine(user._hand.cardList[1].GetASCII());
+// Dealer's turn
 
-// deck.Print();
 
 // WIN CONDITIONS
 /* 

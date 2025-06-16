@@ -4,12 +4,14 @@ public class Hand
 {
     public List<Card> _cards;
     public bool _isDealer;
+    public int _currentScore;
 
-    public Hand(bool isDealer=false)
+    public Hand(bool isDealer = false)
     {
         this._isDealer = isDealer;
 
         _cards = [];
+        _currentScore = 0;
     }
 
     public void AddCard(Deck deck)
