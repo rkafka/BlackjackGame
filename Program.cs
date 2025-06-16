@@ -58,7 +58,11 @@ while (!gameOver)
 {
     // Initial Deal
     Startup.PrintTitle();
+
+    game.SetBet();
+
     game.InitialDraw();
+
 
     game.PrintAllHandsAsText();
     // game.UI_Hands();
@@ -90,18 +94,24 @@ while (!gameOver)
     }
 
     // Player Actions
-    int resultFromPlayerActions = game.PlayerActions();
-
-    // Dealer's turn
-    game.DealersTurn();
-
+    int returnCode_PlayerActions = game.PlayerActions();
+    if (returnCode_PlayerActions != 0)
+    {
+        // Dealer's turn
+        game.DealersTurn();
+    }
     game.DecideWinner();
 
     if (game._user._currentMoney <= 0)
     {
         gameOver = true;
     }
+    else //TO-DO: reset the hands (and deck?)
+    {
+        game.ResetCards();
+    }
 }
+game.GameOver();
 
 // WIN CONDITIONS
 /* 

@@ -11,7 +11,7 @@ public class Player
     /// <summary>Constructor for the Player class.</summary>
     public Player(bool isDealer=false)
     {
-        this._hand = new Hand(isDealer:isDealer);
+        this._hand = new Hand(betAmount:0, isDealer:isDealer);
     }
 
 }
@@ -49,6 +49,29 @@ public class User : Player
     public string GetRecord()
     {
         return $"{_numWins}-{_numLosses}-{_numTies}";
+    }
+    public void PrintRecord_Colored(bool doNewLine = false)
+    {
+        ConsoleColor winColor = ConsoleColor.Green;
+        ConsoleColor lossColor = ConsoleColor.Red;
+        ConsoleColor tieColor = ConsoleColor.Yellow;
+
+        Console.ForegroundColor = winColor;
+        Console.Write(_numWins);
+        Console.ResetColor();
+        Console.Write("-");
+
+        Console.ForegroundColor = lossColor;
+        Console.Write(_numLosses);
+        Console.ResetColor();
+        Console.Write("-");
+
+        Console.ForegroundColor = tieColor;
+        Console.Write(_numTies);
+        Console.ResetColor();
+
+        if (doNewLine)
+            Console.WriteLine();
     }
 }
 
