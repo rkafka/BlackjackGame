@@ -19,19 +19,36 @@ public class Player
 public class User : Player
 {
     /// <summary>The amount of money the player entered the game with</summary>
-    int startingMoney;
+    public int _startingMoney;
 
     /// <summary>The amount of money the player currently possesses</summary>
-    int currentMoney;
+    public int _currentMoney;
 
-    int numWins;
+    public int _numWins;
+    public int _numLosses;
+    public int _numTies;
 
-    int numLoses;
-
+    /// <summary>
+    /// User subclass of Player. Tracks current money, starting money, and number of wins and losses.
+    /// </summary>
+    /// <param name="startingMoney">How much money the player starts with (lesser value = more difficult).</param>
     public User(int startingMoney = 15) : base(false)
     {
-        this.startingMoney = startingMoney;
-        this.currentMoney = startingMoney;
+        this._startingMoney = startingMoney;
+        this._currentMoney = startingMoney;
+
+        _numWins = 0;
+        _numLosses = 0;
+        _numTies = 0;
+    }
+
+    public int GetCurrentEarnings()
+    {
+        return _currentMoney - _startingMoney;
+    }
+    public string GetRecord()
+    {
+        return $"{_numWins}-{_numLosses}-{_numTies}";
     }
 }
 
