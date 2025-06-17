@@ -241,7 +241,17 @@ public class Game
         if (hideFirstCard)
             Console.WriteLine($"|________ SCORE: {currentScore}".PadRight(sectionWidth - 5) + "+ ? |");
         else
-            Console.WriteLine($"|___________ SCORE: {player._hand._currentScore}".PadRight(sectionWidth - 1) + "|");
+        {
+            string scoreLineStart = "|___________ SCORE: ";
+            Console.Write(scoreLineStart);
+            if (player._hand._currentScore > 21)
+                Console.ForegroundColor = ConsoleColor.Red;
+            else if (player._hand._currentScore == 21)
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write(player._hand._currentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
+            Console.ResetColor();
+            Console.WriteLine("|");
+        }
     }
 
     /*
@@ -289,34 +299,47 @@ public class Game
         // for(int i = 0; i < _user._hands.Count; i++)
         if (userBusted || (_user._hand._currentScore < _dealer._hand._currentScore && !dealerBusted)) // DEALER wins (USER loses)
         {
-            _user._currentMoney -= _user._hand._betAmount;
-            _user._numLosses++;
-            Console.WriteLine($"You lost... Your bet of ${_user._hand._betAmount} has been deducted from your money.");
-            // _user._hand._betAmount = 0;
-            Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
-            _user.PrintRecord_Colored(doNewLine: true);
+            resultLose();
         }
         else if (dealerBusted || _user._hand._currentScore > _dealer._hand._currentScore) // USER wins!!
         {
-            _user._currentMoney += _user._hand._betAmount * WIN_RATIO;
-            _user._numWins++;
-            Console.WriteLine($"You won! Your bet of ${_user._hand._betAmount} has been doubled and returned to you.");
-            // _user._hand._betAmount = 0;
-            Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
-            _user.PrintRecord_Colored(doNewLine: true);
+            resultWin();
         }
         else // TIED
         {
-            _user._numTies++;
-            Console.WriteLine($"You tied. Your bet of ${_user._hand._betAmount} has been returned to you.");
-            // _user._hand._betAmount = 0;
-            Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
-            _user.PrintRecord_Colored(doNewLine: true);
+            resultTie();
         }
         Console.WriteLine();
 
         Console.WriteLine("Press enter to continue...");
         Console.ReadLine();
+    }
+
+    public void resultLose()
+    {
+        _user._currentMoney -= _user._hand._betAmount;
+        _user._numLosses++;
+        Console.WriteLine($"You lost... Your bet of ${_user._hand._betAmount} has been deducted from your money.");
+        // _user._hand._betAmount = 0;
+        Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
+        _user.PrintRecord_Colored(doNewLine: true);
+    }
+    public void resultWin()
+    {
+        _user._currentMoney += _user._hand._betAmount * WIN_RATIO;
+        _user._numWins++;
+        Console.WriteLine($"You won! Your bet of ${_user._hand._betAmount} has been doubled and returned to you.");
+        // _user._hand._betAmount = 0;
+        Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
+        _user.PrintRecord_Colored(doNewLine: true);
+    }
+    public void resultTie()
+    {
+        _user._numTies++;
+        Console.WriteLine($"You tied. Your bet of ${_user._hand._betAmount} has been returned to you.");
+        // _user._hand._betAmount = 0;
+        Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
+        _user.PrintRecord_Colored(doNewLine: true);
     }
 
     public void SetBet()
@@ -374,7 +397,9 @@ public class Game
 
     public void GameOver()
     {
-        Console.WriteLine("GAME OVER");
+        string gameOverTitle = "[ GAME OVER ]";
+        // DebugTools.PrintSectionHeader(gameOverTitle, false);
+        Console.WriteLine("".PadRight(Console.WindowWidth/2,'-') + gameOverTitle + "".PadRight(Console.WindowWidth/2,'-'));
         Console.Write("Your final record was ");
         _user.PrintRecord_Colored(doNewLine:true);
     }

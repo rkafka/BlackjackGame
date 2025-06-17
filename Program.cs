@@ -73,43 +73,55 @@ while (!gameOver)
     {
         case 0:
             // nobody wins, continue
+            if (game.PlayerActions() != 0)
+            {
+                // Dealer's turn
+                game.DealersTurn();
+            }
+            game.DecideWinner();
+            if (game._user._currentMoney <= 0)
+                gameOver = true;
+            else
+                game.ResetCards();
             break;
         case 1:
             // user wins! :) end round
             roundOver = true;
-            game._user._currentMoney--; // TO-DO: add betting
-            break;
+            game.resultWin();
+            game.ResetCards();
+            continue;
         case 2:
             // dealer wins... :( end round
             roundOver = true;
-            game._user._currentMoney++; // TO-DO: add betting
-            break;
+            game.resultLose();
+            if (game._user._currentMoney <= 0)
+                gameOver = true;
+            else
+                game.ResetCards();
+            continue;
         case 3:
             // BOTH got blackjack
             // end round, no winner
             roundOver = true;
-            break;
+            game.resultTie();
+            game.ResetCards();
+            continue;
         default:
             throw new ArgumentOutOfRangeException(nameof(roundStatus), "returned invalid value from BlackjackCheck(). Accepted values are 0, 1, 2, and 3");
     }
 
-    // Player Actions
-    int returnCode_PlayerActions = game.PlayerActions();
-    if (returnCode_PlayerActions != 0)
-    {
-        // Dealer's turn
-        game.DealersTurn();
-    }
-    game.DecideWinner();
+    // // Player Actions
+    // int returnCode_PlayerActions = game.PlayerActions();
+    
 
-    if (game._user._currentMoney <= 0)
-    {
-        gameOver = true;
-    }
-    else //TO-DO: reset the hands (and deck?)
-    {
-        game.ResetCards();
-    }
+    // if (game._user._currentMoney <= 0)
+    // {
+    //     gameOver = true;
+    // }
+    // else //TO-DO: reset the hands (and deck?)
+    // {
+    //     game.ResetCards();
+    // }
 }
 game.GameOver();
 
