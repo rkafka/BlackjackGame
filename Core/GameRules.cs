@@ -62,7 +62,7 @@ public static class GameRules
     {
         user._currentMoney -= user._hand._betAmount;
         user._numLosses++;
-        ui.ResultMessage_Lose(user);
+        ui.ResultMessage_Loss(user);
     }
     public static void ResultTie(IGameUI ui, User user)
     {
