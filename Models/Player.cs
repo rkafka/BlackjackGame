@@ -5,6 +5,10 @@ namespace BlackjackGame.Models;
 /// </summary>
 public class Player
 {
+    public const float STARTING_MONEY_EASY = 30.0f;
+    public const float STARTING_MONEY_NORMAL = 30.0f;
+    public const float STARTING_MONEY_HARD = 30.0f;
+    
     /// <summary>The player's current hand this round</summary>
     public Hand _hand;
 
@@ -19,10 +23,10 @@ public class Player
 public class User : Player
 {
     /// <summary>The amount of money the player entered the game with</summary>
-    public int _startingMoney;
+    public float _startingMoney;
 
     /// <summary>The amount of money the player currently possesses</summary>
-    public int _currentMoney;
+    public float _currentMoney;
 
     public int _numWins;
     public int _numLosses;
@@ -32,7 +36,7 @@ public class User : Player
     /// User subclass of Player. Tracks current money, starting money, and number of wins and losses.
     /// </summary>
     /// <param name="startingMoney">How much money the player starts with (lesser value = more difficult).</param>
-    public User(int startingMoney = 15) : base(false)
+    public User(float startingMoney = 15.0f) : base(false)
     {
         this._startingMoney = startingMoney;
         this._currentMoney = startingMoney;
@@ -42,7 +46,7 @@ public class User : Player
         _numTies = 0;
     }
 
-    public int GetCurrentEarnings()
+    public float GetCurrentEarnings()
     {
         return _currentMoney - _startingMoney;
     }

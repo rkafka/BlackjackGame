@@ -11,8 +11,10 @@ public static class GameRules
     public const int SCORE_DEALER_STOP = 17;
 
     // ratios to multiply winnings/losses by
-    public const int WIN_RATIO = 2;
-    public const int LOSS_RATIO = 1;
+    public const float WIN_RATIO = 3.0f/2;
+    public const float LOSS_RATIO = 1;
+
+    public const float MINIMUM_BET = 5.0f;
 
     public static int CalculateHandValue(Hand hand)
     {
