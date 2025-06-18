@@ -3,12 +3,12 @@ using BlackjackGame.UI;
 
 namespace BlackjackGame.Core;
 
-public class BlackjackGame
+public class BJGame
 {
     private readonly GameEngine _engine;
     private readonly IGameUI _ui;
 
-    public BlackjackGame(IGameUI ui)
+    public BJGame(IGameUI ui)
     {
         _ui = ui;
         _engine = new GameEngine(_ui);
@@ -19,9 +19,6 @@ public class BlackjackGame
         // Launch Screen
         _ui.LaunchScreen();
         Console.Clear();
-
-        // Title
-        _ui.DisplayTitle();
 
         // Main game loop
         bool playAgain;
