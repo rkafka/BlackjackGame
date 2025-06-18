@@ -7,6 +7,8 @@ namespace BlackjackGame.UI;
 public interface IGameUI
 {
     public const ConsoleColor COLOR_PROMPT = ConsoleColor.Yellow;
+    public const ConsoleColor COLOR_DEFAULT_BACKGROUND = ConsoleColor.Black;
+    public const ConsoleColor COLOR_DEFAULT_FOREGROUND = ConsoleColor.White;
 
     public void DisplayTitle();
 
@@ -22,7 +24,7 @@ public interface IGameUI
     public void PromptForBet(User user);
     public void PromptAfterError(string problem, bool isBet=false);
 
-    public void ResultMessage_Win(User user);
+    public void ResultMessage_Win(User user, bool isNatural=false);
     public void ResultMessage_Tie(User user);
     public void ResultMessage_Loss(User user);
 
@@ -30,7 +32,7 @@ public interface IGameUI
 
     public void PlayerAction_ChoiceMessage(string playerAction);
     public void PlayerAction_NotSupportedMessage();
-    public void PlayerAction_HitMessage(User user);
+    // public void PlayerAction_HitMessage(User user);
     public void CardDrawnMessage(Player player);
 
     public void GameOverMessage(GameEngine engine);

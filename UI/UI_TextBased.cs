@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using BlackjackGame.Core;
 using BlackjackGame.Models;
 using BlackjackGame.Utils;
@@ -30,7 +32,7 @@ public class UI_TextBased : IGameUI
     public void CardDrawnMessage(Player player)
     {
         Card cardDrawn = player._hand._cards.Last();
-        string playerName = ((player._hand._isDealer) ? "You" : "The Dealer");
+        string playerName = ((player._hand._isDealer) ? "The Dealer":"You");
         Console.WriteLine($"\n{playerName} drew the {cardDrawn} (value: {Card.GetValue(cardDrawn._rank, cardDrawn._value)})\n");
     }
 
@@ -61,11 +63,27 @@ public class UI_TextBased : IGameUI
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write("\n> Type the number to select: ");
         Console.ResetColor();
-        return (Console.ReadLine() ?? "").Trim().ToLower(); // ?? ""   means you should return an empty string if the input is null
+        return (Console.ReadLine() ?? "").Trim().ToLower();
+        // ?? ""   <-- means you should return an empty string if the input is null
     }
 
-    /// <summary> Writes "Press enter to continue.." to the Console Terminal and waits for ReadLine() input </summary>
-    public void PromptToContinue() { Console.WriteLine("\nPress enter to continue..."); Console.ReadLine(); }
+    /// <summary> Writes "Press enter to continue.." to the Console Terminal and waits for ReadLine() input. 
+    /// Clears the  </summary>
+    public void PromptToContinue()
+    {
+        int startY = Console.CursorTop;
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.Write("Press enter to continue...");
+
+        Console.ForegroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND;
+        Console.ReadLine();
+
+        Console.SetCursorPosition(0, startY-1);
+        // erase the lines written
+        for (int i = 0; i < 2; i++) { Console.Write(new string(' ', Console.WindowWidth)); }
+        Console.SetCursorPosition(0, startY-1);
+    }
 
     public void PromptForBet(User user)
     {
@@ -152,19 +170,31 @@ public class UI_TextBased : IGameUI
             Console.ResetColor();
             Console.WriteLine("|");
         }
+        Console.WriteLine(); // extra spacing from next element
     }
 
     public void PlayerAction_ChoiceMessage(string playerAction) { Console.Write($"You chose to {playerAction}.\t"); }
-    public void PlayerAction_HitMessage(User user) { Console.WriteLine($"You drew the {user._hand._cards.Last()} ({user._hand._cards.Last()._value})"); }
+    // public void PlayerAction_HitMessage(User user) { Console.WriteLine($"You drew the {user._hand._cards.Last()} ({user._hand._cards.Last()._value})"); }
     public void PlayerAction_NotSupportedMessage() { Console.WriteLine("Sorry, this option is not supported in the current build."); }
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="user"></param>
-    public void ResultMessage_Win(User user)
+    public void ResultMessage_Win(User user, bool isNatural)
     {
-        Console.WriteLine($"You won! Your bet of {user._hand._betAmount:C0} has been doubled and returned to you.");
+        if (isNatural)
+        {
+            Console.Write("You won with a ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("NATURAL BLACKJACK");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"! Your bet of {user._hand._betAmount:C0} has been returned along with 1.5x its value in winnings.");
+        }
+        else
+        {
+            Console.WriteLine($"You won! Your bet of {user._hand._betAmount:C0} has been doubled and returned to you.");
+        }
         Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
         user.PrintRecord_Colored(doNewLine: true);
     }
@@ -175,7 +205,7 @@ public class UI_TextBased : IGameUI
     /// <param name="user"></param>
     public void ResultMessage_Loss(User user)
     {
-        Console.WriteLine($"You lost... Your bet of {user._hand._betAmount:C0} has been deducted from your money.");
+        Console.WriteLine($"You lost... Your bet of {user._hand._betAmount:C0} has been lost.");
         Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
         user.PrintRecord_Colored(doNewLine: true);
     }
