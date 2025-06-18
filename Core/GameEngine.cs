@@ -7,7 +7,7 @@ namespace BlackjackGame.Core;
 public class GameEngine
 {
     private Deck _deck;
-    private User _user;
+    public User _user;
     private Dealer _dealer;
     private readonly IGameUI _ui;
 

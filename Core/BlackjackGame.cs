@@ -17,9 +17,7 @@ public class BlackjackGame
     public void Run()
     {
         // Launch Screen
-        Console.Clear();
-        _ui.DisplayTitle();
-        _ui.PromptToContinue();
+        _ui.LaunchScreen();
         Console.Clear();
 
         // Title
