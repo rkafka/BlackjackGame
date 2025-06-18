@@ -115,7 +115,7 @@ using BlackjackGame.Core;
 
 //         // // Player Actions
 //         // int returnCode_PlayerActions = game.PlayerActions();
-        
+
 
 //         // if (game._user._currentMoney <= 0)
 //         // {
@@ -144,7 +144,10 @@ using BlackjackGame.Core;
     Insurance:      2:1 (side bet if dealer shows an Ace — not recommended!)
 */
 
-
+// Ensure clean execution
+Console.BackgroundColor = ConsoleColor.Black;
+Console.ForegroundColor = ConsoleColor.White;
+Console.Clear();
 
 // new
 IGameUI ui;

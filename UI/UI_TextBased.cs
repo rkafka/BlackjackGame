@@ -38,9 +38,7 @@ public class UI_TextBased : IGameUI
 
     public void GameOverMessage(GameEngine engine)
     {
-        string gameOverTitle = "[ GAME OVER ]";
-        // DebugTools.PrintSectionHeader(gameOverTitle, false);
-        Console.WriteLine("".PadRight(Console.WindowWidth / 2, '-') + gameOverTitle + "".PadRight(Console.WindowWidth / 2, '-'));
+        UIHelper.PrintSectionHeader("GAME OVER");
         Console.Write("Your final record was ");
         engine._user.PrintRecord_Colored(doNewLine: true);
     }
@@ -72,9 +70,19 @@ public class UI_TextBased : IGameUI
     public void PromptForBet(User user)
     {
         Console.WriteLine("Starting new round...");
-        Console.WriteLine($"You currently have {user._currentMoney:C0} to gamble with.");
+
+        Console.Write($"You currently have {user._currentMoney:C2} to gamble with. The ");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.Write("minimum bet ");
+        Console.ResetColor();
+        Console.Write("is ");
+        Console.ForegroundColor = ConsoleColor.Magenta;
+        Console.Write($"{GameRules.MINIMUM_BET:C0}");
+        Console.ResetColor();
+        Console.WriteLine(".");
+
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write("How much would you like to bet? (must be an integer greater than 0) -->");
+        Console.Write("How much would you like to bet? Enter as a positive integer -->");
         Console.ResetColor();
         Console.Write(" $");
     }
@@ -118,11 +126,11 @@ public class UI_TextBased : IGameUI
             // hide first card if its player's turn
             if (hideFirstCard && i == 0)
             {
-                Console.WriteLine("| [");
+                Console.Write("| [");
                 Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.Write("HIDDEN");
                 Console.ResetColor();
-                Console.Write("]          ?? |");
+                Console.WriteLine("]          ?? |");
             }
             else // output card info to hand display
             {
@@ -156,9 +164,8 @@ public class UI_TextBased : IGameUI
     /// <param name="user"></param>
     public void ResultMessage_Win(User user)
     {
-        Console.WriteLine($"You won! Your bet of ${user._hand._betAmount} has been doubled and returned to you.");
-        // _user._hand._betAmount = 0;
-        Console.Write($"Remaining Money:  {user._currentMoney:C0}  |  W/L/T Record:  ");
+        Console.WriteLine($"You won! Your bet of {user._hand._betAmount:C0} has been doubled and returned to you.");
+        Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
         user.PrintRecord_Colored(doNewLine: true);
     }
 
@@ -168,9 +175,8 @@ public class UI_TextBased : IGameUI
     /// <param name="user"></param>
     public void ResultMessage_Loss(User user)
     {
-        Console.WriteLine($"You lost... Your bet of ${user._hand._betAmount} has been deducted from your money.");
-        // _user._hand._betAmount = 0;
-        Console.Write($"Remaining Money:  {user._currentMoney:C0}  |  W/L/T Record:  ");
+        Console.WriteLine($"You lost... Your bet of {user._hand._betAmount:C0} has been deducted from your money.");
+        Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
         user.PrintRecord_Colored(doNewLine: true);
     }
 
@@ -179,8 +185,8 @@ public class UI_TextBased : IGameUI
     /// </summary>
     public void ResultMessage_Tie(User user)
     {
-        Console.WriteLine($"You tied. Your bet of ${user._hand._betAmount} has been returned to you.");
-        Console.Write($"Remaining Money:  {user._currentMoney:C0}  |  W/L/T Record:  ");
+        Console.WriteLine($"You tied. Your bet of {user._hand._betAmount:C0} has been returned to you.");
+        Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
         user.PrintRecord_Colored(doNewLine: true);
     }
 

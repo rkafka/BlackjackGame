@@ -183,8 +183,8 @@ public class GameEngine
     {
         _ui.PromptForBet(_user);
 
-        bool waitForBet = true;
-        while (waitForBet)
+        bool validBet = false;
+        while (!validBet)
         {
             if (!int.TryParse(Console.ReadLine(), out int betAmount))
                 _ui.PromptAfterError("Your bet must be an integer", isBet: true);
@@ -192,17 +192,17 @@ public class GameEngine
             {
                 if (betAmount > _user._currentMoney)
                     _ui.PromptAfterError("Your bet must be less than your starting money", isBet: true);
-                else if (betAmount <= 0)
-                    _ui.PromptAfterError("Your bet must be greater than zero", isBet: true);
-                else
-                    waitForBet = SetBet(betAmount); // SUCCESS!
+                else if (betAmount <= GameRules.MINIMUM_BET)
+                    _ui.PromptAfterError($"The minimum bet is {GameRules.MINIMUM_BET:C0}", isBet: true);
+                else 
+                    validBet = SetBet(betAmount); // SUCCESS!
             }
         }
     }
 
     public bool SetBet(int newBet)
     {
-        if (newBet >= _user._currentMoney)
+        if (newBet > _user._currentMoney)
             return false;
         else
         {
