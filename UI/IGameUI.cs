@@ -26,6 +26,8 @@ public interface IGameUI
     public void ResultMessage_Tie(User user);
     public void ResultMessage_Loss(User user);
 
+    public void RevealDealersHiddenCard(User user, Dealer dealer);
+
     public void PlayerAction_ChoiceMessage(string playerAction);
     public void PlayerAction_NotSupportedMessage();
     public void PlayerAction_HitMessage(User user);

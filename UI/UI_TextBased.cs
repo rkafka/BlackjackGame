@@ -26,7 +26,7 @@ public class UI_TextBased : IGameUI
         if (waitForInput) { Console.ReadLine(); }
         Console.Clear();
     }
-    
+
     public void CardDrawnMessage(Player player)
     {
         Card cardDrawn = player._hand._cards.Last();
@@ -157,7 +157,7 @@ public class UI_TextBased : IGameUI
     public void PlayerAction_ChoiceMessage(string playerAction) { Console.Write($"You chose to {playerAction}.\t"); }
     public void PlayerAction_HitMessage(User user) { Console.WriteLine($"You drew the {user._hand._cards.Last()} ({user._hand._cards.Last()._value})"); }
     public void PlayerAction_NotSupportedMessage() { Console.WriteLine("Sorry, this option is not supported in the current build."); }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -188,6 +188,11 @@ public class UI_TextBased : IGameUI
         Console.WriteLine($"You tied. Your bet of {user._hand._betAmount:C0} has been returned to you.");
         Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
         user.PrintRecord_Colored(doNewLine: true);
+    }
+
+    public void RevealDealersHiddenCard(User user, Dealer dealer) {
+        Console.WriteLine("Your turn is now over. Revealing the Dealer's hidden first card ...");
+        DisplayHands(user, dealer, hideDealersFirstCard: false);
     }
 
 }

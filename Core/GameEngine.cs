@@ -11,6 +11,10 @@ public class GameEngine
     private Dealer _dealer;
     private readonly IGameUI _ui;
 
+    /// <summary> Constructor for the GameEngine that instantiates a Deck, User, and Player for the game to use
+    /// throughout its execution.
+    /// </summary>
+    /// <param name="ui">UI object passed in, determines whether the Text-Based or ASCII Art display is used.</param>
     public GameEngine(IGameUI ui)
     {
         this._ui = ui;
@@ -48,8 +52,18 @@ public class GameEngine
         {
             // PLAYER'S TURN
             // -- Allow to chose between available options with text input (prompted)
-            if (PlayerTurn()) // if player doesn't bust, DEALER's TURN
+            bool playerDidNotBust = PlayerTurn();
+
+            // REVEAL DEALER'S HIDDEN CARD
+            _dealer._doHideFirstCard = false;
+            _ui.RevealDealersHiddenCard(_user, _dealer);
+            _ui.DisplayHands(_user, _dealer, hideDealersFirstCard:false);
+
+            if (playerDidNotBust) // if player doesn't bust, DEALER's TURN
+            {
+                // DEALER's TURN
                 DealerTurn();
+            }
 
             // DECIDE THE WINNER
             // -- based on resultant hands held after user & dealer have both had their turn
@@ -57,9 +71,10 @@ public class GameEngine
         }
 
         ResetCards();
-        return (_user._currentMoney > 0);
+        return (_user._currentMoney > GameRules.MINIMUM_BET);
     }
 
+    /// <summary> Draws two cards to the player's hand and then does the same for the dealer's hand. </summary>
     public void InitialDraw()
     {
         _user._hand.AddCard(_deck);
@@ -68,6 +83,9 @@ public class GameEngine
         _dealer._hand.AddCard(_deck);
     }
 
+    /// <summary> Allows the player to choose between player actions, potentially modifying their hand and/or bet. The player
+    /// can continuously hit until they bust or decide to stand. Other features are coming but not yet implemented (TO-DO). </summary>
+    /// <returns>Whether the player's hand busted (and they therefore lose without the Dealer needing to take action).</returns>
     private bool PlayerTurn()
     {
         bool keepDrawing = true;
@@ -136,15 +154,13 @@ public class GameEngine
         return false; // TO-DO: finish
     }
 
-    /// <summary>
-    /// 
+    /// <summary> Segment for the dealer's turn, following strict rules. The dealer hits until they reach the
+    /// set minimum (17 currently) or bust (> 21). After each hit, the user is prompted to hit 'enter' to continue.
     /// </summary>
-    private void DealerTurn()
+    /// <returns>Whether the dealer's hand busted or not</returns>
+    private bool DealerTurn()
     {
         // Reveal Hidden Card
-        _dealer._doHideFirstCard = false;
-        _ui.DisplayHands(_user, _dealer, hideDealersFirstCard: _dealer._doHideFirstCard);
-        Thread.Sleep(5000);
 
         while (_dealer._hand._currentScore < 17)
         {
@@ -153,22 +169,21 @@ public class GameEngine
             _dealer._hand.AddCard(_deck);
             // Retrieve the card just added & display a message describing this action
             _ui.CardDrawnMessage(_dealer);
-            Thread.Sleep(500);
             // Update the display representing players' hands
             _ui.DisplayHands(_user, _dealer, hideDealersFirstCard: _dealer._doHideFirstCard);
-            Thread.Sleep(2000);
+            _ui.PromptToContinue();
         }
 
         // Check for bust
         if (_dealer._hand._currentScore > 21)
         {
             Console.WriteLine("The Dealer BUST! That means ...");
+            return false;
         }
+        return true;
     }
 
-    /// <summary>
-    /// Creates a new shuffled deck and empties the hands by reassigning them to new Hand objects. 
-    /// </summary>
+    /// <summary> Creates a new shuffled deck and empties the hands by reassigning them to new Hand objects. </summary>
     public void ResetCards()
     {
         _deck = new Deck(doShuffle: true);
@@ -176,8 +191,7 @@ public class GameEngine
         _dealer._hand = new Hand(betAmount: -1, isDealer: true);
     }
 
-    /// <summary>
-    /// 
+    /// <summary> Prompts the user to choose a bet amount and 
     /// </summary>
     public void ChooseBet()
     {
@@ -192,7 +206,7 @@ public class GameEngine
             {
                 if (betAmount > _user._currentMoney)
                     _ui.PromptAfterError("Your bet must be less than your starting money", isBet: true);
-                else if (betAmount <= GameRules.MINIMUM_BET)
+                else if (betAmount < GameRules.MINIMUM_BET)
                     _ui.PromptAfterError($"The minimum bet is {GameRules.MINIMUM_BET:C0}", isBet: true);
                 else 
                     validBet = SetBet(betAmount); // SUCCESS!
