@@ -1,4 +1,5 @@
 ﻿using BlackjackGame.Models;
+using BlackjackGame.UI;
 using BlackjackGame.Utils;
 
 
@@ -140,3 +141,12 @@ game.GameOver();
     Blackjack:      3:2 (bet $10, win $15)
     Insurance:      2:1 (side bet if dealer shows an Ace — not recommended!)
 */
+
+
+
+// new
+IGameUI ui;
+if (args.Length > 0 && args[0] == "ascii") { ui = new UI_ASCII(); }
+else { ui = new UI_TextBased(); }
+BlackjackGame game = new BlackjackGame(ui);
+game.Run();

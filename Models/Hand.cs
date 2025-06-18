@@ -15,6 +15,7 @@ public class Hand
         _currentScore = 0;
         _betAmount = betAmount;
     }
+    public override string ToString() => string.Join(", ", _cards);
 
     public void AddCard(Deck deck)
     {

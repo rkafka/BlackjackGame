@@ -31,13 +31,13 @@ public class Game
         _dealer = dealer;
     }
 
-    public void InitialDraw()
-    {
-        _user._hand.AddCard(_deck);
-        _user._hand.AddCard(_deck);
-        _dealer._hand.AddCard(_deck);
-        _dealer._hand.AddCard(_deck);
-    }
+    // public void InitialDraw()
+    // {
+    //     _user._hand.AddCard(_deck);
+    //     _user._hand.AddCard(_deck);
+    //     _dealer._hand.AddCard(_deck);
+    //     _dealer._hand.AddCard(_deck);
+    // }
 
     /// <summary>
     /// 
@@ -206,53 +206,59 @@ public class Game
 
 
 
-    public void PrintAllHandsAsText(bool hideDealersFirstCard = true)
-    {
-        // Print user's hand of cards, with scores included
-        PrintSingleHandAsText(_user);
+    // public void PrintAllHandsAsText(bool hideDealersFirstCard = true)
+    // {
+    //     // Print user's hand of cards, with scores included
+    //     PrintSingleHandAsText(_user);
 
-        Console.WriteLine("\nVS.");
+    //     Console.WriteLine("\nVS.");
 
-        // Print dealer's hand of cards, with scores included
-        PrintSingleHandAsText(_dealer, hideFirstCard: hideDealersFirstCard);
+    //     // Print dealer's hand of cards, with scores included
+    //     PrintSingleHandAsText(_dealer, hideFirstCard: hideDealersFirstCard);
 
-        Console.WriteLine();
-    }
-    public static void PrintSingleHandAsText(Player player, bool hideFirstCard = false)
-    {
-        int cardPadding = 18;
-        int sectionWidth = 24;
+    //     Console.WriteLine();
+    // }
 
-        string playerName = ((player._hand._isDealer) ? "DEALER" : "USER");
-        int currentScore = 0;
-        Console.WriteLine("\n" + $"{playerName}'S HAND:".PadRight(sectionWidth - 1, '-') + ".");
-        for (int i = 0; i < player._hand._cards.Count; i++) // foreach(Card card in player._hand._cards)
-        {
-            Card card = player._hand._cards[i];
-            // hide first card if its player's turn
-            if (hideFirstCard && i == 0)
-                Console.WriteLine($"| [HIDDEN]          ?? |");
-            else // output card info to hand display
-            {
-                Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + Card.GetValue(card._rank).ToString()}".PadRight(sectionWidth - 4) + " |");
-                currentScore += card._value;
-            }
-        }
-        if (hideFirstCard)
-            Console.WriteLine($"|________ SCORE: {currentScore}".PadRight(sectionWidth - 5) + "+ ? |");
-        else
-        {
-            string scoreLineStart = "|___________ SCORE: ";
-            Console.Write(scoreLineStart);
-            if (player._hand._currentScore > 21)
-                Console.ForegroundColor = ConsoleColor.Red;
-            else if (player._hand._currentScore == 21)
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(player._hand._currentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
-            Console.ResetColor();
-            Console.WriteLine("|");
-        }
-    }
+    // public static void PrintSingleHandAsText(Player player, bool hideFirstCard = false)
+    // {
+    //     int cardPadding = 18;
+    //     int sectionWidth = 24;
+
+    //     string playerName = ((player._hand._isDealer) ? "DEALER" : "USER");
+    //     int currentScore = 0;
+    //     Console.WriteLine("\n" + $"{playerName}'S HAND:".PadRight(sectionWidth - 1, '-') + ".");
+    //     for (int i = 0; i < player._hand._cards.Count; i++) // foreach(Card card in player._hand._cards)
+    //     {
+    //         Card card = player._hand._cards[i];
+    //         // hide first card if its player's turn
+    //         if (hideFirstCard && i == 0) {
+    //             Console.WriteLine("| [");
+    //             Console.BackgroundColor = ConsoleColor.DarkGray;
+    //             Console.Write("HIDDEN");
+    //             Console.ResetColor();
+    //             Console.Write("]          ?? |");
+    //         }
+    //         else // output card info to hand display
+    //         {
+    //             Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + Card.GetValue(card._rank).ToString()}".PadRight(sectionWidth - 4) + " |");
+    //             currentScore += card._value;
+    //         }
+    //     }
+    //     if (hideFirstCard)
+    //         Console.WriteLine($"|________ SCORE: {currentScore}".PadRight(sectionWidth - 5) + "+ ? |");
+    //     else
+    //     {
+    //         string scoreLineStart = "|___________ SCORE: ";
+    //         Console.Write(scoreLineStart);
+    //         if (player._hand._currentScore > 21)
+    //             Console.ForegroundColor = ConsoleColor.Red;
+    //         else if (player._hand._currentScore == 21)
+    //             Console.ForegroundColor = ConsoleColor.Yellow;
+    //         Console.Write(player._hand._currentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
+    //         Console.ResetColor();
+    //         Console.WriteLine("|");
+    //     }
+    // }
 
     /*
         1. Reveal Hidden Card
@@ -266,30 +272,30 @@ public class Game
         4. Bust if Over 21
             - If the dealer's hand goes over 21, they bust. All remaining players win.
         */
-    public void DealersTurn()
-    {
-        // Reveal Hidden Card
-        PrintAllHandsAsText(hideDealersFirstCard: false);
-        Thread.Sleep(5000);
+    // public void DealersTurn()
+    // {
+    //     // Reveal Hidden Card
+    //     PrintAllHandsAsText(hideDealersFirstCard: false);
+    //     Thread.Sleep(5000);
 
-        while (_dealer._hand._currentScore < 17)
-        {
-            Console.Clear();
-            _dealer._hand.AddCard(_deck);
-            Console.WriteLine($"\nThe dealer drew the {_dealer._hand._cards.Last()} (value: {_dealer._hand._cards.Last()._value})\n");
-            Thread.Sleep(500);
-            PrintAllHandsAsText(hideDealersFirstCard: false);
-            Thread.Sleep(2000);
-        }
+    //     while (_dealer._hand._currentScore < 17)
+    //     {
+    //         Console.Clear();
+    //         _dealer._hand.AddCard(_deck);
+    //         Console.WriteLine($"\nThe dealer drew the {_dealer._hand._cards.Last()} (value: {_dealer._hand._cards.Last()._value})\n");
+    //         Thread.Sleep(500);
+    //         PrintAllHandsAsText(hideDealersFirstCard: false);
+    //         Thread.Sleep(2000);
+    //     }
 
-        // Check for bust
-        if (_dealer._hand._currentScore > 21)
-        {
-            Console.WriteLine("The Dealer BUST! That means ...");
-        }
+    //     // Check for bust
+    //     if (_dealer._hand._currentScore > 21)
+    //     {
+    //         Console.WriteLine("The Dealer BUST! That means ...");
+    //     }
 
 
-    }
+    // }
 
     public void DecideWinner()
     {
@@ -309,38 +315,37 @@ public class Game
         {
             resultTie();
         }
-        Console.WriteLine();
 
-        Console.WriteLine("Press enter to continue...");
+        Console.WriteLine("\nPress enter to continue...");
         Console.ReadLine();
     }
 
-    public void resultLose()
-    {
-        _user._currentMoney -= _user._hand._betAmount;
-        _user._numLosses++;
-        Console.WriteLine($"You lost... Your bet of ${_user._hand._betAmount} has been deducted from your money.");
-        // _user._hand._betAmount = 0;
-        Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
-        _user.PrintRecord_Colored(doNewLine: true);
-    }
-    public void resultWin()
-    {
-        _user._currentMoney += _user._hand._betAmount * WIN_RATIO;
-        _user._numWins++;
-        Console.WriteLine($"You won! Your bet of ${_user._hand._betAmount} has been doubled and returned to you.");
-        // _user._hand._betAmount = 0;
-        Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
-        _user.PrintRecord_Colored(doNewLine: true);
-    }
-    public void resultTie()
-    {
-        _user._numTies++;
-        Console.WriteLine($"You tied. Your bet of ${_user._hand._betAmount} has been returned to you.");
-        // _user._hand._betAmount = 0;
-        Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
-        _user.PrintRecord_Colored(doNewLine: true);
-    }
+    // public void resultLose()
+    // {
+    //     _user._currentMoney -= _user._hand._betAmount;
+    //     _user._numLosses++;
+    //     Console.WriteLine($"You lost... Your bet of ${_user._hand._betAmount} has been deducted from your money.");
+    //     // _user._hand._betAmount = 0;
+    //     Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
+    //     _user.PrintRecord_Colored(doNewLine: true);
+    // }
+    // public void resultWin()
+    // {
+    //     _user._currentMoney += _user._hand._betAmount * WIN_RATIO;
+    //     _user._numWins++;
+    //     Console.WriteLine($"You won! Your bet of ${_user._hand._betAmount} has been doubled and returned to you.");
+    //     // _user._hand._betAmount = 0;
+    //     Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
+    //     _user.PrintRecord_Colored(doNewLine: true);
+    // }
+    // public void resultTie()
+    // {
+    //     _user._numTies++;
+    //     Console.WriteLine($"You tied. Your bet of ${_user._hand._betAmount} has been returned to you.");
+    //     // _user._hand._betAmount = 0;
+    //     Console.Write($"Remaining Money:  {_user._currentMoney:C0}  |  W/L/T Record:  ");
+    //     _user.PrintRecord_Colored(doNewLine: true);
+    // }
 
     public void SetBet()
     {
@@ -359,10 +364,7 @@ public class Game
             {
                 if (betAmount > _user._currentMoney)
                 {
-                    Console.BackgroundColor = ConsoleColor.Red;
-                    Console.Write("Oops! Your bet must be less than your starting money, try again: ");
-                    Console.ResetColor();
-                    Console.Write(" $");
+                    _ui.RepromptBet(problem: "Your bet must be less than your starting money");
                 }
                 else if (betAmount <= 0)
                 {
@@ -388,19 +390,19 @@ public class Game
 
     }
 
-    public void ResetCards()
-    {
-        _deck = new Deck(doShuffle: true);
-        _user._hand = new Hand(betAmount: -1, isDealer: false);
-        _dealer._hand = new Hand(betAmount: 0, isDealer: true);
-    }
+    // public void ResetCards()
+    // {
+    //     _deck = new Deck(doShuffle: true);
+    //     _user._hand = new Hand(betAmount: -1, isDealer: false);
+    //     _dealer._hand = new Hand(betAmount: 0, isDealer: true);
+    // }
 
-    public void GameOver()
-    {
-        string gameOverTitle = "[ GAME OVER ]";
-        // DebugTools.PrintSectionHeader(gameOverTitle, false);
-        Console.WriteLine("".PadRight(Console.WindowWidth/2,'-') + gameOverTitle + "".PadRight(Console.WindowWidth/2,'-'));
-        Console.Write("Your final record was ");
-        _user.PrintRecord_Colored(doNewLine:true);
-    }
+    // public void GameOver()
+    // {
+    //     string gameOverTitle = "[ GAME OVER ]";
+    //     // DebugTools.PrintSectionHeader(gameOverTitle, false);
+    //     Console.WriteLine("".PadRight(Console.WindowWidth/2,'-') + gameOverTitle + "".PadRight(Console.WindowWidth/2,'-'));
+    //     Console.Write("Your final record was ");
+    //     _user.PrintRecord_Colored(doNewLine:true);
+    // }
 }
