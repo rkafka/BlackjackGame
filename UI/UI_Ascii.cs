@@ -113,12 +113,12 @@ public class UI_ASCII : IGameUI
     {
         throw new NotImplementedException();
     }
-    
+
     public void PromptToContinue()
     {
         throw new NotImplementedException();
     }
-    
+
     public void PromptForBet(User user)
     {
         throw new NotImplementedException();
@@ -136,8 +136,8 @@ public class UI_ASCII : IGameUI
     {
         throw new NotImplementedException();
     }
-    
-    public void ResultMessage_Win(User user)
+
+    public void ResultMessage_Win(User user, bool isNatural=false)
     {
         throw new NotImplementedException();
     }
@@ -147,6 +147,10 @@ public class UI_ASCII : IGameUI
     }
     public void ResultMessage_Loss(User user)
     {
+        throw new NotImplementedException();
+    }
+
+    public void RevealDealersHiddenCard(User user, Dealer dealer) {
         throw new NotImplementedException();
     }
 }
