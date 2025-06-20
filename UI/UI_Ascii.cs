@@ -109,7 +109,7 @@ public class UI_ASCII : IGameUI
     {
         throw new NotImplementedException();
     }
-    public void PromptAfterError(string problem, bool isBet = false)
+    public void PromptAfterError(string problem, bool isBet = false, bool tryAgain=false)
     {
         throw new NotImplementedException();
     }
@@ -137,7 +137,13 @@ public class UI_ASCII : IGameUI
         throw new NotImplementedException();
     }
 
-    public void ResultMessage_Win(User user, bool isNatural=false)
+    public void ResetConsoleColors()
+    {
+        Console.BackgroundColor = Utils.ASCII.DEFAULT_BACKGROUND;
+        Console.ForegroundColor = Utils.ASCII.DEFAULT_FOREGROUND;
+    }
+
+    public void ResultMessage_Win(User user, bool isNatural = false)
     {
         throw new NotImplementedException();
     }

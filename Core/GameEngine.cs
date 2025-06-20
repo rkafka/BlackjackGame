@@ -100,14 +100,15 @@ public class GameEngine
                 case 2:
                     // STAND
                     _ui.PlayerAction_ChoiceMessage("Stand");
-                    // Console.WriteLine($"It is now the Dealer's turn.");
                     keepDrawing = false;
                     break;
                 case 3:
                     // DOUBLE DOWN
                     _ui.PlayerAction_ChoiceMessage("Double Down");
-                    _ui.PlayerAction_NotSupportedMessage();
-                    keepDrawing = false;
+                    keepDrawing = PlayerAction_DoubleDown();
+                    busted = GameRules.CheckForBust(_user._hand);
+                    if (busted)
+                        Console.WriteLine("You BUST. That's a shame...");
                     break;
                 case 4:
                     // SPLIT
@@ -145,9 +146,14 @@ public class GameEngine
     /// <returns>True if the player can continue, false otherwise.</returns>
     public bool PlayerAction_DoubleDown()
     {
-        SetBet(2*_user._hand._betAmount);
-        bool busted = PlayerAction_Hit();
-        return false; // TO-DO: finish
+        int oldBet = _user._hand._betAmount;
+        bool betRaiseSuccessful = RaiseBet(oldBet);
+        Console.Write($"Your bet was doubled from {oldBet:C0} to {_user._hand._betAmount:C2}, now drawing a card before ending your turn.");
+        if (!betRaiseSuccessful)
+            _ui.PromptAfterError($"You don't have enough money to double your bet, you have {_user._currentMoney} and need {_user._hand._betAmount * 2}", isBet: false, tryAgain: false);
+        else
+            PlayerAction_Hit();
+        return !betRaiseSuccessful; // TO-DO: finish
     }
 
     /// <summary> Handles the dealer's turn: dealer draws cards until reaching at least 17 or busting, displaying each action.
@@ -237,6 +243,7 @@ public class GameEngine
             return false;
         else
         {
+            _user._currentMoney -= raise;
             _user._hand._betAmount += raise;
             return true;
         }

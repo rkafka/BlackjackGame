@@ -104,10 +104,14 @@ public class UI_TextBased : IGameUI
         Console.ResetColor();
         Console.Write(" $");
     }
-    public void PromptAfterError(string problem, bool isBet = false)
+    public void PromptAfterError(string problem, bool isBet = false, bool tryAgain = true)
     {
+        // ResetConsoleColors();
+        // Thread.Sleep(5);
+
         Console.BackgroundColor = ConsoleColor.Red;
-        Console.Write($"Oops! {problem}, try again: ");
+        Console.Write($"Oops! {problem}");
+        Console.Write((tryAgain) ? ", try again: " : ".\n");
         Console.ResetColor();
         Console.Write($" {(isBet ? "$" : "")}");
     }
@@ -176,6 +180,13 @@ public class UI_TextBased : IGameUI
     public void PlayerAction_ChoiceMessage(string playerAction) { Console.Write($"You chose to {playerAction}.\t"); }
     // public void PlayerAction_HitMessage(User user) { Console.WriteLine($"You drew the {user._hand._cards.Last()} ({user._hand._cards.Last()._value})"); }
     public void PlayerAction_NotSupportedMessage() { Console.WriteLine("Sorry, this option is not supported in the current build."); }
+
+    public void ResetConsoleColors()
+    {
+        Console.BackgroundColor = Utils.ASCII.DEFAULT_BACKGROUND;
+        Console.ForegroundColor = Utils.ASCII.DEFAULT_FOREGROUND;
+    }
+
 
     /// <summary>
     /// 
