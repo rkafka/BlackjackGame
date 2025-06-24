@@ -2,12 +2,35 @@
 using BlackjackGame.UI;
 using BlackjackGame.Utils;
 using BlackjackGame.Core;
+using BlackjackGame.Tests;
 
 
 // Ensure clean execution
 Console.BackgroundColor = ConsoleColor.Black;
 Console.ForegroundColor = ConsoleColor.White;
 Console.Clear();
+
+// TO-DO: start menu
+
+if (args.Length >= 2)
+{
+    if (args[0].ToLower().Equals("debug"))
+    {
+        switch (args[1].ToLower())
+        {
+            case "gameplay":
+                GameplayTests.Execute(args[2..]);
+                break;
+            case "models":
+                ModelsTests.Execute(args[2..]);
+                break;
+            default:
+                Console.WriteLine("ERROR:  can not find the desired debug module.\n\n\n\n");
+                break;
+        }
+        return; // end execution after debug
+    }
+}
 
 // new
 IGameUI ui;
