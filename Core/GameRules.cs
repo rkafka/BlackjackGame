@@ -83,7 +83,7 @@ public static class GameRules
         float winnings = user._hand._betAmount * winRatio;
         user._currentMoney += user._hand._betAmount + winnings;
         user._numWins++;
-        ui.ResultMessage_Win(user);
+        ui.ResultMessage_Win(user, isNatural);
     }
     public static void ResultLose(IGameUI ui, User user)
     {
