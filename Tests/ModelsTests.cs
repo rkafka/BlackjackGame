@@ -1,4 +1,6 @@
-namespace BlackjackGame.Models;
+using BlackjackGame.Models;
+
+namespace BlackjackGame.Tests;
 
 public class ModelsTests
 {
@@ -10,9 +12,9 @@ public class ModelsTests
     static void TEST_Deck()
     {
         // Hand hand = new();
-        Deck d = new Deck(doShuffle:false);
+        Deck d = new Deck(doShuffle: false);
 
-        d.Print(title:"Unshuffled Deck");
+        d.Print(title: "Unshuffled Deck");
 
         for (int i = 0; i < 5; i++)
         {
@@ -20,5 +22,7 @@ public class ModelsTests
             d.Print(title: $"Current Deck (Shuffled {i}x)");
         }
     }
+
+
 }
 
