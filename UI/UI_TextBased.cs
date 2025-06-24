@@ -192,7 +192,7 @@ public class UI_TextBased : IGameUI
     /// 
     /// </summary>
     /// <param name="user"></param>
-    public void ResultMessage_Win(User user, bool isNatural)
+    public void ResultMessage_Win(User user, bool isNatural=false)
     {
         if (isNatural)
         {
