@@ -19,8 +19,15 @@ public class GameEngine
     public GameEngine(IGameUI ui)
     {
         this._ui = ui;
-
         this._deck = new Deck(doShuffle: true);
+        this._user = new();
+        this._dealer = new();
+    }
+    /// for testing
+    public GameEngine(IGameUI ui, Deck customDeck, User user, Dealer dealer)
+    {
+        this._ui = ui;
+        this._deck = customDeck;
         this._user = new();
         this._dealer = new();
     }
