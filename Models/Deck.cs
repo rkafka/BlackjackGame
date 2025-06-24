@@ -18,6 +18,11 @@ public class Deck
         if (doShuffle)
             Shuffle();
     }
+    public Deck(List<Card> customCards)
+    {
+        _cards = customCards; // used to inject a particular set of cards as the deck. 
+        // helpful for debug.
+    }
 
 
     public void Shuffle()
