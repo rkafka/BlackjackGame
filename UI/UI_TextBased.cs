@@ -8,6 +8,10 @@ namespace BlackjackGame.UI;
 
 public class UI_TextBased : IGameUI
 {
+    /// <summary>
+    /// Displays the launch screen with the title and hand art, and optionally waits for user input before clearing the screen.
+    /// </summary>
+    /// <param name="waitForInput">If true, waits for the user to press enter before clearing the screen.</param>
     public void LaunchScreen(bool waitForInput = true)
     {
         Console.Clear();
@@ -29,6 +33,10 @@ public class UI_TextBased : IGameUI
         Console.Clear();
     }
 
+    /// <summary>
+    /// Displays a message indicating which player drew which card, including the card's value.
+    /// </summary>
+    /// <param name="player">The player who drew the card.</param>
     public void CardDrawnMessage(Player player)
     {
         Card cardDrawn = player._hand._cards.Last();
@@ -36,8 +44,15 @@ public class UI_TextBased : IGameUI
         Console.WriteLine($"\n{playerName} drew the {cardDrawn} (value: {Card.GetValue(cardDrawn._rank, cardDrawn._value)})\n");
     }
 
+    /// <summary>
+    /// Displays the ASCII art title to the console.
+    /// </summary>
     public void DisplayTitle() { Console.WriteLine("\n" + Utils.ASCII.ascii_Title); }
 
+    /// <summary>
+    /// Displays the game over message and the user's final record.
+    /// </summary>
+    /// <param name="engine">The game engine instance containing the user record.</param>
     public void GameOverMessage(GameEngine engine)
     {
         UIHelper.PrintSectionHeader("GAME OVER");
@@ -46,8 +61,10 @@ public class UI_TextBased : IGameUI
     }
 
 
-    /// <summary> Prompts the player to select a Player Action (Hit, Stand, Double Down, etc.) by typing their associated number. </summary>
-    /// <returns>String containing the input read in from the user</returns>
+    /// <summary>
+    /// Prompts the player to select a player action (Hit, Stand, Double Down, Surrender, Split) by typing the associated number.
+    /// </summary>
+    /// <returns>String containing the input read in from the user.</returns>
     public string PromptPlayerAction()
     {
         Console.Write("PLAYER OPTIONS:  ");
@@ -67,8 +84,9 @@ public class UI_TextBased : IGameUI
         // ?? ""   <-- means you should return an empty string if the input is null
     }
 
-    /// <summary> Writes "Press enter to continue.." to the Console Terminal and waits for ReadLine() input. 
-    /// Clears the  </summary>
+    /// <summary>
+    /// Writes "Press enter to continue..." to the console and waits for user input, then clears the prompt from the screen.
+    /// </summary>
     public void PromptToContinue()
     {
         int startY = Console.CursorTop;
@@ -85,6 +103,10 @@ public class UI_TextBased : IGameUI
         Console.SetCursorPosition(0, startY-1);
     }
 
+    /// <summary>
+    /// Prompts the user to enter a bet amount, displaying their current money and the minimum bet.
+    /// </summary>
+    /// <param name="user">The user to prompt for a bet.</param>
     public void PromptForBet(User user)
     {
         Console.WriteLine("Starting new round...");
@@ -104,6 +126,12 @@ public class UI_TextBased : IGameUI
         Console.ResetColor();
         Console.Write(" $");
     }
+    /// <summary>
+    /// Displays an error message in red and prompts the user to try again, optionally indicating a bet input.
+    /// </summary>
+    /// <param name="problem">The error message to display.</param>
+    /// <param name="isBet">If true, displays a dollar sign for bet input.</param>
+    /// <param name="tryAgain">If true, prompts the user to try again.</param>
     public void PromptAfterError(string problem, bool isBet = false, bool tryAgain = true)
     {
         // ResetConsoleColors();
@@ -117,10 +145,12 @@ public class UI_TextBased : IGameUI
     }
 
 
-    /// <summary> Outputs both the user & dealer hands to the Console Terminal in Text-Based format. </summary>
-    /// <param name="user">The user object to print the hand(s) of</param>
-    /// <param name="dealer">The dealer object to print the hand(s) of</param>
-    /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on players turn, false on dealer's turn).</param>
+    /// <summary>
+    /// Outputs both the user's and dealer's hands to the console in text-based format.
+    /// </summary>
+    /// <param name="user">The user object whose hand(s) to print.</param>
+    /// <param name="dealer">The dealer object whose hand(s) to print.</param>
+    /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on player's turn, false on dealer's turn).</param>
     public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
     {
         // Print user's hand of cards, with scores included
@@ -131,9 +161,11 @@ public class UI_TextBased : IGameUI
         Console.WriteLine();
     }
 
-    /// <summary> Outputs a singular hand to the Console Terminal. </summary>
-    /// <param name="player">The user or dealer object of which to print the hand</param>
-    /// <param name="hideFirstCard">Boolean marker determining whether the first card is hidden (Dealer hides their first card before their turn).</param>
+    /// <summary>
+    /// Outputs a single player's hand to the console, optionally hiding the first card (for the dealer).
+    /// </summary>
+    /// <param name="player">The player whose hand to print.</param>
+    /// <param name="hideFirstCard">If true, hides the first card (for the dealer before their turn).</param>
     public void DisplayHands(Player player, bool hideFirstCard = false)
     {
         int cardPadding = 18;
@@ -177,10 +209,16 @@ public class UI_TextBased : IGameUI
         Console.WriteLine(); // extra spacing from next element
     }
 
+    /// <summary> Displays a message indicating the player's chosen action. </summary>
+    /// <param name="playerAction">The action chosen by the player.</param>
     public void PlayerAction_ChoiceMessage(string playerAction) { Console.Write($"You chose to {playerAction}.\t"); }
+
     // public void PlayerAction_HitMessage(User user) { Console.WriteLine($"You drew the {user._hand._cards.Last()} ({user._hand._cards.Last()._value})"); }
+
+    /// <summary> Displays a message indicating that the selected player action is not supported in the current build. </summary>
     public void PlayerAction_NotSupportedMessage() { Console.WriteLine("Sorry, this option is not supported in the current build."); }
 
+    /// <summary> Resets the console's background and foreground colors to their default values. </summary>
     public void ResetConsoleColors()
     {
         Console.BackgroundColor = Utils.ASCII.DEFAULT_BACKGROUND;
@@ -188,10 +226,9 @@ public class UI_TextBased : IGameUI
     }
 
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="user"></param>
+    /// <summary> Displays a message indicating the user has won, with special formatting for a natural blackjack. </summary>
+    /// <param name="user">The user who won.</param>
+    /// <param name="isNatural">If true, indicates a natural blackjack win.</param>
     public void ResultMessage_Win(User user, bool isNatural=false)
     {
         if (isNatural)
@@ -200,7 +237,7 @@ public class UI_TextBased : IGameUI
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("NATURAL BLACKJACK");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"! Your bet of {user._hand._betAmount:C0} has been returned along with 1.5x its value in winnings.");
+            Console.WriteLine($"! Your bet of {user._hand._betAmount:C0} has been returned along with 1.5x its value in winnings.");
         }
         else
         {
@@ -210,10 +247,8 @@ public class UI_TextBased : IGameUI
         user.PrintRecord_Colored(doNewLine: true);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="user"></param>
+    /// <summary> Displays a message indicating the user has lost and their remaining money and record. </summary>
+    /// <param name="user">The user who lost.</param>
     public void ResultMessage_Loss(User user)
     {
         Console.WriteLine($"You lost... Your bet of {user._hand._betAmount:C0} has been lost.");
@@ -221,9 +256,8 @@ public class UI_TextBased : IGameUI
         user.PrintRecord_Colored(doNewLine: true);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <summary> Displays a message indicating the user has tied and their remaining money and record. </summary>
+    /// <param name="user">The user who tied.</param>
     public void ResultMessage_Tie(User user)
     {
         Console.WriteLine($"You tied. Your bet of {user._hand._betAmount:C0} has been returned to you.");
@@ -231,6 +265,9 @@ public class UI_TextBased : IGameUI
         user.PrintRecord_Colored(doNewLine: true);
     }
 
+    /// <summary> Reveals the dealer's hidden first card and displays both hands. </summary>
+    /// <param name="user">The user object.</param>
+    /// <param name="dealer">The dealer object.</param>
     public void RevealDealersHiddenCard(User user, Dealer dealer) {
         Console.WriteLine("Your turn is now over. Revealing the Dealer's hidden first card ...");
         DisplayHands(user, dealer, hideDealersFirstCard: false);
