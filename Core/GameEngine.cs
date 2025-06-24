@@ -246,7 +246,7 @@ public class GameEngine
     /// <returns>True if the bet was incremented successfully, false otherwise.</returns>
     public bool RaiseBet(int raise)
     {
-        if (_user._hand._betAmount + raise > _user._currentMoney)
+        if (raise > _user._currentMoney)
             return false;
         else
         {
