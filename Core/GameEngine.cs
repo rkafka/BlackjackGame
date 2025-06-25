@@ -69,7 +69,7 @@ public class GameEngine
         // If natural blackjack found, winner is already decided in GameRules
 
         ResetCards();
-        return (_user._currentMoney > GameRules.MINIMUM_BET);
+        return (_user._currentMoney >= GameRules.MINIMUM_BET);
     }
 
     /// <summary> Draws two cards to the user's hand and two cards to the dealer's hand at the start of a round. </summary>
