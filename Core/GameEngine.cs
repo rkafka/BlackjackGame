@@ -65,10 +65,10 @@ public class GameEngine
             // DECIDE THE WINNER
             GameRules.DecideWinner(_ui, _user, _dealer);
         }
-
         // If natural blackjack found, winner is already decided in GameRules
 
         ResetCards();
+        _dealer._doHideFirstCard = true;
         return (_user._currentMoney >= GameRules.MINIMUM_BET);
     }
 
