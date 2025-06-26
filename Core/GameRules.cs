@@ -38,12 +38,18 @@ public static class GameRules
         // if blackjack exists at all in either/any hand
         if (hasBlackjack_User || hasBlackjack_Dealer)
         {
-            if (hasBlackjack_User && hasBlackjack_Dealer)   // BOTH (tie)
-                GameRules.ResultTie(ui, user);
-            else if (hasBlackjack_User)                     // User (win) 
-                GameRules.ResultWin(ui, user, isNatural:wouldBeNatural);   // natural blackjack win means additional earnings
-            else // hasBlackjack_dealer                     // Dealer (lose)
-                GameRules.ResultLose(ui, user);
+            if (hasBlackjack_Dealer)
+            {   // show the dealer's card if they get natural blackjack
+                dealer.DoHideFirstCard = false;
+                if (hasBlackjack_User)
+                    GameRules.ResultTie(ui, user);  // BOTH (tie) 
+                else
+                    GameRules.ResultLose(ui, user); // Dealer (lose)
+            }
+            else // User (win) 
+                GameRules.ResultWin(ui, user, isNatural: wouldBeNatural);
+                // natural blackjack win means additional earnings
+
             return true;
         }
         else

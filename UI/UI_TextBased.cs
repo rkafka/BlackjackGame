@@ -11,9 +11,7 @@ namespace BlackjackGame.UI;
 /// </summary>
 public class UI_TextBased : IGameUI
 {
-
     private int _roundNumber = 0;
-
 
 
     /// <summary>
@@ -73,7 +71,7 @@ public class UI_TextBased : IGameUI
                 Console.Write("| [");
                 Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.Write("HIDDEN");
-                Console.ResetColor();
+                ResetConsoleColors();
                 Console.WriteLine("]          ?? |");
             }
             else
@@ -91,9 +89,9 @@ public class UI_TextBased : IGameUI
             if (player.Hand.CurrentScore > 21)
                 Console.ForegroundColor = IGameUI.COLOR_BAD;
             else if (player.Hand.CurrentScore == 21)
-                Console.ForegroundColor = IGameUI.COLOR_BAD;
+                Console.ForegroundColor = IGameUI.COLOR_GOOD;
             Console.Write(player.Hand.CurrentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
-            Console.ResetColor();
+            ResetConsoleColors();
             Console.WriteLine("|");
         }
         Console.WriteLine();
@@ -107,7 +105,7 @@ public class UI_TextBased : IGameUI
     public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
     {
         DisplayHand(user);
-        Console.WriteLine("\nVS.");
+        Console.WriteLine("VS.");
         DisplayHand(dealer, hideFirstCard: hideDealersFirstCard);
         Console.WriteLine();
     }
@@ -135,21 +133,20 @@ public class UI_TextBased : IGameUI
     /// Prompts the player to select a player action (Hit, Stand, Double Down, Surrender, Split) by typing the associated number.
     /// </summary>
     /// <returns>String containing the input read in from the user.</returns>
-    public string PromptPlayerAction()
+    public string PromptPlayerAction(bool isFirstTurn=true)
     {
         Console.Write("PLAYER OPTIONS:  ");
         string[] options = ["Hit", "Stand", "Double Down", "Surrender", "Split"];
-        for (int i = 0; i < options.Length; i++)
+        int numOptionsToPrint = (isFirstTurn ? 5 : 2 );
+        for (int i = 0; i < numOptionsToPrint-1; i++)
         {
             Console.Write($"[");
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write($"{i + 1}");
-            Console.ResetColor();
-            Console.Write($"] {options[i]}  ");
+            Console.ForegroundColor = ConsoleColor.Cyan; Console.Write($"{i + 1}");
+            ResetConsoleColors(); Console.Write($"] {options[i]}  ");
         }
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write("\n> Type the number to select: ");
-        Console.ResetColor();
+        ResetConsoleColors();
         return (Console.ReadLine() ?? "").Trim().ToLower();
         // ?? ""   <-- means you should return an empty string if the input is null
     }
@@ -192,15 +189,15 @@ public class UI_TextBased : IGameUI
         Console.Write($"You currently have {user.CurrentMoney:C2} to gamble with. The ");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write("minimum bet ");
-        Console.ResetColor();
+        ResetConsoleColors();
         Console.Write("is ");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write($"{GameRules.MINIMUM_BET:C0}");
-        Console.ResetColor();
+        ResetConsoleColors();
         Console.WriteLine(".");
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write("How much would you like to bet? Enter as a positive integer -->");
-        Console.ResetColor();
+        ResetConsoleColors();
         Console.Write(" $");
     }
     /// <summary>
@@ -217,7 +214,7 @@ public class UI_TextBased : IGameUI
         Console.BackgroundColor = ConsoleColor.Red;
         Console.Write($"Oops! {problem}");
         Console.Write((tryAgain) ? ", try again: " : ".\n");
-        Console.ResetColor();
+        ResetConsoleColors();
         Console.Write($" {(isBet ? "$" : "")}");
     }
 

@@ -18,10 +18,13 @@ public interface IGameUI
     public void DisplayHand(Player player, bool hideDealersFirstCard); // single hand
 
     public void LaunchScreen(bool waitForInput = true);
+    
+    public void PlayerAction_ChoiceMessage(string playerAction);
+    public void PlayerAction_NotSupportedMessage();
 
     /// <summary> Prompts the player to select a Player Action (Hit, Stand, Double Down, etc.) by typing their associated number. </summary>
     /// <returns>String containing the input read in from the user</returns>
-    public string PromptPlayerAction();
+    public string PromptPlayerAction(bool isFirstTurn = true);
     public void PromptToContinue();
     public void PromptForBet(User user);
     public void PromptAfterError(string problem, bool isBet = false, bool tryAgain = true);
@@ -34,8 +37,6 @@ public interface IGameUI
 
     public void RevealDealersHiddenCard(User user, Dealer dealer);
 
-    public void PlayerAction_ChoiceMessage(string playerAction);
-    public void PlayerAction_NotSupportedMessage();
     public void CardDrawnMessage(Player player);
 
     public void GameOverMessage(GameEngine engine);

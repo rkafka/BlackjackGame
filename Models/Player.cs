@@ -35,95 +35,59 @@ public class Player
 /// <summary>
 /// Represents a user (human player) in the Blackjack game.
 /// </summary>
-public class User : Player
+/// <remarks> User subclass of Player. Tracks current money, starting money, and number of wins and losses. </remarks>
+/// <param name="startingMoney">How much money the player starts with (lesser value = more difficult).</param>
+public class User(float startingMoney = 15.0f) : Player(false)
 {
-    private float _startingMoney;
-    private float _currentMoney;
-    private int _numWins;
-    private int _numLosses;
-    private int _numTies;
-    private List<float> _winningsRecord;
+    private float _startingMoney = startingMoney;
+    private float _currentMoney = startingMoney;
+    private int _numWins = 0;
+    private int _numLosses = 0;
+    private int _numTies = 0;
+    private List<float> _winningsRecord = [];
 
-    /// <summary>
-    /// Gets the amount of money the player entered the game with.
-    /// </summary>
+    /// <summary> Gets the amount of money the player entered the game with. </summary>
     public float StartingMoney => _startingMoney;
 
-    /// <summary>
-    /// Gets or sets the amount of money the player currently possesses.
-    /// </summary>
+    /// <summary> Gets or sets the amount of money the player currently possesses. </summary>
     public float CurrentMoney
-    {
-        get => _currentMoney;
-        set => _currentMoney = value;
-    }
+    {  get => _currentMoney;  set => _currentMoney = value;  }
 
-    /// <summary>
-    /// Gets or sets the number of wins.
-    /// </summary>
+    /// <summary> Gets or sets the number of wins. </summary>
     public int NumWins
-    {
-        get => _numWins;
-        set => _numWins = value;
-    }
+    {  get => _numWins;  set => _numWins = value;  }
 
-    /// <summary>
-    /// Gets or sets the number of losses.
-    /// </summary>
+    /// <summary> Gets or sets the number of losses. </summary>
     public int NumLosses
-    {
-        get => _numLosses;
-        set => _numLosses = value;
-    }
+    {  get => _numLosses;  set => _numLosses = value;  }
 
-    /// <summary>
-    /// Gets or sets the number of ties.
-    /// </summary>
+    /// <summary> Gets or sets the number of ties. </summary>
     public int NumTies
-    {
-        get => _numTies;
-        set => _numTies = value;
-    }
+    {  get => _numTies;  set => _numTies = value;  }
 
-    /// <summary>
-    /// Gets the record of winnings for the user.
-    /// </summary>
+    /// <summary> Gets the record of winnings for the user. </summary>
     public List<float> WinningsRecord => _winningsRecord;
 
-    /// <summary>
-    /// User subclass of Player. Tracks current money, starting money, and number of wins and losses.
-    /// </summary>
-    /// <param name="startingMoney">How much money the player starts with (lesser value = more difficult).</param>
-    public User(float startingMoney = 15.0f) : base(false)
-    {
-        _startingMoney = startingMoney;
-        _currentMoney = startingMoney;
-        _numWins = 0;
-        _numLosses = 0;
-        _numTies = 0;
-        _winningsRecord = [];
-    }
 
-    /// <summary>
-    /// Gets the current earnings of the user.
-    /// </summary>
+
+    /* FUNCTIONS */
+
+    /// <summary> Gets the current earnings of the user. </summary>
+    /// <returns>the difference between the user's current money and the amount they started playing with.</returns>
     public float GetCurrentEarnings()
     {
         return _currentMoney - _startingMoney;
     }
 
-    /// <summary>
-    /// Gets the win/loss/tie record as a string.
-    /// </summary>
+    /// <summary> Gets the win/loss/tie record as a string. </summary>
+    /// <returns>a string of the win-loss record in W-L-T format</returns>
     public string GetWinLossRecord()
     {
         return $"{_numWins}-{_numLosses}-{_numTies}";
     }
 }
 
-/// <summary>
-/// Represents the dealer in the Blackjack game.
-/// </summary>
+/// <summary> Represents the dealer in the Blackjack game. Subclass of <see cref="Player"/>. </summary>
 public class Dealer : Player
 {
     private bool _doHideFirstCard;

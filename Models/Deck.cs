@@ -11,18 +11,22 @@ public class Deck
     /// <summary> Gets the list of cards in the deck (read-only). </summary>
     public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
 
+    private Func<List<Card>>? _getCardsToOmit;
 
 
     /// <summary> Initializes a new shuffled deck of cards. </summary>
     /// <param name="doShuffle">Whether to shuffle the deck upon creation.</param>
-    public Deck(bool doShuffle = true) { _cards = CreateNewDeck(doShuffle: doShuffle); }
+    public Deck(bool doShuffle = true, Func<List<Card>>? getCardsToOmit = null) {
+        _getCardsToOmit = getCardsToOmit;
+        _cards = CreateNewDeck(doShuffle: doShuffle);
+    }
 
     /// <summary> Initializes a deck with a custom set of cards (for testing or debugging). </summary>
     /// <param name="customCards">The custom set of cards to use as the deck.</param>
     public Deck(List<Card> customCards) { _cards = customCards; }
 
 
-    private static List<Card> CreateNewDeck(bool doShuffle = true)
+    private static List<Card> CreateNewDeck(bool doShuffle = true, List<Card>? cardsToOmit = null)
     {
         var newDeck = new List<Card>();
         foreach (string suit in Card.suitDict.Keys)
@@ -33,7 +37,13 @@ public class Deck
             }
         }
 
-        if(doShuffle)
+        if (cardsToOmit != null)
+        {
+            foreach (Card card in cardsToOmit)
+                newDeck.Remove(card);
+        }
+
+        if (doShuffle)
             Shuffle(newDeck);
 
         return newDeck;
@@ -84,7 +94,11 @@ public class Deck
     public Card PullCard()
     {
         if (_cards.Count == 0)
-            _cards = CreateNewDeck(doShuffle:true);
+        {
+            var cardsToOmit = _getCardsToOmit?.Invoke();
+            _cards = CreateNewDeck(doShuffle: true, cardsToOmit:cardsToOmit);
+            Console.WriteLine("\nNOTICE: Deck has been reset, all cards not actively in play have been readded to the deck.");
+        }
         Card card = _cards[0];
         _cards.RemoveAt(0);
         return card;

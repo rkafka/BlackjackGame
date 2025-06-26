@@ -41,7 +41,7 @@ public class GameEngine
     public GameEngine(IGameUI ui)
     {
         _ui = ui;
-        _deck = new Deck(doShuffle: true);
+        _deck = new Deck(doShuffle: true, getCardsToOmit:GetAllInPlayCards);
         User = new();
         _dealer = new();
     }
@@ -55,6 +55,9 @@ public class GameEngine
         User = user;
         _dealer = dealer;
     }
+
+
+    public List<Card> GetAllInPlayCards() { return [.. User.Hand.Cards, .. Dealer.Hand.Cards]; }
 
     /// <summary>
     /// Starts a new game round: displays the title, handles betting, deals initial cards, checks for blackjack,
@@ -115,10 +118,12 @@ public class GameEngine
     {
         bool keepDrawing = true;
         bool busted = false;
+        bool firstTurn = true;
         while (!GameRules.CheckForBlackjack(User.Hand) && keepDrawing)
         {
-            // PLAYER OPTIONS: [1] Hit  [2] Stand  [3] Double Down   |   Type the number to select:     TO-DO: [3] Double Down [4] Split, [5] Surrender
-            if (!int.TryParse(_ui.PromptPlayerAction(), out int playerChoice))
+            // PLAYER OPTIONS: [1] Hit  [2] Stand  [3] Double Down   |   Type the number to select:     
+            // TO-DO: [3] Double Down, [4] Split, [5] Surrender
+            if (!int.TryParse(_ui.PromptPlayerAction(firstTurn), out int playerChoice))
                 continue;
             switch (playerChoice)
             {
@@ -137,6 +142,11 @@ public class GameEngine
                     break;
                 case 3:
                     // DOUBLE DOWN
+                    if (!firstTurn)
+                    {
+                        Console.WriteLine("ERROR: can only surrender as your first action after the initial deal");
+                        continue;
+                    }
                     _ui.PlayerAction_ChoiceMessage("Double Down");
                     keepDrawing = PlayerAction_DoubleDown();
                     busted = GameRules.CheckForBust(User.Hand);
@@ -145,11 +155,21 @@ public class GameEngine
                     break;
                 case 4:
                     // SPLIT
+                    if (!firstTurn)
+                    {
+                        Console.WriteLine("ERROR: can only split as your first action after the initial deal");
+                        continue;
+                    }
                     _ui.PlayerAction_ChoiceMessage("Split");
                     _ui.PlayerAction_NotSupportedMessage();
                     break;
                 case 5:
                     // SURRENDER
+                    if (!firstTurn)
+                    {
+                        Console.WriteLine("ERROR: can only surrender as your first action after the initial deal");
+                        continue;
+                    }
                     _ui.PlayerAction_ChoiceMessage("Surrender");
                     _ui.PlayerAction_NotSupportedMessage();
                     break;
@@ -157,6 +177,7 @@ public class GameEngine
                     Console.WriteLine("Your input was not an integer in the correct range (1-5). Please try again.");
                     break;
             }
+            firstTurn = false;
         }
         Console.WriteLine();
         return busted;

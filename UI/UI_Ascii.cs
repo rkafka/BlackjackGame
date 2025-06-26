@@ -105,7 +105,7 @@ public class UI_ASCII : IGameUI
     }
 
 
-    public string PromptPlayerAction()
+    public string PromptPlayerAction(bool isFirstTurn = true)
     {
         throw new NotImplementedException();
     }
