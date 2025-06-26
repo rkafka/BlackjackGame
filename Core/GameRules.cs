@@ -10,43 +10,11 @@ namespace BlackjackGame.Core;
 /// </summary>
 public static class GameRules
 {
-    public const int ScoreBlackjack = 21;
-    public const int ScoreDealerStop = 17;
-    public const float WinRatioNormal = 1f;
-    public const float WinRatioNaturalBlackjack = 3.0f / 2;
-    public const float MinimumBet = 5.0f;
-
-    /// <summary>
-    /// Calculates the total value of a hand, treating Aces as 11 or 1 as needed to avoid busting. Updates hand.CurrentScore.
-    /// </summary>
-    /// <param name="hand">The hand to evaluate.</param>
-    /// <returns>The total value of the hand.</returns>
-    public static int CalculateHandValue(Hand hand)
-    {
-        int handValue = 0;
-        List<Card> aces = [];
-        foreach (var card in hand.Cards)
-        {
-            if (card.Rank == 1) // Ace
-            {
-                handValue += 11;
-                aces.Add(card);
-            }
-            else if (card.Rank >= 10) // Face cards or 10
-                handValue += 10;
-            else
-                handValue += card.Rank;
-        }
-        // Reduce Ace(s) from 11 to 1 as needed to avoid bust
-        while (handValue > 21 && aces.Count > 0)
-        {
-            handValue -= 10;
-            aces[^1].Value = 1;
-            aces.RemoveAt(aces.Count - 1);
-        }
-        hand.CurrentScore = handValue;
-        return handValue;
-    }
+    public const int SCORE_BLACKJACK = 21;
+    public const int SCORE_DEALER_STOP = 17;
+    public const float WIN_RATIO_NORMAL = 1f;
+    public const float WIN_RATIO_NATURAL_BLACKJACK = 3.0f / 2;
+    public const float MINIMUM_BET = 5.0f;
 
     /// <summary>
     /// Checks if the given hand is a blackjack (score of 21).
@@ -87,14 +55,14 @@ public static class GameRules
     /// </summary>
     /// <param name="hand">The hand to check.</param>
     /// <returns>True if the hand is a bust, false otherwise.</returns>
-    public static bool CheckForBust(Hand hand) { return (CalculateHandValue(hand) > 21); }
+    public static bool CheckForBust(Hand hand) { return (hand.CurrentScore > 21); }
 
     /// <summary>
     /// Determines if the dealer should hit based on their current score.
     /// </summary>
     /// <param name="dealer">The dealer player.</param>
     /// <returns>True if the dealer should hit, false otherwise.</returns>
-    public static bool DealerShouldHit(Dealer dealer) { return dealer.Hand.CurrentScore < ScoreDealerStop; }
+    public static bool DealerShouldHit(Dealer dealer) { return dealer.Hand.CurrentScore < SCORE_DEALER_STOP; }
 
     /// <summary>
     /// Determines the winner of the round based on user and dealer hand scores, and updates records and UI.
@@ -130,7 +98,7 @@ public static class GameRules
     public static void ResultWin(IGameUI ui, User user, bool isNatural = false)
     {
         // Return the bet amount and winnings (ratio of bet to winnings )
-        float winRatio = (isNatural ? WinRatioNaturalBlackjack : WinRatioNormal);
+        float winRatio = (isNatural ? WIN_RATIO_NATURAL_BLACKJACK : WIN_RATIO_NORMAL);
         float winnings = user.Hand.BetAmount * winRatio;
         user.CurrentMoney += user.Hand.BetAmount + winnings;
         user.NumWins++;

@@ -1,64 +1,36 @@
 namespace BlackjackGame.Models;
 
-/// <summary>
-/// Represents a hand of cards in Blackjack.
-/// </summary>
-public class Hand
+
+/// <summary> Represents a <see cref="Hand"/> of cards in Blackjack. </summary>
+/// <param name="betAmount">The bet amount for this hand.</param>
+/// <param name="isDealer">Whether this hand belongs to the dealer.</param>
+public class Hand(int betAmount, bool isDealer = false)
 {
     private List<Card> _cards;
-    private bool _isDealer;
-    private int _currentScore;
-    private int _betAmount;
+    /// <summary> Gets the list of cards in the hand. </summary>
+    public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
 
-    /// <summary>
-    /// Gets the list of cards in the hand.
-    /// </summary>
-    public List<Card> Cards
-    {
-        get => _cards;
-        set => _cards = value;
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether this hand belongs to the dealer.
-    /// </summary>
+    private bool _isDealer = isDealer;
+    /// <summary> Gets a value indicating whether this hand belongs to the dealer. </summary>
     public bool IsDealer => _isDealer;
 
-    /// <summary>
-    /// Gets or sets the current score of the hand.
-    /// </summary>
-    public int CurrentScore
-    {
-        get => _currentScore;
-        set => _currentScore = value;
-    }
+    /// <summary>  </summary> 
+    public int CurrentScore => CalculateHandScore();
 
-    /// <summary>
-    /// Gets or sets the bet amount for this hand.
-    /// </summary>
+    private int _betAmount = betAmount;
+    /// <summary> Gets or sets the bet amount for this hand. </summary>
     public int BetAmount
     {
         get => _betAmount;
         set => _betAmount = value;
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Hand"/> class.
-    /// </summary>
-    /// <param name="betAmount">The bet amount for this hand.</param>
-    /// <param name="isDealer">Whether this hand belongs to the dealer.</param>
-    public Hand(int betAmount, bool isDealer = false)
-    {
-        _cards = [];
-        _isDealer = isDealer;
-        _currentScore = 0;
-        _betAmount = betAmount;
-    }
 
     /// <summary>
     /// Returns a string representation of the hand.
     /// </summary>
     public override string ToString() => string.Join(", ", _cards);
+
 
     /// <summary>
     /// Adds a card from the deck to this hand and updates the score.
@@ -68,6 +40,36 @@ public class Hand
     {
         var card = deck.PullCard();
         _cards.Add(card);
-        _currentScore += Card.GetValue(card.Rank, _currentScore);
+        // CurrentScore += Card.GetValue(card.Rank, _currentScore);
+    }
+
+    /// <summary> Calculates the total value of the hand, treating Aces as 11 or 1 as needed to avoid busting. 
+    /// Updates hand.CurrentScore. </summary>
+    /// <returns>The total value of the hand.</returns>
+    public int CalculateHandValue()
+    {
+        int handValue = 0;
+        List<Card> aces = [];
+        foreach (var card in this.Cards)
+        {
+            if (card.Rank == 1) // Ace
+            {
+                handValue += 11;
+                aces.Add(card);
+            }
+            else if (card.Rank >= 10) // Face cards or 10
+                handValue += 10;
+            else
+                handValue += card.Rank;
+        }
+        // Reduce Ace(s) from 11 to 1 as needed to avoid bust
+        while (handValue > 21 && aces.Count > 0)
+        {
+            handValue -= 10;
+            aces[^1].Value = 1;
+            aces.RemoveAt(aces.Count - 1);
+        }
+
+        return handValue;
     }
 }
