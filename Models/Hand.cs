@@ -6,7 +6,7 @@ namespace BlackjackGame.Models;
 /// <param name="isDealer">Whether this hand belongs to the dealer.</param>
 public class Hand(int betAmount, bool isDealer = false)
 {
-    private List<Card> _cards;
+    private List<Card> _cards = [];
     /// <summary> Gets the list of cards in the hand. </summary>
     public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
 
@@ -15,7 +15,7 @@ public class Hand(int betAmount, bool isDealer = false)
     public bool IsDealer => _isDealer;
 
     /// <summary>  </summary> 
-    public int CurrentScore => CalculateHandScore();
+    public int CurrentScore => CalculateHandValue();  
 
     private int _betAmount = betAmount;
     /// <summary> Gets or sets the bet amount for this hand. </summary>
