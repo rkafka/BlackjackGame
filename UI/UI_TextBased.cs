@@ -11,6 +11,11 @@ namespace BlackjackGame.UI;
 /// </summary>
 public class UI_TextBased : IGameUI
 {
+
+    private int _roundNumber = 0;
+
+
+
     /// <summary>
     /// Displays the launch screen with the title and hand art, and optionally waits for user input before clearing the screen.
     /// </summary>
@@ -49,22 +54,6 @@ public class UI_TextBased : IGameUI
 
 
     /// <summary>
-    /// Outputs both the user's and dealer's hands to the console in text-based format.
-    /// </summary>
-    /// <param name="user">The user object whose hand(s) to print.</param>
-    /// <param name="dealer">The dealer object whose hand(s) to print.</param>
-    /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on player's turn, false on dealer's turn).</param>
-    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
-    {
-        GameRules.CalculateHandValue(user.Hand);
-        DisplayHand(user);
-        Console.WriteLine("\nVS.");
-        GameRules.CalculateHandValue(dealer.Hand);
-        DisplayHand(dealer, hideFirstCard: hideDealersFirstCard);
-        Console.WriteLine();
-    }
-
-    /// <summary>
     /// Outputs a single player's hand to the console, optionally hiding the first card (for the dealer).
     /// </summary>
     /// <param name="player">The player whose hand to print.</param>
@@ -100,13 +89,26 @@ public class UI_TextBased : IGameUI
             string scoreLineStart = "|___________ SCORE: ";
             Console.Write(scoreLineStart);
             if (player.Hand.CurrentScore > 21)
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = IGameUI.COLOR_BAD;
             else if (player.Hand.CurrentScore == 21)
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = IGameUI.COLOR_BAD;
             Console.Write(player.Hand.CurrentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
             Console.ResetColor();
             Console.WriteLine("|");
         }
+        Console.WriteLine();
+    }
+    /// <summary>
+    /// Outputs both the user's and dealer's hands to the console in text-based format.
+    /// </summary>
+    /// <param name="user">The user object whose hand(s) to print.</param>
+    /// <param name="dealer">The dealer object whose hand(s) to print.</param>
+    /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on player's turn, false on dealer's turn).</param>
+    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
+    {
+        DisplayHand(user);
+        Console.WriteLine("\nVS.");
+        DisplayHand(dealer, hideFirstCard: hideDealersFirstCard);
         Console.WriteLine();
     }
 
@@ -177,14 +179,23 @@ public class UI_TextBased : IGameUI
     /// <param name="user">The user to prompt for a bet.</param>
     public void PromptForBet(User user)
     {
-        Console.WriteLine("Starting new round...");
+        _roundNumber++;
+        string roundMessage = $"Starting Round {_roundNumber}...";
+        foreach (char character in roundMessage)
+        {
+            Console.Write(character);
+            Thread.Sleep(30);
+        }
+        Console.WriteLine();
+        Thread.Sleep(120);
+
         Console.Write($"You currently have {user.CurrentMoney:C2} to gamble with. The ");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write("minimum bet ");
         Console.ResetColor();
         Console.Write("is ");
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.Write($"{GameRules.MinimumBet:C0}");
+        Console.Write($"{GameRules.MINIMUM_BET:C0}");
         Console.ResetColor();
         Console.WriteLine(".");
         Console.ForegroundColor = ConsoleColor.Yellow;

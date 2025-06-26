@@ -9,6 +9,8 @@ public interface IGameUI
     public const ConsoleColor COLOR_PROMPT = ConsoleColor.Yellow;
     public const ConsoleColor COLOR_DEFAULT_BACKGROUND = ConsoleColor.Black;
     public const ConsoleColor COLOR_DEFAULT_FOREGROUND = ConsoleColor.White;
+    public const ConsoleColor COLOR_GOOD = ConsoleColor.Green;
+    public const ConsoleColor COLOR_BAD = ConsoleColor.Red;
 
     public void DisplayTitle();
 
