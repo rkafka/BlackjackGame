@@ -8,8 +8,10 @@ public static class UIHelper
     private static Dictionary<string, int> _titleCounts = [];
 
     /// <summary> Method for breaking up sections and adding a title </summary>
-    /// <param name="title"></param>
+    /// <param name="header">The text which will be displayed formatted as a section header</param>
     /// <param name="addNumber">Optional toggle for whether to enumerate the section title</param>
+    /// <param name="markDuplicates">Dictates whether the header will be denoted as having 
+    ///                              been repeated (and how many times).</param>
     public static void PrintSectionHeader(string header, bool addNumber = false, bool markDuplicates = false)
     {
         if (addNumber)

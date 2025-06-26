@@ -16,6 +16,7 @@ public class Deck
 
     /// <summary> Initializes a new shuffled deck of cards. </summary>
     /// <param name="doShuffle">Whether to shuffle the deck upon creation.</param>
+    /// <param name="getCardsToOmit">The function which retrieves which cards to omit from new card list.</param>
     public Deck(bool doShuffle = true, Func<List<Card>>? getCardsToOmit = null) {
         _getCardsToOmit = getCardsToOmit;
         _cards = CreateNewDeck(doShuffle: doShuffle);
