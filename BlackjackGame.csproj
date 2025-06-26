@@ -5,7 +5,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- Generate XML Documentation for contents of this codebase -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Suppress warning CS1591: Missing XML comment for publicly visible type or member -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
 </Project>
