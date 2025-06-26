@@ -32,6 +32,8 @@ public class User : Player
     public int _numLosses;
     public int _numTies;
 
+    public List<float> winningsRecord;
+
     /// <summary>
     /// User subclass of Player. Tracks current money, starting money, and number of wins and losses.
     /// </summary>
@@ -44,13 +46,15 @@ public class User : Player
         _numWins = 0;
         _numLosses = 0;
         _numTies = 0;
+
+        winningsRecord = [];
     }
 
     public float GetCurrentEarnings()
     {
         return _currentMoney - _startingMoney;
     }
-    public string GetRecord()
+    public string GetWinLossRecord()
     {
         return $"{_numWins}-{_numLosses}-{_numTies}";
     }
@@ -76,6 +80,22 @@ public class User : Player
 
         if (doNewLine)
             Console.WriteLine();
+    }
+    public void Print_WinningsRecord()
+    {
+        ConsoleColor winColor = ConsoleColor.Green;
+        ConsoleColor lossColor = ConsoleColor.Red;
+        ConsoleColor tieColor = ConsoleColor.Yellow;
+
+        Console.Write("Winnings/Losses by round: [");
+        foreach (float record in winningsRecord)
+        {
+            Console.ForegroundColor = ((record > 0) ? winColor : ((record < 0) ? lossColor : tieColor));
+            Console.Write($" {((record>0) ? "+" : "")}{record:F2} ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(",");
+        }
+        Console.Write("\b]");
     }
 }
 

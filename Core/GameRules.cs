@@ -139,6 +139,7 @@ public static class GameRules
         float winnings = user._hand._betAmount * winRatio;
         user._currentMoney += user._hand._betAmount + winnings;
         user._numWins++;
+        user.winningsRecord.Add(winnings);
         ui.ResultMessage_Win(user, isNatural);
     }
     /// <summary>
@@ -150,6 +151,7 @@ public static class GameRules
     {
         // Don't return the bet amount, lost to the house
         user._numLosses++;
+        user.winningsRecord.Add(-1*user._hand._betAmount);
         ui.ResultMessage_Loss(user);
     }
     /// <summary>
@@ -162,6 +164,7 @@ public static class GameRules
         // return the bet amount back, no winnings
         user._currentMoney += user._hand._betAmount; 
         user._numTies++;
+        user.winningsRecord.Add(0);
         ui.ResultMessage_Tie(user);
     }
 }
