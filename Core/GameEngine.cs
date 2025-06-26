@@ -91,7 +91,9 @@ public class GameEngine
         }
         // If natural blackjack found, winner is already decided in GameRules
 
-        ResetCards();
+        // ResetCards(); // handled by deck
+        ResetHands();
+
         Dealer.DoHideFirstCard = true;
         return (User.CurrentMoney >= GameRules.MINIMUM_BET);
     }
@@ -217,9 +219,9 @@ public class GameEngine
     /// <summary>
     /// Resets the deck and both hands for a new round, creating a new shuffled deck and empty hands.
     /// </summary>
-    public void ResetCards()
+    public void ResetHands()
     {
-        _deck = new Deck(doShuffle: true);
+        // _deck = new Deck(doShuffle: true);  // NOW HANDLED BY DECK CLASS WHEN DECK IS EMPTY
         User.Hand = new Hand(betAmount: -1, isDealer: false);
         Dealer.Hand = new Hand(betAmount: -1, isDealer: true);
     }

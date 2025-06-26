@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace BlackjackGame.Models;
 
 /// <summary>
@@ -6,60 +8,62 @@ namespace BlackjackGame.Models;
 public class Deck
 {
     private List<Card> _cards;
-
-    /// <summary>
-    /// Gets the list of cards in the deck (read-only).
-    /// </summary>
+    /// <summary> Gets the list of cards in the deck (read-only). </summary>
     public IReadOnlyList<Card> Cards => _cards.AsReadOnly();
 
-    /// <summary>
-    /// Initializes a new shuffled deck of cards.
-    /// </summary>
+
+
+    /// <summary> Initializes a new shuffled deck of cards. </summary>
     /// <param name="doShuffle">Whether to shuffle the deck upon creation.</param>
-    public Deck(bool doShuffle = true)
+    public Deck(bool doShuffle = true) { _cards = CreateNewDeck(doShuffle: doShuffle); }
+
+    /// <summary> Initializes a deck with a custom set of cards (for testing or debugging). </summary>
+    /// <param name="customCards">The custom set of cards to use as the deck.</param>
+    public Deck(List<Card> customCards) { _cards = customCards; }
+
+
+    private static List<Card> CreateNewDeck(bool doShuffle = true)
     {
-        _cards = [];
+        var newDeck = new List<Card>();
         foreach (string suit in Card.suitDict.Keys)
         {
             for (int rank = Card.MinAllowedRank; rank <= Card.MaxAllowedRank; rank++)
             {
-                _cards.Add(new Card(suit, rank));
+                newDeck.Add(new Card(suit, rank));
             }
         }
 
-        if (doShuffle)
-            Shuffle();
+        if(doShuffle)
+            Shuffle(newDeck);
+
+        return newDeck;
     }
 
-    /// <summary>
-    /// Initializes a deck with a custom set of cards (for testing or debugging).
-    /// </summary>
-    /// <param name="customCards">The custom set of cards to use as the deck.</param>
-    public Deck(List<Card> customCards)
-    {
-        _cards = customCards;
-    }
 
-    /// <summary>
-    /// Shuffles the deck using the Fisher-Yates algorithm.
+    /// <summary> Shuffles the specified list of cards in place using the Fisher-Yates algorithm.
     /// </summary>
-    public void Shuffle()
+    /// <param name="cards">The list of cards to shuffle.</param>
+    /// <exception cref="Exception">Thrown if the list is empty.</exception>
+    public static void Shuffle(List<Card> cards)
     {
-        if (_cards.Count < 1)
-            throw new Exception("Attempted to shuffle a non-existent deck.");
+        if (cards.Count < 1)
+            throw new Exception("Attempted to shuffle an empty deck.");
 
         Random rng = new();
-        int randomIndex = rng.Next(0, _cards.Count);
-        for (int iterativeIndex = 0; iterativeIndex < _cards.Count - 1; iterativeIndex++)
+        int randomIndex = rng.Next(0, cards.Count);
+        for (int iterativeIndex = 0; iterativeIndex < cards.Count - 1; iterativeIndex++)
         {
-            randomIndex = rng.Next(iterativeIndex + 1, _cards.Count);
-            (_cards[iterativeIndex], _cards[randomIndex]) = (_cards[randomIndex], _cards[iterativeIndex]);
+            randomIndex = rng.Next(iterativeIndex + 1, cards.Count);
+            (cards[iterativeIndex], cards[randomIndex]) = (cards[randomIndex], cards[iterativeIndex]);
         }
     }
+    /// <summary> Shuffles this deck's cards in place using the Fisher-Yates algorithm.  </summary>
+    public void Shuffle()
+    {
+        Shuffle(_cards);
+    }
 
-    /// <summary>
-    /// Outputs the Deck in a formatted table to the Console window.
-    /// </summary>
+    /// <summary> Outputs the Deck in a formatted table to the Console window. </summary>
     /// <param name="cardsPerLine">How many cards to output, per row, before adding a newline ('\n')</param>
     /// <param name="title">A title for the deck's output, useful for showing how many shuffles have occured.</param>
     public void Print(int cardsPerLine = 4, string title = "Current Deck")
@@ -75,14 +79,12 @@ public class Deck
         Console.WriteLine();
     }
 
-    /// <summary>
-    /// Pulls (removes and returns) the top card from the deck.
-    /// </summary>
+    /// <summary> Pulls (removes and returns) the top card from the deck. </summary>
     /// <returns>The card that was removed from the deck.</returns>
     public Card PullCard()
     {
         if (_cards.Count == 0)
-            throw new InvalidOperationException("No cards left in the deck.");
+            _cards = CreateNewDeck(doShuffle:true);
         Card card = _cards[0];
         _cards.RemoveAt(0);
         return card;
