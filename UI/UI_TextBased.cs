@@ -6,6 +6,9 @@ using BlackjackGame.Utils;
 
 namespace BlackjackGame.UI;
 
+/// <summary>
+/// Text-based UI implementation for Blackjack.
+/// </summary>
 public class UI_TextBased : IGameUI
 {
     /// <summary>
@@ -39,10 +42,74 @@ public class UI_TextBased : IGameUI
     /// <param name="player">The player who drew the card.</param>
     public void CardDrawnMessage(Player player)
     {
-        Card cardDrawn = player._hand._cards.Last();
-        string playerName = ((player._hand._isDealer) ? "The Dealer":"You");
-        Console.WriteLine($"\n{playerName} drew the {cardDrawn} (value: {Card.GetValue(cardDrawn._rank, cardDrawn._value)})\n");
+        Card cardDrawn = player.Hand.Cards.Last();
+        string playerName = (player.Hand.IsDealer ? "The Dealer" : "You");
+        Console.WriteLine($"\n{playerName} drew the {cardDrawn} (value: {Card.GetValue(cardDrawn.Rank, cardDrawn.Value)})\n");
     }
+
+
+    /// <summary>
+    /// Outputs both the user's and dealer's hands to the console in text-based format.
+    /// </summary>
+    /// <param name="user">The user object whose hand(s) to print.</param>
+    /// <param name="dealer">The dealer object whose hand(s) to print.</param>
+    /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on player's turn, false on dealer's turn).</param>
+    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
+    {
+        GameRules.CalculateHandValue(user.Hand);
+        DisplayHand(user);
+        Console.WriteLine("\nVS.");
+        GameRules.CalculateHandValue(dealer.Hand);
+        DisplayHand(dealer, hideFirstCard: hideDealersFirstCard);
+        Console.WriteLine();
+    }
+
+    /// <summary>
+    /// Outputs a single player's hand to the console, optionally hiding the first card (for the dealer).
+    /// </summary>
+    /// <param name="player">The player whose hand to print.</param>
+    /// <param name="hideFirstCard">If true, hides the first card (for the dealer before their turn).</param>
+    public void DisplayHand(Player player, bool hideFirstCard = false)
+    {
+        int cardPadding = 18;
+        int sectionWidth = 24;
+        string playerName = (player.Hand.IsDealer ? "DEALER" : "USER");
+        int currentScore = 0;
+        Console.WriteLine("\n" + $"{playerName}'S HAND:".PadRight(sectionWidth - 1, '-') + ".");
+        for (int i = 0; i < player.Hand.Cards.Count; i++)
+        {
+            Card card = player.Hand.Cards[i];
+            if (hideFirstCard && i == 0)
+            {
+                Console.Write("| [");
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.Write("HIDDEN");
+                Console.ResetColor();
+                Console.WriteLine("]          ?? |");
+            }
+            else
+            {
+                Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + Card.GetValue(card.Rank).ToString()}".PadRight(sectionWidth - 4) + " |");
+                currentScore += card.Value;
+            }
+        }
+        if (hideFirstCard)
+            Console.WriteLine($"|________ SCORE: {currentScore}".PadRight(sectionWidth - 5) + "+ ? |");
+        else
+        {
+            string scoreLineStart = "|___________ SCORE: ";
+            Console.Write(scoreLineStart);
+            if (player.Hand.CurrentScore > 21)
+                Console.ForegroundColor = ConsoleColor.Red;
+            else if (player.Hand.CurrentScore == 21)
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write(player.Hand.CurrentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
+            Console.ResetColor();
+            Console.WriteLine("|");
+        }
+        Console.WriteLine();
+    }
+
 
     /// <summary>
     /// Displays the ASCII art title to the console.
@@ -57,8 +124,8 @@ public class UI_TextBased : IGameUI
     {
         UIHelper.PrintSectionHeader("GAME OVER");
         Console.Write("Your final record was ");
-        engine._user.PrintRecord_Colored(doNewLine: true);
-        engine._user.Print_WinningsRecord();
+        Console.WriteLine(engine.User.GetWinLossRecord());
+        // Optionally, print winnings record if needed
     }
 
 
@@ -111,17 +178,15 @@ public class UI_TextBased : IGameUI
     public void PromptForBet(User user)
     {
         Console.WriteLine("Starting new round...");
-
-        Console.Write($"You currently have {user._currentMoney:C2} to gamble with. The ");
+        Console.Write($"You currently have {user.CurrentMoney:C2} to gamble with. The ");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write("minimum bet ");
         Console.ResetColor();
         Console.Write("is ");
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.Write($"{GameRules.MINIMUM_BET:C0}");
+        Console.Write($"{GameRules.MinimumBet:C0}");
         Console.ResetColor();
         Console.WriteLine(".");
-
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write("How much would you like to bet? Enter as a positive integer -->");
         Console.ResetColor();
@@ -143,71 +208,6 @@ public class UI_TextBased : IGameUI
         Console.Write((tryAgain) ? ", try again: " : ".\n");
         Console.ResetColor();
         Console.Write($" {(isBet ? "$" : "")}");
-    }
-
-
-    /// <summary>
-    /// Outputs both the user's and dealer's hands to the console in text-based format.
-    /// </summary>
-    /// <param name="user">The user object whose hand(s) to print.</param>
-    /// <param name="dealer">The dealer object whose hand(s) to print.</param>
-    /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on player's turn, false on dealer's turn).</param>
-    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
-    {
-        // Print user's hand of cards, with scores included
-        DisplayHands(user);
-        Console.WriteLine("\nVS.");
-        // Print dealer's hand of cards, with scores included
-        DisplayHands(dealer, hideFirstCard: hideDealersFirstCard);
-        Console.WriteLine();
-    }
-
-    /// <summary>
-    /// Outputs a single player's hand to the console, optionally hiding the first card (for the dealer).
-    /// </summary>
-    /// <param name="player">The player whose hand to print.</param>
-    /// <param name="hideFirstCard">If true, hides the first card (for the dealer before their turn).</param>
-    public void DisplayHands(Player player, bool hideFirstCard = false)
-    {
-        int cardPadding = 18;
-        int sectionWidth = 24;
-
-        string playerName = ((player._hand._isDealer) ? "DEALER" : "USER");
-        int currentScore = 0;
-        Console.WriteLine("\n" + $"{playerName}'S HAND:".PadRight(sectionWidth - 1, '-') + ".");
-        for (int i = 0; i < player._hand._cards.Count; i++) // foreach(Card card in player._hand._cards)
-        {
-            Card card = player._hand._cards[i];
-            // hide first card if its player's turn
-            if (hideFirstCard && i == 0)
-            {
-                Console.Write("| [");
-                Console.BackgroundColor = ConsoleColor.DarkGray;
-                Console.Write("HIDDEN");
-                Console.ResetColor();
-                Console.WriteLine("]          ?? |");
-            }
-            else // output card info to hand display
-            {
-                Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + Card.GetValue(card._rank).ToString()}".PadRight(sectionWidth - 4) + " |");
-                currentScore += card._value;
-            }
-        }
-        if (hideFirstCard)
-            Console.WriteLine($"|________ SCORE: {currentScore}".PadRight(sectionWidth - 5) + "+ ? |");
-        else
-        {
-            string scoreLineStart = "|___________ SCORE: ";
-            Console.Write(scoreLineStart);
-            if (player._hand._currentScore > 21)
-                Console.ForegroundColor = ConsoleColor.Red;
-            else if (player._hand._currentScore == 21)
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(player._hand._currentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
-            Console.ResetColor();
-            Console.WriteLine("|");
-        }
-        Console.WriteLine(); // extra spacing from next element
     }
 
     /// <summary> Displays a message indicating the player's chosen action. </summary>
@@ -238,32 +238,32 @@ public class UI_TextBased : IGameUI
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("NATURAL BLACKJACK");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"! Your bet of {user._hand._betAmount:C0} has been returned along with 1.5x its value in winnings.");
+            Console.WriteLine($"! Your bet of {user.Hand.BetAmount:C0} has been returned along with 1.5x its value in winnings.");
         }
         else
         {
-            Console.WriteLine($"You won! Your bet of {user._hand._betAmount:C0} has been doubled and returned to you.");
+            Console.WriteLine($"You won! Your bet of {user.Hand.BetAmount:C0} has been doubled and returned to you.");
         }
-        Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
-        user.PrintRecord_Colored(doNewLine: true);
+        Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
+        Console.WriteLine(user.GetWinLossRecord());
     }
 
     /// <summary> Displays a message indicating the user has lost and their remaining money and record. </summary>
     /// <param name="user">The user who lost.</param>
     public void ResultMessage_Loss(User user)
     {
-        Console.WriteLine($"You lost... Your bet of {user._hand._betAmount:C0} has been lost.");
-        Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
-        user.PrintRecord_Colored(doNewLine: true);
+        Console.WriteLine($"You lost... Your bet of {user.Hand.BetAmount:C0} has been lost.");
+        Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
+        Console.WriteLine(user.GetWinLossRecord());
     }
 
     /// <summary> Displays a message indicating the user has tied and their remaining money and record. </summary>
     /// <param name="user">The user who tied.</param>
     public void ResultMessage_Tie(User user)
     {
-        Console.WriteLine($"You tied. Your bet of {user._hand._betAmount:C0} has been returned to you.");
-        Console.Write($"Remaining Money:  {user._currentMoney:C2}  |  W/L/T Record:  ");
-        user.PrintRecord_Colored(doNewLine: true);
+        Console.WriteLine($"You tied. Your bet of {user.Hand.BetAmount:C0} has been returned to you.");
+        Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
+        Console.WriteLine(user.GetWinLossRecord());
     }
 
     /// <summary> Reveals the dealer's hidden first card and displays both hands. </summary>

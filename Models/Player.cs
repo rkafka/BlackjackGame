@@ -1,38 +1,94 @@
 namespace BlackjackGame.Models;
 
 /// <summary>
-/// Represents a player, 
+/// Represents a player in the Blackjack game.
 /// </summary>
 public class Player
 {
-    public const float STARTING_MONEY_EASY = 30.0f;
-    public const float STARTING_MONEY_NORMAL = 30.0f;
-    public const float STARTING_MONEY_HARD = 30.0f;
-    
-    /// <summary>The player's current hand this round</summary>
-    public Hand _hand;
+    /// <summary>
+    /// The player's current hand this round.
+    /// </summary>
+    private Hand _hand;
 
-    /// <summary>Constructor for the Player class.</summary>
-    public Player(bool isDealer=false)
+    /// <summary>
+    /// Gets or sets the player's current hand.
+    /// </summary>
+    public Hand Hand
     {
-        this._hand = new Hand(betAmount:0, isDealer:isDealer);
+        get => _hand;
+        set => _hand = value;
     }
 
+    public const float StartingMoneyEasy = 30.0f;
+    public const float StartingMoneyNormal = 30.0f;
+    public const float StartingMoneyHard = 30.0f;
+
+    /// <summary>
+    /// Constructor for the Player class.
+    /// </summary>
+    public Player(bool isDealer = false)
+    {
+        _hand = new Hand(betAmount: 0, isDealer: isDealer);
+    }
 }
 
+/// <summary>
+/// Represents a user (human player) in the Blackjack game.
+/// </summary>
 public class User : Player
 {
-    /// <summary>The amount of money the player entered the game with</summary>
-    public float _startingMoney;
+    private float _startingMoney;
+    private float _currentMoney;
+    private int _numWins;
+    private int _numLosses;
+    private int _numTies;
+    private List<float> _winningsRecord;
 
-    /// <summary>The amount of money the player currently possesses</summary>
-    public float _currentMoney;
+    /// <summary>
+    /// Gets the amount of money the player entered the game with.
+    /// </summary>
+    public float StartingMoney => _startingMoney;
 
-    public int _numWins;
-    public int _numLosses;
-    public int _numTies;
+    /// <summary>
+    /// Gets or sets the amount of money the player currently possesses.
+    /// </summary>
+    public float CurrentMoney
+    {
+        get => _currentMoney;
+        set => _currentMoney = value;
+    }
 
-    public List<float> winningsRecord;
+    /// <summary>
+    /// Gets or sets the number of wins.
+    /// </summary>
+    public int NumWins
+    {
+        get => _numWins;
+        set => _numWins = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the number of losses.
+    /// </summary>
+    public int NumLosses
+    {
+        get => _numLosses;
+        set => _numLosses = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the number of ties.
+    /// </summary>
+    public int NumTies
+    {
+        get => _numTies;
+        set => _numTies = value;
+    }
+
+    /// <summary>
+    /// Gets the record of winnings for the user.
+    /// </summary>
+    public List<float> WinningsRecord => _winningsRecord;
 
     /// <summary>
     /// User subclass of Player. Tracks current money, starting money, and number of wins and losses.
@@ -40,72 +96,52 @@ public class User : Player
     /// <param name="startingMoney">How much money the player starts with (lesser value = more difficult).</param>
     public User(float startingMoney = 15.0f) : base(false)
     {
-        this._startingMoney = startingMoney;
-        this._currentMoney = startingMoney;
-
+        _startingMoney = startingMoney;
+        _currentMoney = startingMoney;
         _numWins = 0;
         _numLosses = 0;
         _numTies = 0;
-
-        winningsRecord = [];
+        _winningsRecord = [];
     }
 
+    /// <summary>
+    /// Gets the current earnings of the user.
+    /// </summary>
     public float GetCurrentEarnings()
     {
         return _currentMoney - _startingMoney;
     }
+
+    /// <summary>
+    /// Gets the win/loss/tie record as a string.
+    /// </summary>
     public string GetWinLossRecord()
     {
         return $"{_numWins}-{_numLosses}-{_numTies}";
     }
-    public void PrintRecord_Colored(bool doNewLine = false)
-    {
-        ConsoleColor winColor = ConsoleColor.Green;
-        ConsoleColor lossColor = ConsoleColor.Red;
-        ConsoleColor tieColor = ConsoleColor.Yellow;
-
-        Console.ForegroundColor = winColor;
-        Console.Write(_numWins);
-        Console.ResetColor();
-        Console.Write("-");
-
-        Console.ForegroundColor = lossColor;
-        Console.Write(_numLosses);
-        Console.ResetColor();
-        Console.Write("-");
-
-        Console.ForegroundColor = tieColor;
-        Console.Write(_numTies);
-        Console.ResetColor();
-
-        if (doNewLine)
-            Console.WriteLine();
-    }
-    public void Print_WinningsRecord()
-    {
-        ConsoleColor winColor = ConsoleColor.Green;
-        ConsoleColor lossColor = ConsoleColor.Red;
-        ConsoleColor tieColor = ConsoleColor.Yellow;
-
-        Console.Write("Winnings/Losses by round: [");
-        foreach (float record in winningsRecord)
-        {
-            Console.ForegroundColor = ((record > 0) ? winColor : ((record < 0) ? lossColor : tieColor));
-            Console.Write($" {((record>0) ? "+" : "")}{record:F2} ");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write(",");
-        }
-        Console.Write("\b]");
-    }
 }
 
 /// <summary>
-/// 
+/// Represents the dealer in the Blackjack game.
 /// </summary>
 public class Dealer : Player
 {
-    public bool _doHideFirstCard;
-    public Dealer(bool doHideFirst=true) : base(true)
+    private bool _doHideFirstCard;
+
+    /// <summary>
+    /// Gets or sets whether the dealer's first card should be hidden.
+    /// </summary>
+    public bool DoHideFirstCard
+    {
+        get => _doHideFirstCard;
+        set => _doHideFirstCard = value;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the Dealer class.
+    /// </summary>
+    /// <param name="doHideFirst">Whether the dealer's first card should be hidden.</param>
+    public Dealer(bool doHideFirst = true) : base(true)
     {
         _doHideFirstCard = doHideFirst;
     }

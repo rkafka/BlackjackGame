@@ -28,9 +28,9 @@ public class UI_ASCII : IGameUI
         throw new NotImplementedException();
     }
 
-    public void DisplayHands(Player player, bool doHideFirstCard = true)
+    public void DisplayHand(Player player, bool doHideFirstCard = true)
     {
-
+        throw new NotImplementedException();
     }
 
     // DEV NOTE: formerly UI_Hands() in old version
@@ -51,9 +51,9 @@ public class UI_ASCII : IGameUI
         Utils.ASCII.DisplayASCII(Utils.ASCII.ascii_User, leftToRight: true, foregroundColor: COLOR_F_USER);
         // USER HAND
         Console.SetCursorPosition(0, yCoord_UserLine + 1);
-        for (int i = 0; i < user._hand._cards.Count; i++)
+        for (int i = 0; i < user.Hand.Cards.Count; i++)
         {
-            Utils.ASCII.DisplayASCII(user._hand._cards[i].GetASCII(), true, backgroundColor: COLOR_B_USER);
+            Utils.ASCII.DisplayASCII(user.Hand.Cards[i].GetASCII(), true, backgroundColor: COLOR_B_USER);
         }
         // RESET BACKGROUND COLOR
         Console.BackgroundColor = Utils.ASCII.DEFAULT_BACKGROUND;
@@ -79,9 +79,9 @@ public class UI_ASCII : IGameUI
         (x, y) = (Console.WindowWidth - Card.ASCII_WIDTH, yCoord_DealerLine - Card.ASCII_HEIGHT);
         Console.SetCursorPosition(x, y);
         // DEALER HAND -- DISPLAYING CARDS
-        for (int i = 0; i < dealer._hand._cards.Count; i++)
+        for (int i = 0; i < dealer.Hand.Cards.Count; i++)
         {
-            Utils.ASCII.DisplayASCII(dealer._hand._cards[i].GetASCII(), false, backgroundColor: COLOR_B_DEALER);
+            Utils.ASCII.DisplayASCII(dealer.Hand.Cards[i].GetASCII(), false, backgroundColor: COLOR_B_DEALER);
             x -= Card.ASCII_WIDTH * (i + 1);
             Console.SetCursorPosition(x, y);
         }

@@ -4,32 +4,56 @@ using BlackjackGame.UI;
 
 namespace BlackjackGame.Core;
 
+/// <summary>
+/// Main game engine for Blackjack. Manages game state, user, dealer, and UI.
+/// </summary>
 public class GameEngine
 {
     private Deck _deck;
-    public User _user;
     private Dealer _dealer;
     private readonly IGameUI _ui;
 
-    /// <summary> 
+    /// <summary>
+    /// Gets or sets the user for the game.
+    /// </summary>
+    public User User { get; set; }
+
+    /// <summary>
+    /// Gets the current deck in use.
+    /// </summary>
+    public Deck Deck => _deck;
+
+    /// <summary>
+    /// Gets the dealer for the game.
+    /// </summary>
+    public Dealer Dealer => _dealer;
+
+    /// <summary>
+    /// Gets the UI interface for the game.
+    /// </summary>
+    public IGameUI UI => _ui;
+
+    /// <summary>
     /// Constructor for the GameEngine that instantiates a Deck, User, and Dealer for the game to use
     /// throughout its execution. The UI object determines whether the Text-Based or ASCII Art display is used.
     /// </summary>
     /// <param name="ui">UI object passed in, determines the display type.</param>
     public GameEngine(IGameUI ui)
     {
-        this._ui = ui;
-        this._deck = new Deck(doShuffle: true);
-        this._user = new();
-        this._dealer = new();
+        _ui = ui;
+        _deck = new Deck(doShuffle: true);
+        User = new();
+        _dealer = new();
     }
-    /// for testing
+    /// <summary>
+    /// For testing: allows injection of custom deck, user, and dealer.
+    /// </summary>
     public GameEngine(IGameUI ui, Deck customDeck, User user, Dealer dealer)
     {
-        this._ui = ui;
-        this._deck = customDeck;
-        this._user = new();
-        this._dealer = new();
+        _ui = ui;
+        _deck = customDeck;
+        User = user;
+        _dealer = dealer;
     }
 
     /// <summary>
@@ -44,10 +68,10 @@ public class GameEngine
         // INITIAL DRAW
         ChooseBet();
         InitialDraw();
-        _ui.DisplayHands(_user, _dealer, _dealer._doHideFirstCard);
+        _ui.DisplayHands(User, Dealer, Dealer.DoHideFirstCard);
 
         // CHECK FOR BLACKJACK
-        bool foundNatural = GameRules.CheckForBlackjack(_ui, _user, _dealer, wouldBeNatural: true);
+        bool foundNatural = GameRules.CheckForBlackjack(_ui, User, Dealer, wouldBeNatural: true);
         if (!foundNatural)
         {
             // PLAYER'S TURN
@@ -57,28 +81,28 @@ public class GameEngine
             if (!playerBusted)
             {
                 // REVEAL DEALER'S HIDDEN CARD
-                _dealer._doHideFirstCard = false;
-                _ui.RevealDealersHiddenCard(_user, _dealer);
+                Dealer.DoHideFirstCard = false;
+                _ui.RevealDealersHiddenCard(User, Dealer);
                 // DEALER's TURN
                 DealerTurn();
             }
             // DECIDE THE WINNER
-            GameRules.DecideWinner(_ui, _user, _dealer);
+            GameRules.DecideWinner(_ui, User, Dealer);
         }
         // If natural blackjack found, winner is already decided in GameRules
 
         ResetCards();
-        _dealer._doHideFirstCard = true;
-        return (_user._currentMoney >= GameRules.MINIMUM_BET);
+        Dealer.DoHideFirstCard = true;
+        return (User.CurrentMoney >= GameRules.MinimumBet);
     }
 
     /// <summary> Draws two cards to the user's hand and two cards to the dealer's hand at the start of a round. </summary>
     public void InitialDraw()
     {
-        _user._hand.AddCard(_deck);
-        _user._hand.AddCard(_deck);
-        _dealer._hand.AddCard(_deck);
-        _dealer._hand.AddCard(_deck);
+        User.Hand.AddCard(_deck);
+        User.Hand.AddCard(_deck);
+        Dealer.Hand.AddCard(_deck);
+        Dealer.Hand.AddCard(_deck);
     }
 
     /// <summary>
@@ -89,7 +113,7 @@ public class GameEngine
     {
         bool keepDrawing = true;
         bool busted = false;
-        while (!GameRules.CheckForBlackjack(_user._hand) && keepDrawing)
+        while (!GameRules.CheckForBlackjack(User.Hand) && keepDrawing)
         {
             // PLAYER OPTIONS: [1] Hit  [2] Stand  [3] Double Down   |   Type the number to select:     TO-DO: [3] Double Down [4] Split, [5] Surrender
             if (!int.TryParse(_ui.PromptPlayerAction(), out int playerChoice))
@@ -100,7 +124,7 @@ public class GameEngine
                     // HIT
                     _ui.PlayerAction_ChoiceMessage("Hit");
                     keepDrawing = PlayerAction_Hit();
-                    busted = GameRules.CheckForBust(_user._hand);
+                    busted = GameRules.CheckForBust(User.Hand);
                     if (busted)
                         Console.WriteLine("You BUST. That's a shame...");
                     break;
@@ -113,7 +137,7 @@ public class GameEngine
                     // DOUBLE DOWN
                     _ui.PlayerAction_ChoiceMessage("Double Down");
                     keepDrawing = PlayerAction_DoubleDown();
-                    busted = GameRules.CheckForBust(_user._hand);
+                    busted = GameRules.CheckForBust(User.Hand);
                     if (busted)
                         Console.WriteLine("You BUST. That's a shame...");
                     break;
@@ -143,45 +167,46 @@ public class GameEngine
     /// <returns>True if the player can continue (not blackjack or bust), false otherwise.</returns>
     public bool PlayerAction_Hit()
     {
-        _user._hand.AddCard(_deck);
-        _ui.CardDrawnMessage(_user);
-        _ui.DisplayHands(_user, _dealer, hideDealersFirstCard: true);
-        return (!GameRules.CheckForBlackjack(_user._hand) && !GameRules.CheckForBust(_user._hand));
+        User.Hand.AddCard(_deck);
+        _ui.CardDrawnMessage(User);
+        _ui.DisplayHands(User, Dealer, hideDealersFirstCard: true);
+        return (!GameRules.CheckForBlackjack(User.Hand) && !GameRules.CheckForBust(User.Hand));
     }
 
     /// <summary> Handles the logic for the player choosing to double down. (TO-DO: complete implementation) </summary>
     /// <returns>True if the player can continue, false otherwise.</returns>
     public bool PlayerAction_DoubleDown()
     {
-        int oldBet = _user._hand._betAmount;
+        int oldBet = User.Hand.BetAmount;
         bool betRaiseSuccessful = RaiseBet(oldBet);
-        Console.Write($"Your bet was doubled from {oldBet:C0} to {_user._hand._betAmount:C2}, now drawing a card before ending your turn.");
+        Console.Write($"Your bet was doubled from {oldBet:C0} to {User.Hand.BetAmount:C2}, now drawing a card before ending your turn.");
         if (!betRaiseSuccessful)
-            _ui.PromptAfterError($"You don't have enough money to double your bet, you have {_user._currentMoney} and need {_user._hand._betAmount * 2}", isBet: false, tryAgain: false);
+            _ui.PromptAfterError($"You don't have enough money to double your bet, you have {User.CurrentMoney} and need {User.Hand.BetAmount * 2}", isBet: false, tryAgain: false);
         else
             PlayerAction_Hit();
         return !betRaiseSuccessful; // TO-DO: finish
     }
 
-    /// <summary> Handles the dealer's turn: dealer draws cards until reaching at least 17 or busting, displaying each action.
+    /// <summary>
+    /// Handles the dealer's turn: dealer draws cards until reaching at least 17 or busting, displaying each action.
     /// </summary>
     /// <returns>True if the dealer does not bust, false if the dealer busts.</returns>
     private bool DealerTurn()
     {
-        while (_dealer._hand._currentScore < 17)
+        while (Dealer.Hand.CurrentScore < 17)
         {
             Console.Clear();
             // Draw a card from the deck and add it to the Dealer's hand
-            _dealer._hand.AddCard(_deck);
+            Dealer.Hand.AddCard(_deck);
             // Retrieve the card just added & display a message describing this action
-            _ui.CardDrawnMessage(_dealer);
+            _ui.CardDrawnMessage(Dealer);
             // Update the display representing players' hands
-            _ui.DisplayHands(_user, _dealer, hideDealersFirstCard: _dealer._doHideFirstCard);
+            _ui.DisplayHands(User, Dealer, hideDealersFirstCard: Dealer.DoHideFirstCard);
             _ui.PromptToContinue();
         }
 
         // Check for bust
-        if (_dealer._hand._currentScore > 21)
+        if (Dealer.Hand.CurrentScore > 21)
         {
             Console.WriteLine("The Dealer BUST! That means ...");
             return false;
@@ -195,8 +220,8 @@ public class GameEngine
     public void ResetCards()
     {
         _deck = new Deck(doShuffle: true);
-        _user._hand = new Hand(betAmount: -1, isDealer: false);
-        _dealer._hand = new Hand(betAmount: -1, isDealer: true);
+        User.Hand = new Hand(betAmount: -1, isDealer: false);
+        Dealer.Hand = new Hand(betAmount: -1, isDealer: true);
     }
 
     /// <summary>
@@ -204,7 +229,7 @@ public class GameEngine
     /// </summary>
     public void ChooseBet()
     {
-        _ui.PromptForBet(_user);
+        _ui.PromptForBet(User);
 
         bool validBet = false;
         while (!validBet)
@@ -213,10 +238,10 @@ public class GameEngine
                 _ui.PromptAfterError("Your bet must be an integer", isBet: true);
             else
             {
-                if (betAmount > _user._currentMoney)
+                if (betAmount > User.CurrentMoney)
                     _ui.PromptAfterError("Your bet must be less than your starting money", isBet: true);
-                else if (betAmount < GameRules.MINIMUM_BET)
-                    _ui.PromptAfterError($"The minimum bet is {GameRules.MINIMUM_BET:C0}", isBet: true);
+                else if (betAmount < GameRules.MinimumBet)
+                    _ui.PromptAfterError($"The minimum bet is {GameRules.MinimumBet:C0}", isBet: true);
                 else 
                     validBet = SetBet(betAmount); // SUCCESS!
             }
@@ -229,13 +254,13 @@ public class GameEngine
     /// <returns>True if the bet was set successfully, false otherwise.</returns>
     public bool SetBet(int newBet)
     {
-        if (newBet > _user._currentMoney)
+        if (newBet > User.CurrentMoney)
             return false;
         else
         {
             // set the money aside as part of the hand
-            _user._currentMoney -= newBet;
-            _user._hand._betAmount = newBet;
+            User.CurrentMoney -= newBet;
+            User.Hand.BetAmount = newBet;
             return true;
         }
     }
@@ -246,12 +271,12 @@ public class GameEngine
     /// <returns>True if the bet was incremented successfully, false otherwise.</returns>
     public bool RaiseBet(int raise)
     {
-        if (raise > _user._currentMoney)
+        if (raise > User.CurrentMoney)
             return false;
         else
         {
-            _user._currentMoney -= raise;
-            _user._hand._betAmount += raise;
+            this.User.CurrentMoney -= raise;
+            this.User.Hand.BetAmount += raise;
             return true;
         }
     }

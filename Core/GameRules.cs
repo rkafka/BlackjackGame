@@ -5,20 +5,19 @@ using BlackjackGame.UI;
 
 namespace BlackjackGame.Core;
 
+/// <summary>
+/// Contains static rules and logic for Blackjack gameplay.
+/// </summary>
 public static class GameRules
 {
-    // score-based markers
-    public const int SCORE_BLACKJACK = 21;
-    public const int SCORE_DEALER_STOP = 17;
-
-    // ratios to multiply winnings/losses by
-    public const float WIN_RATIO_NORMAL = 1f;
-    public const float WIN_RATIO_NATURAL_BLACKJACK = 3.0f/2;
-
-    public const float MINIMUM_BET = 5.0f;
+    public const int ScoreBlackjack = 21;
+    public const int ScoreDealerStop = 17;
+    public const float WinRatioNormal = 1f;
+    public const float WinRatioNaturalBlackjack = 3.0f / 2;
+    public const float MinimumBet = 5.0f;
 
     /// <summary>
-    /// Calculates the total value of a hand, treating Aces as 11 or 1 as needed to avoid busting. Updates hand._currentScore.
+    /// Calculates the total value of a hand, treating Aces as 11 or 1 as needed to avoid busting. Updates hand.CurrentScore.
     /// </summary>
     /// <param name="hand">The hand to evaluate.</param>
     /// <returns>The total value of the hand.</returns>
@@ -26,27 +25,26 @@ public static class GameRules
     {
         int handValue = 0;
         List<Card> aces = [];
-        foreach (var card in hand._cards)
+        foreach (var card in hand.Cards)
         {
-            if (card._rank == 1) // Ace
+            if (card.Rank == 1) // Ace
             {
                 handValue += 11;
                 aces.Add(card);
             }
-            else if (card._rank >= 10) // Face cards or 10
+            else if (card.Rank >= 10) // Face cards or 10
                 handValue += 10;
             else
-                handValue += card._rank;
+                handValue += card.Rank;
         }
         // Reduce Ace(s) from 11 to 1 as needed to avoid bust
         while (handValue > 21 && aces.Count > 0)
         {
             handValue -= 10;
-            aces[^1]._value = 1;
-            aces.RemoveAt(aces.Count-1);
+            aces[^1].Value = 1;
+            aces.RemoveAt(aces.Count - 1);
         }
-
-        hand._currentScore = handValue;
+        hand.CurrentScore = handValue;
         return handValue;
     }
 
@@ -55,7 +53,7 @@ public static class GameRules
     /// </summary>
     /// <param name="hand">The hand to check.</param>
     /// <returns>True if the hand is a blackjack, false otherwise.</returns>
-    public static bool CheckForBlackjack(Hand hand) { return (hand._currentScore == 21); }
+    public static bool CheckForBlackjack(Hand hand) => hand.CurrentScore == 21;
 
     /// <summary>
     /// Checks for blackjack in either the user or dealer hand, and handles win/loss/tie logic accordingly.
@@ -67,8 +65,8 @@ public static class GameRules
     /// <returns>True if a blackjack was found, false otherwise.</returns>
     public static bool CheckForBlackjack(IGameUI ui, User user, Dealer dealer, bool wouldBeNatural=false)
     {
-        bool hasBlackjack_User = GameRules.CheckForBlackjack(user._hand);
-        bool hasBlackjack_Dealer = GameRules.CheckForBlackjack(dealer._hand);
+        bool hasBlackjack_User = GameRules.CheckForBlackjack(user.Hand);
+        bool hasBlackjack_Dealer = GameRules.CheckForBlackjack(dealer.Hand);
         // if blackjack exists at all in either/any hand
         if (hasBlackjack_User || hasBlackjack_Dealer)
         {
@@ -96,7 +94,7 @@ public static class GameRules
     /// </summary>
     /// <param name="dealer">The dealer player.</param>
     /// <returns>True if the dealer should hit, false otherwise.</returns>
-    public static bool DealerShouldHit(Dealer dealer) { return dealer._hand._currentScore < SCORE_DEALER_STOP; }
+    public static bool DealerShouldHit(Dealer dealer) { return dealer.Hand.CurrentScore < ScoreDealerStop; }
 
     /// <summary>
     /// Determines the winner of the round based on user and dealer hand scores, and updates records and UI.
@@ -106,23 +104,20 @@ public static class GameRules
     /// <param name="dealer">The dealer player.</param>
     public static void DecideWinner(IGameUI ui, User user, Dealer dealer)
     {
-        bool userBusted = (user._hand._currentScore > 21);
-        bool dealerBusted = (dealer._hand._currentScore > 21);
-
-        // for(int i = 0; i < _user._hands.Count; i++)
-        if (userBusted || (user._hand._currentScore < dealer._hand._currentScore && !dealerBusted)) // DEALER wins (USER loses)
+        bool userBusted = (user.Hand.CurrentScore > 21);
+        bool dealerBusted = (dealer.Hand.CurrentScore > 21);
+        if (userBusted || (user.Hand.CurrentScore < dealer.Hand.CurrentScore && !dealerBusted))
         {
             ResultLose(ui, user);
         }
-        else if (dealerBusted || user._hand._currentScore > dealer._hand._currentScore) // USER wins!!
+        else if (dealerBusted || user.Hand.CurrentScore > dealer.Hand.CurrentScore)
         {
             ResultWin(ui, user);
         }
-        else // TIED
+        else
         {
             ResultTie(ui, user);
         }
-
         ui.PromptToContinue();
     }
 
@@ -135,11 +130,11 @@ public static class GameRules
     public static void ResultWin(IGameUI ui, User user, bool isNatural = false)
     {
         // Return the bet amount and winnings (ratio of bet to winnings )
-        float winRatio = (isNatural ? WIN_RATIO_NATURAL_BLACKJACK : WIN_RATIO_NORMAL);
-        float winnings = user._hand._betAmount * winRatio;
-        user._currentMoney += user._hand._betAmount + winnings;
-        user._numWins++;
-        user.winningsRecord.Add(winnings);
+        float winRatio = (isNatural ? WinRatioNaturalBlackjack : WinRatioNormal);
+        float winnings = user.Hand.BetAmount * winRatio;
+        user.CurrentMoney += user.Hand.BetAmount + winnings;
+        user.NumWins++;
+        user.WinningsRecord.Add(winnings);
         ui.ResultMessage_Win(user, isNatural);
     }
     /// <summary>
@@ -150,8 +145,8 @@ public static class GameRules
     public static void ResultLose(IGameUI ui, User user)
     {
         // Don't return the bet amount, lost to the house
-        user._numLosses++;
-        user.winningsRecord.Add(-1*user._hand._betAmount);
+        user.NumLosses++;
+        user.WinningsRecord.Add(-1 * user.Hand.BetAmount);
         ui.ResultMessage_Loss(user);
     }
     /// <summary>
@@ -162,9 +157,9 @@ public static class GameRules
     public static void ResultTie(IGameUI ui, User user)
     {
         // return the bet amount back, no winnings
-        user._currentMoney += user._hand._betAmount; 
-        user._numTies++;
-        user.winningsRecord.Add(0);
+        user.CurrentMoney += user.Hand.BetAmount; 
+        user.NumTies++;
+        user.WinningsRecord.Add(0);
         ui.ResultMessage_Tie(user);
     }
 }

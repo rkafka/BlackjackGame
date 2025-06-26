@@ -13,7 +13,7 @@ public interface IGameUI
     public void DisplayTitle();
 
     public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard);  // both/all hands
-    public void DisplayHands(Player player, bool hideDealersFirstCard); // single hand
+    public void DisplayHand(Player player, bool hideDealersFirstCard); // single hand
 
     public void LaunchScreen(bool waitForInput = true);
 
