@@ -5,9 +5,14 @@ namespace BlackjackGame.Utils;
 
 public class ASCII
 {
+    /// <summary> Default foreground color for Console Output </summary>
     public const ConsoleColor DEFAULT_FOREGROUND = ConsoleColor.White;
+
+    /// <summary> Default background color for Console Output </summary>
     public const ConsoleColor DEFAULT_BACKGROUND = ConsoleColor.Black;
 
+    
+    /// <summary> String holding the ASCII art of the blackjack.dll title </summary>
     public const string ascii_Title = @"                                                                           
   88          88                       88        88                       88                     88 88 88  
   88          88                       88        """"                       88                     88 88 88  
@@ -20,6 +25,8 @@ public class ASCII
                                                 ,88                                                        
                                               888P""                                                        
 ";
+
+    /// <summary> String holding the ASCII art of a hand holding a playing card </summary>
     public const string ascii_Hand = @"
                                 _____________________
                                |                     |
@@ -55,6 +62,9 @@ MMMMMMMMMMMMMMMMMMMMMMMMMA.
 MMMMMMMMMMMMMMMMMMMMMMMMMMM
 MMMMMMMMMMMMMMMMMMMMMMMMMV'
 ";
+
+    /// <summary> String holding the ASCII art of a hand holding a playing card, cropped to dimensions befitting
+    /// the launch screen. </summary>
     public const string ascii_HandCropped = @"
                                 _____________________
                                |           ___  __   |
@@ -71,6 +81,8 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
        |        - \  /        /|        \__/         |
        |        '  .'        / |         __          |
        |          '         |.'|        /  \         |";
+
+    /// <summary> String holding the ASCII art of a queen. </summary>
     public const string ascii_TestQueen = @"
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡄⢤⣀⣯⣠⡄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⡿⠿⢿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -115,12 +127,10 @@ MMMMMMMMMMMMMMMMMMMMMMMMMV'
 | |_| |  __/ (_| | |  __/ |   
 |____/ \___|\__,_|_|\___|_|   ".Split('\n')[1..]);
 
-    /// <summary>
-    /// Displays a segment of ASCII art. Starts at the current cursor location and prints either 
+    /// <summary> Displays a segment of ASCII art. Starts at the current cursor location and prints either 
     /// right and down or left and down depending on boolean input parameter value. Finally, returns
     /// the cursor to the left/right of the art at the starting y level, and resets the ConsoleColor
-    /// changes.
-    /// </summary>
+    /// changes. </summary>
     /// <param name="content">The ASCII art to be displayed, in string format</param>
     /// <param name="foregroundColor">The foreground color output will be in.</param>
     /// <param name="backgroundColor">The background color output will be in.</param>
