@@ -10,7 +10,7 @@ public static class UIHelper
     /// <summary> Method for breaking up sections and adding a title </summary>
     /// <param name="title"></param>
     /// <param name="addNumber">Optional toggle for whether to enumerate the section title</param>
-    public static void PrintSectionHeader(string header, bool addNumber = false, bool markDuplicates=false)
+    public static void PrintSectionHeader(string header, bool addNumber = false, bool markDuplicates = false)
     {
         if (addNumber)
         {
@@ -47,5 +47,19 @@ public static class UIHelper
             return input;
 
         return char.ToUpper(input[0]) + input.Substring(1);
+    }
+
+    /// <summary> Prints a message character-by-character. </summary>
+    /// <param name="msg">The message to output to the console.</param>
+    /// <param name="msPerChar">The time in ms the thread is put to sleep between each character printed</param>
+    public static void PrintSlowly(string msg, bool doNewLine = false, int msPerChar = 30)
+    {
+        foreach (char c in msg)
+        {
+            Console.Write(c);
+            Thread.Sleep(msPerChar);
+        }
+        if (doNewLine)
+            Console.WriteLine();
     }
 }
