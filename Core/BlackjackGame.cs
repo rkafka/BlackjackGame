@@ -24,7 +24,7 @@ public class BJGame
         bool playAgain;
         do
         {
-            playAgain = _engine.StartGame();
+            playAgain = _engine.PlayRound();
             // TO-DO: prompt to play again / take input from startgame
         } while (playAgain);
 

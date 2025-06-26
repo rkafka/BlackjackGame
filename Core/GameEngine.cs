@@ -61,7 +61,7 @@ public class GameEngine
     /// manages player and dealer turns, determines the winner, and resets cards for the next round.
     /// </summary>
     /// <returns>True if the user has enough money to continue playing, false otherwise.</returns>
-    public bool StartGame()
+    public bool PlayRound()
     {
         _ui.DisplayTitle();
 
@@ -93,7 +93,7 @@ public class GameEngine
 
         ResetCards();
         Dealer.DoHideFirstCard = true;
-        return (User.CurrentMoney >= GameRules.MinimumBet);
+        return (User.CurrentMoney >= GameRules.MINIMUM_BET);
     }
 
     /// <summary> Draws two cards to the user's hand and two cards to the dealer's hand at the start of a round. </summary>
@@ -240,8 +240,8 @@ public class GameEngine
             {
                 if (betAmount > User.CurrentMoney)
                     _ui.PromptAfterError("Your bet must be less than your starting money", isBet: true);
-                else if (betAmount < GameRules.MinimumBet)
-                    _ui.PromptAfterError($"The minimum bet is {GameRules.MinimumBet:C0}", isBet: true);
+                else if (betAmount < GameRules.MINIMUM_BET)
+                    _ui.PromptAfterError($"The minimum bet is {GameRules.MINIMUM_BET:C0}", isBet: true);
                 else 
                     validBet = SetBet(betAmount); // SUCCESS!
             }

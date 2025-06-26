@@ -51,27 +51,27 @@ public static class GameplayTests {
         Deck testDeck = new Deck(stackedCards);
         User testUser = new User(100); // Give user enough money
         Dealer testDealer = new Dealer();
-        testUser._hand = new Hand(betAmount: 10, isDealer: false);
-        testDealer._hand = new Hand(betAmount: 0, isDealer: true);
+        testUser.Hand = new Hand(betAmount: 10, isDealer: false);
+        testDealer.Hand = new Hand(betAmount: 0, isDealer: true);
 
         // Use the existing UI_TextBased (or UI_ASCII) for testing
         IGameUI testUI = new UI_TextBased();
 
         // Act: Run the game logic for a single round
         GameEngine engine = new GameEngine(testUI, testDeck, testUser, testDealer);
-        bool canContinue = engine.StartGame();
+        bool canContinue = engine.PlayRound();
 
         // Assert: User should have blackjack, dealer should not, and winnings should be correct
-        bool userHasBlackjack = GameRules.CheckForBlackjack(testUser._hand);
-        bool dealerHasBlackjack = GameRules.CheckForBlackjack(testDealer._hand);
+        bool userHasBlackjack = GameRules.CheckForBlackjack(testUser.Hand);
+        bool dealerHasBlackjack = GameRules.CheckForBlackjack(testDealer.Hand);
         float expectedMoney = 100 - 10 + (10 * GameRules.WIN_RATIO_NATURAL_BLACKJACK) + 10; // bet returned + 1.5x winnings
-        bool winningsCorrect = Math.Abs(testUser._currentMoney - expectedMoney) < 0.01f;
+        bool winningsCorrect = Math.Abs(testUser.CurrentMoney - expectedMoney) < 0.01f;
 
-        Console.WriteLine($"User hand: {testUser._hand} (score: {testUser._hand._currentScore})");
-        Console.WriteLine($"Dealer hand: {testDealer._hand} (score: {testDealer._hand._currentScore})");
+        Console.WriteLine($"User hand: {testUser.Hand} (score: {testUser.Hand.CurrentScore})");
+        Console.WriteLine($"Dealer hand: {testDealer.Hand} (score: {testDealer.Hand.CurrentScore})");
         Console.WriteLine($"User has blackjack: {userHasBlackjack}");
         Console.WriteLine($"Dealer has blackjack: {dealerHasBlackjack}");
-        Console.WriteLine($"User money after win: {testUser._currentMoney} (expected: {expectedMoney})");
+        Console.WriteLine($"User money after win: {testUser.CurrentMoney} (expected: {expectedMoney})");
         Console.WriteLine($"Winnings correct: {winningsCorrect}");
 
         return userHasBlackjack && !dealerHasBlackjack && winningsCorrect;
@@ -91,25 +91,21 @@ public static class GameplayTests {
         Deck testDeck = new Deck(stackedCards);
         User testUser = new User(100);
         Dealer testDealer = new Dealer();
-        testUser._hand = new Hand(betAmount: 10, isDealer: false);
-        testDealer._hand = new Hand(betAmount: 0, isDealer: true);
+        testUser.Hand = new Hand(betAmount: 10, isDealer: false);
+        testDealer.Hand = new Hand(betAmount: 0, isDealer: true);
 
         // Act: Deal initial cards
-        testUser._hand.AddCard(testDeck);
-        testUser._hand.AddCard(testDeck);
-        testDealer._hand.AddCard(testDeck);
-        testDealer._hand.AddCard(testDeck);
+        testUser.Hand.AddCard(testDeck);
+        testUser.Hand.AddCard(testDeck);
+        testDealer.Hand.AddCard(testDeck);
+        testDealer.Hand.AddCard(testDeck);
         // Player hits
-        testUser._hand.AddCard(testDeck);
-
-        // Calculate scores (if not done automatically)
-        testUser._hand._currentScore = GameRules.CalculateHandValue(testUser._hand);
-        testDealer._hand._currentScore = GameRules.CalculateHandValue(testDealer._hand);
+        testUser.Hand.AddCard(testDeck);
 
         // Assert: User should bust
-        bool userBusted = GameRules.CheckForBust(testUser._hand);
-        Console.WriteLine($"User hand: {testUser._hand} (score: {testUser._hand._currentScore})");
-        Console.WriteLine($"Dealer hand: {testDealer._hand} (score: {testDealer._hand._currentScore})");
+        bool userBusted = GameRules.CheckForBust(testUser.Hand);
+        Console.WriteLine($"User hand: {testUser.Hand} (score: {testUser.Hand.CurrentScore})");
+        Console.WriteLine($"Dealer hand: {testDealer.Hand} (score: {testDealer.Hand.CurrentScore})");
         Console.WriteLine($"User busted: {userBusted}");
         return userBusted;
     }
@@ -128,24 +124,21 @@ public static class GameplayTests {
         Deck testDeck = new Deck(stackedCards);
         User testUser = new User(100);
         Dealer testDealer = new Dealer();
-        testUser._hand = new Hand(betAmount: 10, isDealer: false);
-        testDealer._hand = new Hand(betAmount: 0, isDealer: true);
+        testUser.Hand = new Hand(betAmount: 10, isDealer: false);
+        testDealer.Hand = new Hand(betAmount: 0, isDealer: true);
         IGameUI testUI = new UI_TextBased();
 
         // Act: Deal initial cards
-        testUser._hand.AddCard(testDeck); // Ace
-        testUser._hand.AddCard(testDeck); // 9
-        testDealer._hand.AddCard(testDeck);
-        testDealer._hand.AddCard(testDeck);
-        testUser._hand.AddCard(testDeck); // 5
-
-        // Calculate score (should be 1+9+5=15, not 11+9+5=25)
-        testUser._hand._currentScore = GameRules.CalculateHandValue(testUser._hand);
+        testUser.Hand.AddCard(testDeck); // Ace
+        testUser.Hand.AddCard(testDeck); // 9
+        testDealer.Hand.AddCard(testDeck);
+        testDealer.Hand.AddCard(testDeck);
+        testUser.Hand.AddCard(testDeck); // 5
 
         // Assert: User should NOT bust, and score should be 15
-        bool userBusted = GameRules.CheckForBust(testUser._hand);
-        bool correctScore = testUser._hand._currentScore == 15;
-        Console.WriteLine($"User hand: {testUser._hand} (score: {testUser._hand._currentScore})");
+        bool userBusted = GameRules.CheckForBust(testUser.Hand);
+        bool correctScore = testUser.Hand.CurrentScore == 15;
+        Console.WriteLine($"User hand: {testUser.Hand} (score: {testUser.Hand.CurrentScore})");
         Console.WriteLine($"User busted: {userBusted}");
         Console.WriteLine($"Ace reduced to 1: {correctScore}");
         return !userBusted && correctScore;
