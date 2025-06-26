@@ -58,6 +58,7 @@ public class UI_TextBased : IGameUI
         UIHelper.PrintSectionHeader("GAME OVER");
         Console.Write("Your final record was ");
         engine._user.PrintRecord_Colored(doNewLine: true);
+        engine._user.Print_WinningsRecord();
     }
 
 
