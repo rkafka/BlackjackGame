@@ -38,14 +38,16 @@ public class Card
 
 
     // Instance fields (unique to each instance of a Card object)
+    // -- PUBLIC PROPERTIES
     /// <summary>The suit of the card (e.g., "Spades").</summary>
     public string Suit { get; }
     /// <summary>The rank of the card (1=Ace, 11=Jack, 12=Queen, 13=King).</summary>
     public int Rank { get; }
     /// <summary>The value of the card for Blackjack (1, 2-10, or 10 for face cards).</summary>
     public int Value { get; set; }
+    // -- PRIVATE VARIABLES
     /// <summary>Whether the card is hidden (face down).</summary>
-    public bool IsHidden;
+    private bool _isHidden;
 
 
     /// <summary>
@@ -62,7 +64,7 @@ public class Card
             throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be in range [1,13]");
 
         this.Value = GetValue(rank);
-        this.IsHidden = hidden;
+        this._isHidden = hidden;
     }
     /// <summary>
     /// Returns a string representation of the card (e.g., "Ace of Spades").
