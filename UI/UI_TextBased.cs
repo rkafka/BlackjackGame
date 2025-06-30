@@ -127,7 +127,7 @@ public class UI_TextBased : IGameUI
     {
         UIHelper.PrintSectionHeader("GAME OVER");
         Console.Write("Your final record was ");
-        Console.WriteLine(engine.User.GetWinLossRecord());
+        UIHelper.PrintUserWinLossRecord(engine.User);
         // Optionally, print winnings record if needed
     }
 
@@ -250,7 +250,7 @@ public class UI_TextBased : IGameUI
             Console.WriteLine($"You won! Your bet of {user.Hand.BetAmount:C0} has been doubled and returned to you.");
         }
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
-        Console.WriteLine(user.GetWinLossRecord());
+        UIHelper.PrintUserWinLossRecord(user);
     }
 
     /// <summary> Displays a message indicating the user has lost and their remaining money and record. </summary>
@@ -261,7 +261,7 @@ public class UI_TextBased : IGameUI
         if (isNatural)
         {
             Console.Write("Uh Oh! The Dealer got a ");
-            UIHelper.PrintSlowly("NATURAL BLACKJACK", msPerChar:60, foregroundColor:IGameUI.COLOR_BAD);
+            UIHelper.PrintSlowly("NATURAL BLACKJACK", msPerChar: 60, foregroundColor: IGameUI.COLOR_BAD);
             Console.WriteLine($"! You lose your bet of {user.Hand.BetAmount:C0}.");
         }
         else
@@ -269,7 +269,7 @@ public class UI_TextBased : IGameUI
             Console.WriteLine($"You lost... Your bet of {user.Hand.BetAmount:C0} has been lost.");
         }
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
-        Console.WriteLine(user.GetWinLossRecord());
+        UIHelper.PrintUserWinLossRecord(user);
     }
 
     /// <summary> Displays a message indicating the user has tied and their remaining money and record. </summary>
@@ -278,7 +278,7 @@ public class UI_TextBased : IGameUI
     {
         Console.WriteLine($"You tied. Your bet of {user.Hand.BetAmount:C0} has been returned to you.");
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
-        Console.WriteLine(user.GetWinLossRecord());
+        UIHelper.PrintUserWinLossRecord(user);
     }
 
     /// <summary> Reveals the dealer's hidden first card and displays both hands. </summary>

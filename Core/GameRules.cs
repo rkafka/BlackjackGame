@@ -22,7 +22,7 @@ public static class GameRules
     /// </summary>
     /// <param name="hand">The hand to check.</param>
     /// <returns>True if the hand is a blackjack, false otherwise.</returns>
-    public static bool CheckForBlackjack(Hand hand) => hand.CurrentScore == 21;
+    public static bool CheckHandForBlackjack(Hand hand) => hand.CurrentScore == 21;
 
     /// <summary>
     /// Checks for blackjack in either the user or dealer hand, and handles win/loss/tie logic accordingly.
@@ -34,8 +34,8 @@ public static class GameRules
     /// <returns>True if a blackjack was found, false otherwise.</returns>
     public static bool CheckForBlackjack(IGameUI ui, User user, Dealer dealer, bool wouldBeNatural=false)
     {
-        bool hasBlackjack_User = GameRules.CheckForBlackjack(user.Hand);
-        bool hasBlackjack_Dealer = GameRules.CheckForBlackjack(dealer.Hand);
+        bool hasBlackjack_User = GameRules.CheckHandForBlackjack(user.Hand);
+        bool hasBlackjack_Dealer = GameRules.CheckHandForBlackjack(dealer.Hand);
         // if blackjack exists at all in either/any hand
         if (hasBlackjack_User || hasBlackjack_Dealer)
         {
@@ -45,7 +45,7 @@ public static class GameRules
                 if (hasBlackjack_User)
                     GameRules.ResultTie(ui, user);  // BOTH (tie) 
                 else
-                    GameRules.ResultLose(ui, user); // Dealer (lose)
+                    GameRules.ResultLose(ui, user, isNatural:wouldBeNatural); // Dealer (lose)
             }
             else // User (win) 
                 GameRules.ResultWin(ui, user, isNatural: wouldBeNatural);
@@ -117,12 +117,13 @@ public static class GameRules
     /// </summary>
     /// <param name="ui">The UI interface for displaying results.</param>
     /// <param name="user">The user player.</param>
-    public static void ResultLose(IGameUI ui, User user)
+    /// <param name="isNatural">Whether the loss was to a natural blackjack</param>
+    public static void ResultLose(IGameUI ui, User user, bool isNatural = false)
     {
         // Don't return the bet amount, lost to the house
         user.NumLosses++;
         user.WinningsRecord.Add(-1 * user.Hand.BetAmount);
-        ui.ResultMessage_Loss(user);
+        ui.ResultMessage_Loss(user, isNatural);
     }
     /// <summary>
     /// Handles the logic for a tie, returning the bet, updating tie count, and displaying the result.

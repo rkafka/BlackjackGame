@@ -34,7 +34,7 @@ public class UI_ASCII : IGameUI
     }
 
     // DEV NOTE: formerly UI_Hands() in old version
-    public void DisplayHands(User user, Dealer dealer, bool doHideFirstCard = true)
+    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard)
     {
         int distanceFromBottom = 10;
         int yCoord_UserLine = Console.WindowHeight - distanceFromBottom;
@@ -91,6 +91,8 @@ public class UI_ASCII : IGameUI
         //
         Console.SetCursorPosition(0, Console.WindowHeight - 1);
     }
+    public void DisplayHands(User user, Dealer dealer)
+    { DisplayHands(user, dealer, dealer.DoHideFirstCard); }
 
 
     public void GameOverMessage(GameEngine engine)

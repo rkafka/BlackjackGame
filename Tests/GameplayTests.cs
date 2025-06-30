@@ -48,10 +48,12 @@ public static class GameplayTests {
                 new Card("Clubs", 10),    // Player 2 (user) - 10
                 new Card("Hearts", 7)     // Dealer 2
             };
+        int userBet = 10;
+        float userStartingMoney = 100.0f;
         Deck testDeck = new Deck(stackedCards);
-        User testUser = new User(100); // Give user enough money
+        User testUser = new User(userStartingMoney); // Give user enough money
         Dealer testDealer = new Dealer();
-        testUser.Hand = new Hand(betAmount: 10, isDealer: false);
+        testUser.Hand = new Hand(betAmount: userBet, isDealer: false);
         testDealer.Hand = new Hand(betAmount: 0, isDealer: true);
 
         // Use the existing UI_TextBased (or UI_ASCII) for testing
@@ -62,9 +64,9 @@ public static class GameplayTests {
         bool canContinue = engine.PlayRound();
 
         // Assert: User should have blackjack, dealer should not, and winnings should be correct
-        bool userHasBlackjack = GameRules.CheckForBlackjack(testUser.Hand);
-        bool dealerHasBlackjack = GameRules.CheckForBlackjack(testDealer.Hand);
-        float expectedMoney = 100 - 10 + (10 * GameRules.WIN_RATIO_NATURAL_BLACKJACK) + 10; // bet returned + 1.5x winnings
+        bool userHasBlackjack = GameRules.CheckHandForBlackjack(testUser.Hand);
+        bool dealerHasBlackjack = GameRules.CheckHandForBlackjack(testDealer.Hand);
+        float expectedMoney = userStartingMoney - userBet + (userBet + (userBet * GameRules.WIN_RATIO_NATURAL_BLACKJACK)); // bet returned + 1.5x winnings
         bool winningsCorrect = Math.Abs(testUser.CurrentMoney - expectedMoney) < 0.01f;
 
         Console.WriteLine($"User hand: {testUser.Hand} (score: {testUser.Hand.CurrentScore})");

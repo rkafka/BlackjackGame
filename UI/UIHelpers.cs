@@ -102,6 +102,28 @@ public static class UIHelper
             ResetConsoleColors();
     }
 
+    public static void PrintUserWinLossRecord(User user)
+    {
+        // Print W-L-T with colors: W (green), L (red), T (yellow), dashes (white)
+        string record = user.GetWinLossRecord(); // e.g., "3-2-1"
+        string[] parts = record.Split('-');
+        if (parts.Length != 3)
+        {
+            Console.WriteLine(record); // fallback
+            return;
+        }
+        // Wins
+        PrintColored(parts[0], foregroundColor:IGameUI.COLOR_GOOD, doNewLine: false);
+        // Dash
+        Console.Write("-");
+        // Losses
+        PrintColored(parts[1], foregroundColor:IGameUI.COLOR_BAD, doNewLine: false);
+        // Dash
+        Console.Write("-");
+        // Ties
+        PrintColored(parts[2], foregroundColor:IGameUI.COLOR_PROMPT);
+    }
+
 
     /// <summary> Resets the console's background and foreground colors to their default values. </summary>
     public static void ResetConsoleColors()
