@@ -133,14 +133,14 @@ public static class UIHelper
         // Ties
         PrintColoredLine(parts[2], foregroundColor:IGameUI.COLOR_PROMPT);
     }
-    
+
     public static void PrintUserRecord_RoundlyEarnings(User user)
     {
         Console.Write("Roundly earnings:   [");
         foreach (float roundWinnings in user.WinningsRecord)
         {
             ConsoleColor fgColor = ((roundWinnings > 0) ? (IGameUI.COLOR_GOOD) : ((roundWinnings == 0) ? IGameUI.COLOR_NEUTRAL : IGameUI.COLOR_BAD));
-            PrintColored($" {roundWinnings} ", foregroundColor: fgColor);
+            PrintColored($" {roundWinnings:C2} ", foregroundColor: fgColor);
             Console.Write(",");
         }
         Console.WriteLine("\b]");

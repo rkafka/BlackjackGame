@@ -95,7 +95,8 @@ public class GameEngine
                 DealerTurn();
             }
             // DECIDE THE WINNER
-            GameRules.DecideWinner(_ui, User, Dealer);
+            if(playerResult != PlayerTurnResult.Surrender)
+                GameRules.DecideWinner(_ui, User, Dealer);
         }
         // If natural blackjack found, winner is already decided in GameRules
 
@@ -239,6 +240,8 @@ public class GameEngine
         float surrenderReturn = User.Hand.BetAmount * GameRules.SURRENDER_RETURN_RATIO;
         User.CurrentMoney += surrenderReturn;
         Console.WriteLine($"The round is over, half of your {User.Hand.BetAmount:C2} bet has been returned ({surrenderReturn:C2}).");
+        User.WinningsRecord.Add(-1 * (User.Hand.BetAmount - surrenderReturn));
+        User.NumLosses++;
     }
 
 
