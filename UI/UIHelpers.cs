@@ -59,7 +59,7 @@ public static class UIHelper
     /// <param name="resetColorsAfter"></param>
     /// <param name="foregroundColor"></param>
     /// <param name="backgroundColor"></param>
-    public static void PrintColored(string message, bool doNewLine = true, bool resetColorsAfter = true,
+    public static void PrintColored(string message, bool doNewLine = false, bool resetColorsAfter = true,
                                     ConsoleColor foregroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND,
                                     ConsoleColor backgroundColor = IGameUI.COLOR_DEFAULT_BACKGROUND)
     {
@@ -71,6 +71,16 @@ public static class UIHelper
 
         if (resetColorsAfter)
             ResetConsoleColors();
+    }
+
+    /// <summary>  </summary>
+    /// 
+    ///  
+    public static void PrintColoredLine(string message, bool resetColorsAfter = true,
+                                        ConsoleColor foregroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND,
+                                        ConsoleColor backgroundColor = IGameUI.COLOR_DEFAULT_BACKGROUND)
+    {
+        PrintColored(message, doNewLine: true, resetColorsAfter: resetColorsAfter, foregroundColor: foregroundColor, backgroundColor: backgroundColor);
     }
 
     /// <summary> Prints a message character-by-character. </summary>

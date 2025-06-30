@@ -139,7 +139,7 @@ public class UI_TextBased : IGameUI
     public string PromptPlayerAction(bool isFirstTurn=true, bool canDoubleDown=true)
     {
         Console.Write("PLAYER OPTIONS:  ");
-        string[] options = ["Hit", "Stand", "Double Down", "Surrender", "Split"];
+        string[] options = ["Hit", "Stand", "Double Down", "Split", "Surrender"];
         //
         if (!isFirstTurn)
             options = options[..(canDoubleDown ? 2 : 1)];
@@ -147,13 +147,10 @@ public class UI_TextBased : IGameUI
         for (int i = 0; i < options.Length; i++)
         {
             Console.Write($"[");
-            Console.ForegroundColor = ConsoleColor.Cyan; Console.Write($"{i + 1}");
-            UIHelper.ResetConsoleColors();
+            UIHelper.PrintColored(message:(i+1).ToString(), foregroundColor:ConsoleColor.Cyan, doNewLine:false);
             Console.Write($"] {options[i]}  ");
         }
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write("\n> Type the number to select: ");
-        UIHelper.ResetConsoleColors();
+        UIHelper.PrintColored("\n> Type the number to select: ", foregroundColor:IGameUI.COLOR_PROMPT, doNewLine:false);
         return (Console.ReadLine() ?? "").Trim().ToLower();
         // ?? ""   <-- means you should return an empty string if the input is null
     }
