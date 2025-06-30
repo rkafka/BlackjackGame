@@ -29,8 +29,6 @@ public interface IGameUI
     public void PromptForBet(User user);
     public void PromptAfterError(string problem, bool isBet = false, bool tryAgain = true);
 
-    public void ResetConsoleColors();
-
     public void ResultMessage_Win(User user, bool isNatural = false);
     public void ResultMessage_Tie(User user);
     public void ResultMessage_Loss(User user);

@@ -42,20 +42,55 @@ public static class UIHelper
         Console.WriteLine(((numLines % 2 == 1) ? "-" : "") + "\n");
     }
 
-    // method for capitalizing the first letter of a string
+    /// <summary> Capitalizes the first letter of the input string </summary>
+    /// <param name="input">String to capitalize the first letter of.</param>
+    /// <returns>Input string with its first letter capitalized</returns>
     public static string CapitalizeFirstLetter(string input)
     {
         if (string.IsNullOrEmpty(input))
             return input;
 
-        return char.ToUpper(input[0]) + input.Substring(1);
+        return char.ToUpper(input[0]) + ((input.Length > 1) ? input.Substring(1) : "");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="doNewLine"></param>
+    /// <param name="resetColorsAfter"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
+    public static void PrintColored(string message, bool doNewLine = true, bool resetColorsAfter = true,
+                                    ConsoleColor foregroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND,
+                                    ConsoleColor backgroundColor = IGameUI.COLOR_DEFAULT_BACKGROUND)
+    {
+        Console.ForegroundColor = foregroundColor;
+        Console.BackgroundColor = backgroundColor;
+
+        Console.Write(message);
+        if (doNewLine) { Console.WriteLine(); }
+
+        if (resetColorsAfter)
+            ResetConsoleColors();
     }
 
     /// <summary> Prints a message character-by-character. </summary>
     /// <param name="msg">The message to output to the console.</param>
+    /// <param name="doNewLine"></param>
     /// <param name="msPerChar">The time in ms the thread is put to sleep between each character printed</param>
-    public static void PrintSlowly(string msg, bool doNewLine = false, int msPerChar = 30)
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
+    public static void PrintSlowly(string msg, bool doNewLine = false, bool resetColorAfter = true, int msPerChar = 30,
+                                   ConsoleColor? foregroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND,
+                                   ConsoleColor? backgroundColor = IGameUI.COLOR_DEFAULT_BACKGROUND)
     {
+        if (foregroundColor != null)
+            Console.ForegroundColor = (ConsoleColor)foregroundColor;
+        if (backgroundColor != null)
+            Console.BackgroundColor = (ConsoleColor)backgroundColor;
+
+
         foreach (char c in msg)
         {
             Console.Write(c);
@@ -63,5 +98,17 @@ public static class UIHelper
         }
         if (doNewLine)
             Console.WriteLine();
+
+        if (resetColorAfter)
+            ResetConsoleColors();
     }
+
+
+    /// <summary> Resets the console's background and foreground colors to their default values. </summary>
+    public static void ResetConsoleColors()
+    {
+        Console.BackgroundColor = Utils.ASCII.DEFAULT_BACKGROUND;
+        Console.ForegroundColor = Utils.ASCII.DEFAULT_FOREGROUND;
+    }
+
 }

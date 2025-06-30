@@ -71,7 +71,7 @@ public class UI_TextBased : IGameUI
                 Console.Write("| [");
                 Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.Write("HIDDEN");
-                ResetConsoleColors();
+                UIHelper.ResetConsoleColors();
                 Console.WriteLine("]          ?? |");
             }
             else
@@ -91,7 +91,7 @@ public class UI_TextBased : IGameUI
             else if (player.Hand.CurrentScore == 21)
                 Console.ForegroundColor = IGameUI.COLOR_GOOD;
             Console.Write(player.Hand.CurrentScore.ToString().PadRight(sectionWidth - 1 - scoreLineStart.Length));
-            ResetConsoleColors();
+            UIHelper.ResetConsoleColors();
             Console.WriteLine("|");
         }
         Console.WriteLine();
@@ -145,11 +145,12 @@ public class UI_TextBased : IGameUI
         {
             Console.Write($"[");
             Console.ForegroundColor = ConsoleColor.Cyan; Console.Write($"{i + 1}");
-            ResetConsoleColors(); Console.Write($"] {options[i]}  ");
+            UIHelper.ResetConsoleColors();
+            Console.Write($"] {options[i]}  ");
         }
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write("\n> Type the number to select: ");
-        ResetConsoleColors();
+        UIHelper.ResetConsoleColors();
         return (Console.ReadLine() ?? "").Trim().ToLower();
         // ?? ""   <-- means you should return an empty string if the input is null
     }
@@ -192,15 +193,15 @@ public class UI_TextBased : IGameUI
         Console.Write($"You currently have {user.CurrentMoney:C2} to gamble with. The ");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write("minimum bet ");
-        ResetConsoleColors();
+        UIHelper.ResetConsoleColors();
         Console.Write("is ");
         Console.ForegroundColor = ConsoleColor.Magenta;
         Console.Write($"{GameRules.MINIMUM_BET:C0}");
-        ResetConsoleColors();
+        UIHelper.ResetConsoleColors();
         Console.WriteLine(".");
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write("How much would you like to bet? Enter as a positive integer -->");
-        ResetConsoleColors();
+        UIHelper.ResetConsoleColors();
         Console.Write(" $");
     }
     /// <summary>
@@ -217,7 +218,7 @@ public class UI_TextBased : IGameUI
         Console.BackgroundColor = ConsoleColor.Red;
         Console.Write($"Oops! {problem}");
         Console.Write((tryAgain) ? ", try again: " : ".\n");
-        ResetConsoleColors();
+        UIHelper.ResetConsoleColors();
         Console.Write($" {(isBet ? "$" : "")}");
     }
 
@@ -230,14 +231,6 @@ public class UI_TextBased : IGameUI
     /// <summary> Displays a message indicating that the selected player action is not supported in the current build. </summary>
     public void PlayerAction_NotSupportedMessage() { Console.WriteLine("Sorry, this option is not supported in the current build."); }
 
-    /// <summary> Resets the console's background and foreground colors to their default values. </summary>
-    public void ResetConsoleColors()
-    {
-        Console.BackgroundColor = Utils.ASCII.DEFAULT_BACKGROUND;
-        Console.ForegroundColor = Utils.ASCII.DEFAULT_FOREGROUND;
-    }
-
-
     /// <summary> Displays a message indicating the user has won, with special formatting for a natural blackjack. </summary>
     /// <param name="user">The user who won.</param>
     /// <param name="isNatural">If true, indicates a natural blackjack win.</param>
@@ -246,9 +239,7 @@ public class UI_TextBased : IGameUI
         if (isNatural)
         {
             Console.Write("You won with a ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("NATURAL BLACKJACK");
-            Console.ForegroundColor = ConsoleColor.White;
+            UIHelper.PrintSlowly("NATURAL BLACKJACK", foregroundColor:IGameUI.COLOR_GOOD);
             Console.WriteLine($"! Your bet of {user.Hand.BetAmount:C0} has been returned along with 1.5x its value in winnings.");
         }
         else
