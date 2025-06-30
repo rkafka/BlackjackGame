@@ -24,7 +24,7 @@ public interface IGameUI
 
     /// <summary> Prompts the player to select a Player Action (Hit, Stand, Double Down, etc.) by typing their associated number. </summary>
     /// <returns>String containing the input read in from the user</returns>
-    public string PromptPlayerAction(bool isFirstTurn = true);
+    public string PromptPlayerAction(bool isFirstTurn = true, bool canDoubleDown = true);
     public void PromptToContinue();
     public void PromptForBet(User user);
     public void PromptAfterError(string problem, bool isBet = false, bool tryAgain = true);

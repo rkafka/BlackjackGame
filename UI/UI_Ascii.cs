@@ -105,7 +105,7 @@ public class UI_ASCII : IGameUI
     }
 
 
-    public string PromptPlayerAction(bool isFirstTurn = true)
+    public string PromptPlayerAction(bool isFirstTurn = true, bool canDoubleDown = true)
     {
         throw new NotImplementedException();
     }
