@@ -96,19 +96,22 @@ public class UI_TextBased : IGameUI
         }
         Console.WriteLine();
     }
-    /// <summary>
-    /// Outputs both the user's and dealer's hands to the console in text-based format.
-    /// </summary>
+    /// <summary> Outputs both the user's and dealer's hands to the console in text-based format. </summary>
     /// <param name="user">The user object whose hand(s) to print.</param>
     /// <param name="dealer">The dealer object whose hand(s) to print.</param>
     /// <param name="hideDealersFirstCard">Whether the dealer's first card should be hidden (true on player's turn, false on dealer's turn).</param>
-    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard = false)
+    public void DisplayHands(User user, Dealer dealer, bool hideDealersFirstCard)
     {
         DisplayHand(user);
         Console.WriteLine("VS.");
         DisplayHand(dealer, hideFirstCard: hideDealersFirstCard);
         Console.WriteLine();
     }
+    /// <summary> [OVERRIDE] Outputs both the user's and dealer's hands to the console in text-based format. 
+    /// If hideDealersFirstCard is not provided, uses dealer.DoHideFirstCard. </summary>
+    /// <param name="user">The user object whose hand(s) to print.</param>
+    /// <param name="dealer">The dealer object whose hand(s) to print.</param>
+    public void DisplayHands(User user, Dealer dealer) { DisplayHands(user, dealer, dealer.DoHideFirstCard); }
 
 
     /// <summary>
@@ -252,9 +255,19 @@ public class UI_TextBased : IGameUI
 
     /// <summary> Displays a message indicating the user has lost and their remaining money and record. </summary>
     /// <param name="user">The user who lost.</param>
-    public void ResultMessage_Loss(User user)
+    /// <param name="isNatural"></param>
+    public void ResultMessage_Loss(User user, bool isNatural = false)
     {
-        Console.WriteLine($"You lost... Your bet of {user.Hand.BetAmount:C0} has been lost.");
+        if (isNatural)
+        {
+            Console.Write("Uh Oh! The Dealer got a ");
+            UIHelper.PrintSlowly("NATURAL BLACKJACK", msPerChar:60, foregroundColor:IGameUI.COLOR_BAD);
+            Console.WriteLine($"! You lose your bet of {user.Hand.BetAmount:C0}.");
+        }
+        else
+        {
+            Console.WriteLine($"You lost... Your bet of {user.Hand.BetAmount:C0} has been lost.");
+        }
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
         Console.WriteLine(user.GetWinLossRecord());
     }

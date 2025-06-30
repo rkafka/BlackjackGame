@@ -145,7 +145,7 @@ public class UI_ASCII : IGameUI
     {
         throw new NotImplementedException();
     }
-    public void ResultMessage_Loss(User user)
+    public void ResultMessage_Loss(User user, bool isNatural = false)
     {
         throw new NotImplementedException();
     }
