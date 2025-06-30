@@ -24,6 +24,9 @@ if (args.Length >= 2)
             case "models":
                 ModelsTests.Execute(args[2..]);
                 break;
+            case "menu":
+                MenuTests.Execute(args[2..]);
+                break;
             default:
                 Console.WriteLine("ERROR:  can not find the desired debug module.\n\n\n\n");
                 break;
