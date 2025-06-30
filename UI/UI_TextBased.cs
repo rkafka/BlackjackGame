@@ -127,8 +127,9 @@ public class UI_TextBased : IGameUI
     {
         UIHelper.PrintSectionHeader("GAME OVER");
         Console.Write("Your final record was ");
-        UIHelper.PrintUserWinLossRecord(engine.User);
+        UIHelper.PrintUserRecord_WinLoss(engine.User);
         // Optionally, print winnings record if needed
+        UIHelper.PrintUserRecord_RoundlyEarnings(engine.User);
     }
 
 
@@ -139,7 +140,7 @@ public class UI_TextBased : IGameUI
     public string PromptPlayerAction(bool isFirstTurn=true, bool canDoubleDown=true)
     {
         Console.Write("PLAYER OPTIONS:  ");
-        string[] options = ["Hit", "Stand", "Double Down", "Split", "Surrender"];
+        string[] options = ["Hit", "Stand", "Surrender", "Double Down", "Split"];
         //
         if (!isFirstTurn)
             options = options[..(canDoubleDown ? 2 : 1)];
@@ -247,7 +248,7 @@ public class UI_TextBased : IGameUI
             Console.WriteLine($"You won! Your bet of {user.Hand.BetAmount:C0} has been doubled and returned to you.");
         }
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
-        UIHelper.PrintUserWinLossRecord(user);
+        UIHelper.PrintUserRecord_WinLoss(user);
     }
 
     /// <summary> Displays a message indicating the user has lost and their remaining money and record. </summary>
@@ -266,7 +267,7 @@ public class UI_TextBased : IGameUI
             Console.WriteLine($"You lost... Your bet of {user.Hand.BetAmount:C0} has been lost.");
         }
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
-        UIHelper.PrintUserWinLossRecord(user);
+        UIHelper.PrintUserRecord_WinLoss(user);
     }
 
     /// <summary> Displays a message indicating the user has tied and their remaining money and record. </summary>
@@ -275,7 +276,7 @@ public class UI_TextBased : IGameUI
     {
         Console.WriteLine($"You tied. Your bet of {user.Hand.BetAmount:C0} has been returned to you.");
         Console.Write($"Remaining Money:  {user.CurrentMoney:C2}  |  W/L/T Record:  ");
-        UIHelper.PrintUserWinLossRecord(user);
+        UIHelper.PrintUserRecord_WinLoss(user);
     }
 
     /// <summary> Reveals the dealer's hidden first card and displays both hands. </summary>

@@ -112,7 +112,7 @@ public static class UIHelper
             ResetConsoleColors();
     }
 
-    public static void PrintUserWinLossRecord(User user)
+    public static void PrintUserRecord_WinLoss(User user)
     {
         // Print W-L-T with colors: W (green), L (red), T (yellow), dashes (white)
         string record = user.GetWinLossRecord(); // e.g., "3-2-1"
@@ -123,15 +123,27 @@ public static class UIHelper
             return;
         }
         // Wins
-        PrintColored(parts[0], foregroundColor:IGameUI.COLOR_GOOD, doNewLine: false);
+        PrintColored(parts[0], foregroundColor:IGameUI.COLOR_GOOD);
         // Dash
         Console.Write("-");
         // Losses
-        PrintColored(parts[1], foregroundColor:IGameUI.COLOR_BAD, doNewLine: false);
+        PrintColored(parts[1], foregroundColor:IGameUI.COLOR_BAD);
         // Dash
         Console.Write("-");
         // Ties
-        PrintColored(parts[2], foregroundColor:IGameUI.COLOR_PROMPT);
+        PrintColoredLine(parts[2], foregroundColor:IGameUI.COLOR_PROMPT);
+    }
+    
+    public static void PrintUserRecord_RoundlyEarnings(User user)
+    {
+        Console.Write("Roundly earnings:   [");
+        foreach (float roundWinnings in user.WinningsRecord)
+        {
+            ConsoleColor fgColor = ((roundWinnings > 0) ? (IGameUI.COLOR_GOOD) : ((roundWinnings == 0) ? IGameUI.COLOR_NEUTRAL : IGameUI.COLOR_BAD));
+            PrintColored($" {roundWinnings} ", foregroundColor: fgColor);
+            Console.Write(",");
+        }
+        Console.WriteLine("\b]");
     }
 
 
