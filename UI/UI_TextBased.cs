@@ -239,7 +239,7 @@ public class UI_TextBased : IGameUI
         if (isNatural)
         {
             Console.Write("You won with a ");
-            UIHelper.PrintSlowly("NATURAL BLACKJACK", foregroundColor:IGameUI.COLOR_GOOD);
+            UIHelper.PrintSlowly("NATURAL BLACKJACK", msPerChar:60, foregroundColor:IGameUI.COLOR_GOOD);
             Console.WriteLine($"! Your bet of {user.Hand.BetAmount:C0} has been returned along with 1.5x its value in winnings.");
         }
         else
