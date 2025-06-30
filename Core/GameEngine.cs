@@ -171,6 +171,8 @@ public class GameEngine
                         continue;
                     }
                     _ui.PlayerAction_ChoiceMessage("Surrender");
+                    PlayerAction_Surrender();
+                    keepDrawing = false; // surrendering always ends your turn
                     _ui.PlayerAction_NotSupportedMessage();
                     break;
                 default:
@@ -193,7 +195,14 @@ public class GameEngine
         User.Hand.AddCard(_deck);
         _ui.CardDrawnMessage(User);
         _ui.DisplayHands(User, Dealer, hideDealersFirstCard: true);
-        return (!GameRules.CheckForBlackjack(User.Hand) && !GameRules.CheckForBust(User.Hand));
+
+        bool gotBlackjack = GameRules.CheckForBlackjack(User.Hand);
+        if (gotBlackjack)
+            Console.WriteLine("You got blackjack! Ending your turn.");
+
+        bool busted = GameRules.CheckForBust(User.Hand);
+        bool canKeepDrawing = (!gotBlackjack && !busted);
+        return canKeepDrawing;
     }
 
     /// <summary> Handles the logic for the player choosing to double down. (TO-DO: complete implementation) </summary>
@@ -209,6 +218,16 @@ public class GameEngine
             PlayerAction_Hit();
         return !betRaiseSuccessful; // TO-DO: finish
     }
+
+    /// <summary> </summary>
+    public void PlayerAction_Surrender()
+    {
+        // TO-DO: warning message if game cannot continue should you surrender (difficulty dependent?)
+        float surrenderReturn = User.Hand.BetAmount * GameRules.SURRENDER_RETURN_RATIO;
+        User.CurrentMoney += surrenderReturn;
+        Console.Write($"You surrendered, ending the round. Half of your {User.Hand.BetAmount:C2} bet has been returned ({surrenderReturn:C2}).");
+    }
+
 
     /// <summary>
     /// Handles the dealer's turn: dealer draws cards until reaching at least 17 or busting, displaying each action.

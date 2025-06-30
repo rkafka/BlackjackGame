@@ -15,6 +15,7 @@ public static class GameRules
     public const float WIN_RATIO_NORMAL = 1f;
     public const float WIN_RATIO_NATURAL_BLACKJACK = 3.0f / 2;
     public const float MINIMUM_BET = 5.0f;
+    public const float SURRENDER_RETURN_RATIO = 0.5f;
 
     /// <summary>
     /// Checks if the given hand is a blackjack (score of 21).

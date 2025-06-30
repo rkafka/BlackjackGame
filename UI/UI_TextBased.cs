@@ -133,12 +133,15 @@ public class UI_TextBased : IGameUI
     /// Prompts the player to select a player action (Hit, Stand, Double Down, Surrender, Split) by typing the associated number.
     /// </summary>
     /// <returns>String containing the input read in from the user.</returns>
-    public string PromptPlayerAction(bool isFirstTurn=true)
+    public string PromptPlayerAction(bool isFirstTurn=true, bool canDoubleDown=true)
     {
         Console.Write("PLAYER OPTIONS:  ");
         string[] options = ["Hit", "Stand", "Double Down", "Surrender", "Split"];
-        int numOptionsToPrint = (isFirstTurn ? 5 : 2 );
-        for (int i = 0; i < numOptionsToPrint-1; i++)
+        //
+        if (!isFirstTurn)
+            options = options[..(canDoubleDown ? 2 : 1)];
+
+        for (int i = 0; i < options.Length; i++)
         {
             Console.Write($"[");
             Console.ForegroundColor = ConsoleColor.Cyan; Console.Write($"{i + 1}");
