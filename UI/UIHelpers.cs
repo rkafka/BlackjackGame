@@ -53,9 +53,7 @@ public static class UIHelper
         return char.ToUpper(input[0]) + ((input.Length > 1) ? input.Substring(1) : "");
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <summary> Prints the input string with set color. </summary>
     /// <param name="message"></param>
     /// <param name="doNewLine"></param>
     /// <param name="resetColorsAfter"></param>
@@ -77,10 +75,11 @@ public static class UIHelper
 
     /// <summary> Prints a message character-by-character. </summary>
     /// <param name="msg">The message to output to the console.</param>
-    /// <param name="doNewLine"></param>
+    /// <param name="doNewLine">Whether to print a newline character at the end of message output.</param>
+    /// <param name="resetColorAfter">Whether to reset foreground and background colors to default at the end of execution.</param>
     /// <param name="msPerChar">The time in ms the thread is put to sleep between each character printed</param>
-    /// <param name="foregroundColor"></param>
-    /// <param name="backgroundColor"></param>
+    /// <param name="foregroundColor">Foreground color the console will print the message in.</param>
+    /// <param name="backgroundColor">Background color the console will print the message in.</param>
     public static void PrintSlowly(string msg, bool doNewLine = false, bool resetColorAfter = true, int msPerChar = 30,
                                    ConsoleColor? foregroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND,
                                    ConsoleColor? backgroundColor = IGameUI.COLOR_DEFAULT_BACKGROUND)
