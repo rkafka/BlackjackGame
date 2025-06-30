@@ -83,10 +83,9 @@ public class GameEngine
         else
         {
             // PLAYER'S TURN
-            // -- Allow to chose between available options with text input (prompted)
-            bool playerBusted = PlayerTurn();
+            PlayerTurnResult playerResult = PlayerTurn();
             _ui.PromptToContinue();
-            if (!playerBusted)
+            if (playerResult != PlayerTurnResult.Bust && playerResult != PlayerTurnResult.Surrender)
             {
                 // REVEAL DEALER'S HIDDEN CARD
                 Dealer.DoHideFirstCard = false;
@@ -106,7 +105,9 @@ public class GameEngine
         return (User.CurrentMoney >= GameRules.MINIMUM_BET);
     }
 
-    /// <summary> Draws two cards to the user's hand and two cards to the dealer's hand at the start of a round. </summary>
+    /// <summary>
+    /// Draws two cards to the user's hand and two cards to the dealer's hand at the start of a round.
+    /// </summary>
     public void InitialDraw()
     {
         User.Hand.AddCard(_deck);
@@ -118,16 +119,15 @@ public class GameEngine
     /// <summary>
     /// Handles the player's turn, allowing them to choose actions (hit, stand, etc.) until they stand or bust.
     /// </summary>
-    /// <returns>True if the player busts, false otherwise.</returns>
-    private bool PlayerTurn()
+    /// <returns>PlayerTurnResult indicating how the turn ended.</returns>
+    private PlayerTurnResult PlayerTurn()
     {
         bool keepDrawing = true;
         bool busted = false;
         bool firstTurn = true;
         while (!GameRules.CheckHandForBlackjack(User.Hand) && keepDrawing)
         {
-            // PLAYER OPTIONS: [1] Hit  [2] Stand  [3] Double Down   |   Type the number to select:     
-            // TO-DO: [3] Double Down, [4] Split, [5] Surrender
+            // PLAYER OPTIONS: [1] Hit  [2] Stand  [3] Surrender [4] Double Down [5] Split
             if (!int.TryParse(_ui.PromptPlayerAction(firstTurn), out int playerChoice))
                 continue;
             switch (playerChoice)
@@ -138,37 +138,16 @@ public class GameEngine
                     keepDrawing = PlayerAction_Hit();
                     busted = GameRules.CheckForBust(User.Hand);
                     if (busted)
+                    {
                         Console.WriteLine("You BUST. That's a shame...");
+                        return PlayerTurnResult.Bust;
+                    }
                     break;
                 case 2:
                     // STAND
                     _ui.PlayerAction_ChoiceMessage("Stand");
-                    keepDrawing = false;
-                    break;
+                    return PlayerTurnResult.Stand;
                 case 3:
-                    // DOUBLE DOWN
-                    if (!firstTurn)
-                    {
-                        Console.WriteLine("ERROR: can only surrender as your first action after the initial deal");
-                        continue;
-                    }
-                    _ui.PlayerAction_ChoiceMessage("Double Down");
-                    keepDrawing = PlayerAction_DoubleDown();
-                    busted = GameRules.CheckForBust(User.Hand);
-                    if (busted)
-                        Console.WriteLine("You BUST. That's a shame...");
-                    break;
-                case 4:
-                    // SPLIT
-                    if (!firstTurn)
-                    {
-                        Console.WriteLine("ERROR: can only split as your first action after the initial deal");
-                        continue;
-                    }
-                    _ui.PlayerAction_ChoiceMessage("Split");
-                    _ui.PlayerAction_NotSupportedMessage();
-                    break;
-                case 5:
                     // SURRENDER
                     if (!firstTurn)
                     {
@@ -177,9 +156,36 @@ public class GameEngine
                     }
                     _ui.PlayerAction_ChoiceMessage("Surrender");
                     PlayerAction_Surrender();
-                    keepDrawing = false; // surrendering always ends your turn
+                    return PlayerTurnResult.Surrender;
+                case 4:
+                    // DOUBLE DOWN
+                    _ui.PlayerAction_ChoiceMessage("Double Down");
+                    if (!firstTurn)
+                    {
+                        Console.WriteLine("ERROR: can only double down as your first action after the initial deal");
+                        continue;
+                    }
+                    else
+                    {
+                        keepDrawing = PlayerAction_DoubleDown();
+                        busted = GameRules.CheckForBust(User.Hand);
+                        if (busted)
+                        {
+                            Console.WriteLine("You BUST. That's a shame...");
+                            return PlayerTurnResult.Bust;
+                        }
+                        return PlayerTurnResult.DoubleDown;
+                    }
+                case 5:
+                    // SPLIT
+                    if (!firstTurn)
+                    {
+                        Console.WriteLine("ERROR: can only split as your first action after the initial deal");
+                        continue;
+                    }
+                    _ui.PlayerAction_ChoiceMessage("Split");
                     _ui.PlayerAction_NotSupportedMessage();
-                    break;
+                    return PlayerTurnResult.Split;
                 default:
                     Console.WriteLine("Your input was not an integer in the correct range (1-5). Please try again.");
                     break;
@@ -187,7 +193,8 @@ public class GameEngine
             firstTurn = false;
         }
         Console.WriteLine();
-        return busted;
+        // If we exit the loop without busting, surrendering, or standing, treat as stand
+        return PlayerTurnResult.Stand;
     }
 
     /// <summary>
@@ -230,7 +237,7 @@ public class GameEngine
         // TO-DO: warning message if game cannot continue should you surrender (difficulty dependent?)
         float surrenderReturn = User.Hand.BetAmount * GameRules.SURRENDER_RETURN_RATIO;
         User.CurrentMoney += surrenderReturn;
-        Console.Write($"You surrendered, ending the round. Half of your {User.Hand.BetAmount:C2} bet has been returned ({surrenderReturn:C2}).");
+        Console.WriteLine($"The round is over, half of your {User.Hand.BetAmount:C2} bet has been returned ({surrenderReturn:C2}).");
     }
 
 
@@ -327,4 +334,18 @@ public class GameEngine
             return true;
         }
     }
+}
+
+/// <summary>
+/// Enum representing the possible end states of the player's turn. 
+/// Includes 'Stand', 'Bust', 'Surrender', 'DoubleDown', and 'Split'
+/// </summary>
+/// <example><code>var f = PlayerTurnResult.Stand</code></example>
+public enum PlayerTurnResult
+{
+    Stand,
+    Bust,
+    Surrender,
+    DoubleDown,
+    Split
 }
