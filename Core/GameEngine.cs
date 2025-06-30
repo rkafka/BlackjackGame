@@ -75,7 +75,12 @@ public class GameEngine
 
         // CHECK FOR BLACKJACK
         bool foundNatural = GameRules.CheckForBlackjack(_ui, User, Dealer, wouldBeNatural: true);
-        if (!foundNatural)
+        if (foundNatural)
+        {
+            Dealer.DoHideFirstCard = false;
+            _ui.DisplayHands(User, Dealer);
+        }
+        else
         {
             // PLAYER'S TURN
             // -- Allow to chose between available options with text input (prompted)
@@ -119,7 +124,7 @@ public class GameEngine
         bool keepDrawing = true;
         bool busted = false;
         bool firstTurn = true;
-        while (!GameRules.CheckForBlackjack(User.Hand) && keepDrawing)
+        while (!GameRules.CheckHandForBlackjack(User.Hand) && keepDrawing)
         {
             // PLAYER OPTIONS: [1] Hit  [2] Stand  [3] Double Down   |   Type the number to select:     
             // TO-DO: [3] Double Down, [4] Split, [5] Surrender
@@ -196,7 +201,7 @@ public class GameEngine
         _ui.CardDrawnMessage(User);
         _ui.DisplayHands(User, Dealer, hideDealersFirstCard: true);
 
-        bool gotBlackjack = GameRules.CheckForBlackjack(User.Hand);
+        bool gotBlackjack = GameRules.CheckHandForBlackjack(User.Hand);
         if (gotBlackjack)
             Console.WriteLine("You got blackjack! Ending your turn.");
 
