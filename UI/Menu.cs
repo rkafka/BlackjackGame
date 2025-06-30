@@ -1,6 +1,7 @@
 
 
 using System.Runtime.CompilerServices;
+using BlackjackGame.Utils;
 
 namespace BlackjackGame.UI;
 
@@ -22,17 +23,83 @@ public static class Menu
         int boxWidth = Console.WindowWidth - 4;
         int defaultBoxHeight = 3;
 
-        DrawBox(width: boxWidth, height: 16, x: currentX, y: currentY, fgColor: ConsoleColor.DarkGray);
-        currentY += 16;
+        int bigBoxHeight = 22;
+        DrawBox(width: boxWidth, height: bigBoxHeight, x: currentX, y: currentY, fgColor: ConsoleColor.DarkGray);
 
-        int numBoxes = 3;
-        for (int i = 0; i < numBoxes; i++)
+        // OPTIONS BOX
+        string entryHeader = "Welcome! This is the start menu, view your options below.";
+        DrawBox(width: entryHeader.Length+4, height: defaultBoxHeight, x: currentX + 2, y: currentY - 1, fgColor: ConsoleColor.DarkGray);
+        UIHelper.PrintColored(entryHeader, foregroundColor:ConsoleColor.DarkGray);
+
+        // int numBoxes = 3;
+        // string[] options = { "" };
+        // for (int i = 0; i < numBoxes; i++)
+        // {
+        //     DrawBox(width: boxWidth, height: defaultBoxHeight, x: currentX, y: currentY, fgColor: ConsoleColor.DarkGray);
+        //     currentY += defaultBoxHeight;
+        // }
+
+        currentX = 4;
+        currentY = 7;
+        Console.SetCursorPosition(currentX,7);
+        ASCII.DisplayASCII(ASCII.ascii_Title);
+
+        currentY += ASCII.ascii_Title.Split('\n').Length;
+
+        
+        string[] options = {
+            "Start game", "View the rules of the game", "Change your preferred options (difficulty and such)"
+        };
+
+        // Draw the options box
+        int optionsBoxX = currentX + 1;
+        int optionsBoxY = currentY;
+        int optionsBoxWidth = boxWidth - 4;
+        int optionsBoxHeight = options.Length + 4;
+        DrawBox(optionsBoxWidth, optionsBoxHeight, x: optionsBoxX, y: optionsBoxY, fgColor: ConsoleColor.DarkGray);
+
+        // Print the [OPTIONS] label centered at the top of the box
+        int labelX = optionsBoxX+1; //+ (optionsBoxWidth - 10) / 2; // 10 = length of " [OPTIONS] "
+        int labelY = optionsBoxY;
+        Console.SetCursorPosition(labelX, labelY);
+        UIHelper.PrintColored(" [OPTIONS] ", foregroundColor: ConsoleColor.DarkGray);
+
+        // Print each option inside the box, starting below the label
+        int optionStartY = optionsBoxY + 2;
+        int optionX = optionsBoxX + 2;
+        for (int i = 0; i < options.Length; i++)
         {
-            DrawBox(width: boxWidth, height: defaultBoxHeight, x: currentX, y: currentY, fgColor: ConsoleColor.DarkGray);
-            currentY += defaultBoxHeight;
+            Console.SetCursorPosition(optionX, optionStartY + i);
+            Console.Write("[");
+            UIHelper.PrintColored((i + 1).ToString(), foregroundColor: IGameUI.COLOR_SPECIAL_1);
+            Console.Write("] " + options[i]);
         }
 
-        Console.ReadLine();
+
+        currentY += bigBoxHeight;//16;
+        DrawBox(width: boxWidth, height: defaultBoxHeight, x: 2, y: Console.WindowHeight - 4, fgColor: ConsoleColor.DarkGray);
+        UIHelper.PrintColored("Enter your selection:  ", foregroundColor: IGameUI.COLOR_PROMPT);
+        currentX = Console.CursorLeft; currentY = Console.CursorTop;
+        int menuSelection = -1;
+        while (!int.TryParse(Console.ReadLine(), out menuSelection) || menuSelection !=1)
+        {
+            // Error Msg
+            DrawBox(width: boxWidth, height: defaultBoxHeight, x: 2, y: Console.WindowHeight - 4, fgColor: ConsoleColor.DarkGray);
+            UIHelper.PrintColored("(Sorry, that didn't work. Please type an integer) ", foregroundColor: IGameUI.COLOR_BAD);
+            Thread.Sleep(2000);
+
+            // Reset
+            DrawBox(width: boxWidth, height: defaultBoxHeight, x: 2, y: Console.WindowHeight - 4, fgColor: ConsoleColor.DarkGray);
+            UIHelper.PrintColored("Enter your selection:  ", foregroundColor: IGameUI.COLOR_PROMPT);
+        }
+
+        // switch (menuSelection)
+        // {
+        //     case 1:
+        //         return;
+        //     default:
+        //         break;
+        // }
     }
 
     public static void PrintBoundingBox()

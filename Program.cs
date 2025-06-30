@@ -40,6 +40,8 @@ IGameUI ui;
 if (args.Length > 0 && args[0] == "ascii") { ui = new UI_ASCII(); }
 else { ui = new UI_TextBased(); }
 
+Menu.Execute(args);
+
 BJGame game = new BJGame(ui);
 game.Run();
 

@@ -8,6 +8,7 @@ public interface IGameUI
 {
     /* -- CONSTANTS - */
     public const ConsoleColor COLOR_PROMPT = ConsoleColor.Yellow;
+    public const ConsoleColor COLOR_SPECIAL_1 = ConsoleColor.Cyan;
     public const ConsoleColor COLOR_DEFAULT_BACKGROUND = ConsoleColor.Black;
     public const ConsoleColor COLOR_DEFAULT_FOREGROUND = ConsoleColor.White;
     public const ConsoleColor COLOR_GOOD = ConsoleColor.Green;

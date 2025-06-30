@@ -13,8 +13,7 @@ public class ASCII
 
     
     /// <summary> String holding the ASCII art of the blackjack.dll title </summary>
-    public const string ascii_Title = @"                                                                           
-  88          88                       88        88                       88                     88 88 88  
+    public const string ascii_Title = @"  88          88                       88        88                       88                     88 88 88  
   88          88                       88        """"                       88                     88 88 88  
   88          88                       88                                 88                     88 88 88  
   88,dPPYba,  88 ,adPPYYba,  ,adPPYba, 88   ,d8  88 ,adPPYYba,  ,adPPYba, 88   ,d8       ,adPPYb,88 88 88  
