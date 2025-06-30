@@ -79,6 +79,7 @@ public class GameEngine
         {
             Dealer.DoHideFirstCard = false;
             _ui.DisplayHands(User, Dealer);
+            _ui.PromptToContinue();
         }
         else
         {

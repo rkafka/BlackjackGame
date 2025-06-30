@@ -63,6 +63,40 @@ public class UI_TextBased : IGameUI
         string playerName = (player.Hand.IsDealer ? "DEALER" : "USER");
         int currentScore = 0;
         Console.WriteLine("\n" + $"{playerName}'S HAND:".PadRight(sectionWidth - 1, '-') + ".");
+
+        // Compute effective values for each card in the hand (Aces as 1 or 11 as needed)
+        List<int> effectiveValues = new();
+        int handValue = 0;
+        List<int> aceIndexes = new();
+        for (int i = 0; i < player.Hand.Cards.Count; i++)
+        {
+            var card = player.Hand.Cards[i];
+            if (card.Rank == 1) // Ace
+            {
+                effectiveValues.Add(11);
+                handValue += 11;
+                aceIndexes.Add(i);
+            }
+            else if (card.Rank >= 10)
+            {
+                effectiveValues.Add(10);
+                handValue += 10;
+            }
+            else
+            {
+                effectiveValues.Add(card.Rank);
+                handValue += card.Rank;
+            }
+        }
+        int aceReduceIdx = aceIndexes.Count - 1;
+        while (handValue > 21 && aceReduceIdx >= 0)
+        {
+            handValue -= 10;
+            int aceCardIdx = aceIndexes[aceReduceIdx];
+            effectiveValues[aceCardIdx] = 1;
+            aceReduceIdx--;
+        }
+
         for (int i = 0; i < player.Hand.Cards.Count; i++)
         {
             Card card = player.Hand.Cards[i];
@@ -76,8 +110,10 @@ public class UI_TextBased : IGameUI
             }
             else
             {
-                Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + Card.GetValue(card.Rank).ToString()}".PadRight(sectionWidth - 4) + " |");
-                currentScore += card.Value;
+                // Show the effective value for this card
+                string valueStr = effectiveValues.Count > i ? effectiveValues[i].ToString() : Card.GetValue(card.Rank).ToString();
+                Console.WriteLine("| " + $"{card.ToString().PadRight(cardPadding) + valueStr}".PadRight(sectionWidth - 4) + " |");
+                currentScore += effectiveValues.Count > i ? effectiveValues[i] : card.Value;
             }
         }
         if (hideFirstCard)
