@@ -10,6 +10,7 @@ namespace BlackjackGame.Core;
 /// </summary>
 public static class GameRules
 {
+    // CONSTANTS
     public const int SCORE_BLACKJACK = 21;
 
     // Customizeable attributes (vary on selection or difficulty)
@@ -18,11 +19,8 @@ public static class GameRules
     public static float WinRatioNaturalBlackjack = 3.0f / 2;
     public static float MinimumBet = 5.0f;
     public static float SurrenderReturnRatio = 0.5f;
-    
-
-    public static float UserStartingMoney;
-
-
+    public static float UserStartingMoney = 15.0f;
+    public static float GameWinConditionTarget { get; set; } = 100.0f;
 
 
     /// <summary>
@@ -32,7 +30,7 @@ public static class GameRules
     /// <returns>True if the hand is a blackjack, false otherwise.</returns>
     public static bool CheckHandForBlackjack(Hand hand) => hand.CurrentScore == 21;
     // Settings file path
-    private static readonly string SettingsFilePath = "GameRulesSettings.json";
+    private static readonly string SettingsFilePath = "config/GameRulesSettings.json";
 
     public class GameRulesSettings
     {
@@ -41,6 +39,8 @@ public static class GameRules
         public float WinRatioNaturalBlackjack { get; set; } = 1.5f;
         public float MinimumBet { get; set; } = 5.0f;
         public float SurrenderReturnRatio { get; set; } = 0.5f;
+        public float UserStartingMoney { get; set; } = 15.0f;
+        public float GameWinConditionTarget { get; set; } = 100.0f;
     }
 
     /// <summary>
@@ -61,6 +61,8 @@ public static class GameRules
             WinRatioNaturalBlackjack = settings.WinRatioNaturalBlackjack;
             MinimumBet = settings.MinimumBet;
             SurrenderReturnRatio = settings.SurrenderReturnRatio;
+            UserStartingMoney = settings.UserStartingMoney;
+            GameWinConditionTarget = settings.GameWinConditionTarget;
         }
     }
 
@@ -78,7 +80,9 @@ public static class GameRules
             WinRatioNormal = WinRatioNormal,
             WinRatioNaturalBlackjack = WinRatioNaturalBlackjack,
             MinimumBet = MinimumBet,
-            SurrenderReturnRatio = SurrenderReturnRatio
+            SurrenderReturnRatio = SurrenderReturnRatio,
+            UserStartingMoney = UserStartingMoney,
+            GameWinConditionTarget = GameWinConditionTarget
         };
         // Serialize the settings object to JSON with indentation
         var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });

@@ -1,0 +1,9 @@
+{
+  "ScoreDealerStop": 17,
+  "WinRatioNormal": 1,
+  "WinRatioNaturalBlackjack": 1.5,
+  "MinimumBet": 5,
+  "SurrenderReturnRatio": 0.5,
+  "UserStartingMoney": 50,
+  "GameWinConditionTarget": 100
+}
