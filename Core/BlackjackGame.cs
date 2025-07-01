@@ -25,9 +25,16 @@ public class BJGame
         do
         {
             playAgain = _engine.PlayRound();
-            // TO-DO: prompt to play again / take input from startgame
+
+            // TO-DO: prompt to play again
+
+            //
         } while (playAgain);
 
-        _ui.GameOverMessage(_engine);
+
+        if (_engine.User.CurrentMoney >= GameRules.GameWinConditionTarget)
+            _ui.VictoryMessage(_engine.User);
+        else
+            _ui.GameOverMessage(_engine.User);
     }
 }

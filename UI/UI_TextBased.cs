@@ -159,13 +159,13 @@ public class UI_TextBased : IGameUI
     /// Displays the game over message and the user's final record.
     /// </summary>
     /// <param name="engine">The game engine instance containing the user record.</param>
-    public void GameOverMessage(GameEngine engine)
+    public void GameOverMessage(User user)
     {
         UIHelper.PrintSectionHeader("GAME OVER");
         Console.Write("Your final record was ");
-        UIHelper.PrintUserRecord_WinLoss(engine.User);
+        UIHelper.PrintUserRecord_WinLoss(user);
         // Optionally, print winnings record if needed
-        UIHelper.PrintUserRecord_RoundlyEarnings(engine.User);
+        UIHelper.PrintUserRecord_RoundlyEarnings(user);
     }
 
 
@@ -173,7 +173,7 @@ public class UI_TextBased : IGameUI
     /// Prompts the player to select a player action (Hit, Stand, Double Down, Surrender, Split) by typing the associated number.
     /// </summary>
     /// <returns>String containing the input read in from the user.</returns>
-    public string PromptPlayerAction(bool isFirstTurn=true, bool canDoubleDown=true)
+    public string PromptPlayerAction(bool isFirstTurn = true, bool canDoubleDown = true)
     {
         Console.Write("PLAYER OPTIONS:  ");
         string[] options = ["Hit", "Stand", "Surrender", "Double Down", "Split"];
@@ -184,10 +184,10 @@ public class UI_TextBased : IGameUI
         for (int i = 0; i < options.Length; i++)
         {
             Console.Write($"[");
-            UIHelper.PrintColored(message:(i+1).ToString(), foregroundColor:ConsoleColor.Cyan, doNewLine:false);
+            UIHelper.PrintColored(message: (i + 1).ToString(), foregroundColor: ConsoleColor.Cyan, doNewLine: false);
             Console.Write($"] {options[i]}  ");
         }
-        UIHelper.PrintColored("\n> Type the number to select: ", foregroundColor:IGameUI.COLOR_PROMPT, doNewLine:false);
+        UIHelper.PrintColored("\n> Type the number to select: ", foregroundColor: IGameUI.COLOR_PROMPT, doNewLine: false);
         return (Console.ReadLine() ?? "").Trim().ToLower();
         // ?? ""   <-- means you should return an empty string if the input is null
     }
@@ -205,10 +205,10 @@ public class UI_TextBased : IGameUI
         Console.ForegroundColor = IGameUI.COLOR_DEFAULT_FOREGROUND;
         Console.ReadLine();
 
-        Console.SetCursorPosition(0, startY-1);
+        Console.SetCursorPosition(0, startY - 1);
         // erase the lines written
         for (int i = 0; i < 2; i++) { Console.Write(new string(' ', Console.WindowWidth)); }
-        Console.SetCursorPosition(0, startY-1);
+        Console.SetCursorPosition(0, startY - 1);
     }
 
     /// <summary>
@@ -271,12 +271,12 @@ public class UI_TextBased : IGameUI
     /// <summary> Displays a message indicating the user has won, with special formatting for a natural blackjack. </summary>
     /// <param name="user">The user who won.</param>
     /// <param name="isNatural">If true, indicates a natural blackjack win.</param>
-    public void ResultMessage_Win(User user, bool isNatural=false)
+    public void ResultMessage_Win(User user, bool isNatural = false)
     {
         if (isNatural)
         {
             Console.Write("You won with a ");
-            UIHelper.PrintSlowly("NATURAL BLACKJACK", msPerChar:60, foregroundColor:IGameUI.COLOR_GOOD);
+            UIHelper.PrintSlowly("NATURAL BLACKJACK", msPerChar: 60, foregroundColor: IGameUI.COLOR_GOOD);
             Console.WriteLine($"! Your bet of {user.Hand.BetAmount:C0} has been returned along with 1.5x its value in winnings.");
         }
         else
@@ -318,9 +318,19 @@ public class UI_TextBased : IGameUI
     /// <summary> Reveals the dealer's hidden first card and displays both hands. </summary>
     /// <param name="user">The user object.</param>
     /// <param name="dealer">The dealer object.</param>
-    public void RevealDealersHiddenCard(User user, Dealer dealer) {
+    public void RevealDealersHiddenCard(User user, Dealer dealer)
+    {
         Console.WriteLine("Your turn is now over. Revealing the Dealer's hidden first card ...");
         DisplayHands(user, dealer, hideDealersFirstCard: false);
+    }
+
+    public void VictoryMessage(User user)
+    {
+        UIHelper.PrintSectionHeader(" You Win! ");
+        UIHelper.PrintSlowly($"You started with {user.StartingMoney} and made {user.GetCurrentEarnings()}, ending with a total of {user.CurrentMoney}.", doNewLine:true);
+        UIHelper.PrintSlowly($"Your final record was...   ", doNewLine: true);
+        UIHelper.PrintUserRecord_WinLoss(user);
+        UIHelper.PrintUserRecord_RoundlyEarnings(user);
     }
 
 }

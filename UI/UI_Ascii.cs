@@ -95,7 +95,7 @@ public class UI_ASCII : IGameUI
     { DisplayHands(user, dealer, dealer.DoHideFirstCard); }
 
 
-    public void GameOverMessage(GameEngine engine)
+    public void GameOverMessage(User user)
     {
         throw new NotImplementedException();
     }
@@ -111,7 +111,7 @@ public class UI_ASCII : IGameUI
     {
         throw new NotImplementedException();
     }
-    public void PromptAfterError(string problem, bool isBet = false, bool tryAgain=false)
+    public void PromptAfterError(string problem, bool isBet = false, bool tryAgain = false)
     {
         throw new NotImplementedException();
     }
@@ -152,7 +152,13 @@ public class UI_ASCII : IGameUI
         throw new NotImplementedException();
     }
 
-    public void RevealDealersHiddenCard(User user, Dealer dealer) {
+    public void RevealDealersHiddenCard(User user, Dealer dealer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void VictoryMessage(User user)
+    {
         throw new NotImplementedException();
     }
 }

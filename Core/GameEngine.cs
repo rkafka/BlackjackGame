@@ -68,6 +68,8 @@ public class GameEngine
     {
         _ui.DisplayTitle();
 
+        bool keepPlayingAfterWin = false; // TO-DO: add a toggle for this, modified by user input
+
         // INITIAL DRAW
         ChooseBet();
         InitialDraw();
@@ -104,7 +106,7 @@ public class GameEngine
         ResetHands();
 
         Dealer.DoHideFirstCard = true;
-        return (User.CurrentMoney >= GameRules.MinimumBet);
+        return (User.CurrentMoney >= GameRules.MinimumBet) && ((User.CurrentMoney < GameRules.GameWinConditionTarget) || (keepPlayingAfterWin));
     }
 
     /// <summary>

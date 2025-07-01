@@ -27,7 +27,7 @@ public interface IGameUI
 
     // LAUNCH SCREEN
     public void LaunchScreen(bool waitForInput = true);
-    
+
     // PLAYER ACTION MESSAGES
     public void PlayerAction_ChoiceMessage(string playerAction);
     public void PlayerAction_NotSupportedMessage();
@@ -47,6 +47,8 @@ public interface IGameUI
     //
     public void CardDrawnMessage(Player player);
     //
-    public void GameOverMessage(GameEngine engine);
+    public void GameOverMessage(User user);
+
+    public void VictoryMessage(User user);
 
 }
