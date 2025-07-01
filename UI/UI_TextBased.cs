@@ -233,7 +233,7 @@ public class UI_TextBased : IGameUI
         UIHelper.ResetConsoleColors();
         Console.Write("is ");
         Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.Write($"{GameRules.MINIMUM_BET:C0}");
+        Console.Write($"{GameRules.MinimumBet:C0}");
         UIHelper.ResetConsoleColors();
         Console.WriteLine(".");
         Console.ForegroundColor = ConsoleColor.Yellow;

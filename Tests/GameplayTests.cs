@@ -66,7 +66,7 @@ public static class GameplayTests {
         // Assert: User should have blackjack, dealer should not, and winnings should be correct
         bool userHasBlackjack = GameRules.CheckHandForBlackjack(testUser.Hand);
         bool dealerHasBlackjack = GameRules.CheckHandForBlackjack(testDealer.Hand);
-        float expectedMoney = userStartingMoney - userBet + (userBet + (userBet * GameRules.WIN_RATIO_NATURAL_BLACKJACK)); // bet returned + 1.5x winnings
+        float expectedMoney = userStartingMoney - userBet + (userBet + (userBet * GameRules.WinRatioNaturalBlackjack)); // bet returned + 1.5x winnings
         bool winningsCorrect = Math.Abs(testUser.CurrentMoney - expectedMoney) < 0.01f;
 
         Console.WriteLine($"User hand: {testUser.Hand} (score: {testUser.Hand.CurrentScore})");

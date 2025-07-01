@@ -104,7 +104,7 @@ public class GameEngine
         ResetHands();
 
         Dealer.DoHideFirstCard = true;
-        return (User.CurrentMoney >= GameRules.MINIMUM_BET);
+        return (User.CurrentMoney >= GameRules.MinimumBet);
     }
 
     /// <summary>
@@ -237,7 +237,7 @@ public class GameEngine
     public void PlayerAction_Surrender()
     {
         // TO-DO: warning message if game cannot continue should you surrender (difficulty dependent?)
-        float surrenderReturn = User.Hand.BetAmount * GameRules.SURRENDER_RETURN_RATIO;
+        float surrenderReturn = User.Hand.BetAmount * GameRules.SurrenderReturnRatio;
         User.CurrentMoney += surrenderReturn;
         Console.WriteLine($"The round is over, half of your {User.Hand.BetAmount:C2} bet has been returned ({surrenderReturn:C2}).");
         User.WinningsRecord.Add(-1 * (User.Hand.BetAmount - surrenderReturn));
@@ -298,8 +298,8 @@ public class GameEngine
             {
                 if (betAmount > User.CurrentMoney)
                     _ui.PromptAfterError("Your bet must be less than your starting money", isBet: true);
-                else if (betAmount < GameRules.MINIMUM_BET)
-                    _ui.PromptAfterError($"The minimum bet is {GameRules.MINIMUM_BET:C0}", isBet: true);
+                else if (betAmount < GameRules.MinimumBet)
+                    _ui.PromptAfterError($"The minimum bet is {GameRules.MinimumBet:C0}", isBet: true);
                 else 
                     validBet = SetBet(betAmount); // SUCCESS!
             }

@@ -11,11 +11,19 @@ namespace BlackjackGame.Core;
 public static class GameRules
 {
     public const int SCORE_BLACKJACK = 21;
-    public const int SCORE_DEALER_STOP = 17;
-    public const float WIN_RATIO_NORMAL = 1f;
-    public const float WIN_RATIO_NATURAL_BLACKJACK = 3.0f / 2;
-    public const float MINIMUM_BET = 5.0f;
-    public const float SURRENDER_RETURN_RATIO = 0.5f;
+
+    // Customizeable attributes (vary on selection or difficulty)
+    public static int ScoreDealerStop = 17;
+    public static float WinRatioNormal = 1f;
+    public static float WinRatioNaturalBlackjack = 3.0f / 2;
+    public static float MinimumBet = 5.0f;
+    public static float SurrenderReturnRatio = 0.5f;
+    
+
+    public static float UserStartingMoney;
+
+
+
 
     /// <summary>
     /// Checks if the given hand is a blackjack (score of 21).
@@ -23,6 +31,50 @@ public static class GameRules
     /// <param name="hand">The hand to check.</param>
     /// <returns>True if the hand is a blackjack, false otherwise.</returns>
     public static bool CheckHandForBlackjack(Hand hand) => hand.CurrentScore == 21;
+    // Settings file path
+    private static readonly string SettingsFilePath = "GameRulesSettings.json";
+
+    public class GameRulesSettings
+    {
+        public int ScoreDealerStop { get; set; } = 17;
+        public float WinRatioNormal { get; set; } = 1f;
+        public float WinRatioNaturalBlackjack { get; set; } = 1.5f;
+        public float MinimumBet { get; set; } = 5.0f;
+        public float SurrenderReturnRatio { get; set; } = 0.5f;
+    }
+
+    public static void LoadSettings(string? path = null)
+    {
+        path ??= SettingsFilePath;
+        if (!System.IO.File.Exists(path)) return;
+        var json = System.IO.File.ReadAllText(path);
+        var settings = System.Text.Json.JsonSerializer.Deserialize<GameRulesSettings>(json);
+        if (settings != null)
+        {
+            ScoreDealerStop = settings.ScoreDealerStop;
+            WinRatioNormal = settings.WinRatioNormal;
+            WinRatioNaturalBlackjack = settings.WinRatioNaturalBlackjack;
+            MinimumBet = settings.MinimumBet;
+            SurrenderReturnRatio = settings.SurrenderReturnRatio;
+        }
+    }
+
+    public static void SaveSettings(string? path = null)
+    {
+        path ??= SettingsFilePath;
+        var settings = new GameRulesSettings
+        {
+            ScoreDealerStop = ScoreDealerStop,
+            WinRatioNormal = WinRatioNormal,
+            WinRatioNaturalBlackjack = WinRatioNaturalBlackjack,
+            MinimumBet = MinimumBet,
+            SurrenderReturnRatio = SurrenderReturnRatio
+        };
+        var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        System.IO.File.WriteAllText(path, json);
+    }
+
+
 
     /// <summary>
     /// Checks for blackjack in either the user or dealer hand, and handles win/loss/tie logic accordingly.
@@ -32,7 +84,7 @@ public static class GameRules
     /// <param name="dealer">The dealer player.</param>
     /// <param name="wouldBeNatural">If true, treats a user blackjack as a natural blackjack for payout.</param>
     /// <returns>True if a blackjack was found, false otherwise.</returns>
-    public static bool CheckForBlackjack(IGameUI ui, User user, Dealer dealer, bool wouldBeNatural=false)
+    public static bool CheckForBlackjack(IGameUI ui, User user, Dealer dealer, bool wouldBeNatural = false)
     {
         bool hasBlackjack_User = GameRules.CheckHandForBlackjack(user.Hand);
         bool hasBlackjack_Dealer = GameRules.CheckHandForBlackjack(dealer.Hand);
@@ -45,11 +97,11 @@ public static class GameRules
                 if (hasBlackjack_User)
                     GameRules.ResultTie(ui, user);  // BOTH (tie) 
                 else
-                    GameRules.ResultLose(ui, user, isNatural:wouldBeNatural); // Dealer (lose)
+                    GameRules.ResultLose(ui, user, isNatural: wouldBeNatural); // Dealer (lose)
             }
             else // User (win) 
                 GameRules.ResultWin(ui, user, isNatural: wouldBeNatural);
-                // natural blackjack win means additional earnings
+            // natural blackjack win means additional earnings
 
             return true;
         }
@@ -69,7 +121,7 @@ public static class GameRules
     /// </summary>
     /// <param name="dealer">The dealer player.</param>
     /// <returns>True if the dealer should hit, false otherwise.</returns>
-    public static bool DealerShouldHit(Dealer dealer) { return dealer.Hand.CurrentScore < SCORE_DEALER_STOP; }
+    public static bool DealerShouldHit(Dealer dealer) { return dealer.Hand.CurrentScore < ScoreDealerStop; }
 
     /// <summary>
     /// Determines the winner of the round based on user and dealer hand scores, and updates records and UI.
@@ -105,7 +157,7 @@ public static class GameRules
     public static void ResultWin(IGameUI ui, User user, bool isNatural = false)
     {
         // Return the bet amount and winnings (ratio of bet to winnings )
-        float winRatio = (isNatural ? WIN_RATIO_NATURAL_BLACKJACK : WIN_RATIO_NORMAL);
+        float winRatio = (isNatural ? WinRatioNaturalBlackjack : WinRatioNormal);
         float winnings = user.Hand.BetAmount * winRatio;
         user.CurrentMoney += user.Hand.BetAmount + winnings;
         user.NumWins++;
