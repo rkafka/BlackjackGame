@@ -42,7 +42,7 @@ public class GameEngine
     {
         _ui = ui;
         _deck = new Deck(doShuffle: true, getCardsToOmit:GetAllInPlayCards);
-        User = new();
+        User = new(GameRules.UserStartingMoney);
         _dealer = new();
     }
     /// <summary>

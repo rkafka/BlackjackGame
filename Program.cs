@@ -10,10 +10,11 @@ Console.BackgroundColor = ConsoleColor.Black;
 Console.ForegroundColor = ConsoleColor.White;
 Console.Clear();
 
-// TO-DO: start menu
+
 
 if (args.Length >= 2)
 {
+    // DEBUG OPTONS
     if (args[0].ToLower().Equals("debug"))
     {
         switch (args[1].ToLower())
@@ -33,12 +34,38 @@ if (args.Length >= 2)
         }
         return; // end execution after debug
     }
+
+    // DIFFICULTY SETTING (by argument)
+    if (args[0].ToLower().Equals("difficulty"))
+    {
+        switch (args[1].ToLower())
+        {
+            case "easy":
+                GameRules.LoadSettings("config/easy.json");
+                break;
+            case "medium":
+                GameRules.LoadSettings("config/medium.json");
+                break;
+            case "hard":
+                GameRules.LoadSettings("config/hard.json");
+                break;
+            case "test1":
+                GameRules.LoadSettings("config/test1.json");
+                break;
+            default:
+                Console.WriteLine("ERROR:  can not find the desired difficulty.\n\n\n\n");
+                break;
+        }
+    }
 }
+
+
 
 // new
 IGameUI ui;
 if (args.Length > 0 && args[0] == "ascii") { ui = new UI_ASCII(); }
 else { ui = new UI_TextBased(); }
+
 
 Menu.Execute(args);
 

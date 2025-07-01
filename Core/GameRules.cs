@@ -30,7 +30,8 @@ public static class GameRules
     /// <returns>True if the hand is a blackjack, false otherwise.</returns>
     public static bool CheckHandForBlackjack(Hand hand) => hand.CurrentScore == 21;
     // Settings file path
-    private static readonly string SettingsFilePath = "config/GameRulesSettings.json";
+    private static readonly string SettingsFilePath = "config/";
+    private static readonly string defaultSettingsFile = "GameRulesSettings.json";
 
     public class GameRulesSettings
     {
@@ -49,7 +50,7 @@ public static class GameRules
     /// <param name="path">Optional path to the settings file. If null, uses the default path.</param>
     public static void LoadSettings(string? path = null)
     {
-        path ??= SettingsFilePath; // Use default path if none provided
+        path ??= SettingsFilePath + defaultSettingsFile; // Use default path if none provided
         if (!System.IO.File.Exists(path)) return; // If file doesn't exist, do nothing
         var json = System.IO.File.ReadAllText(path); // Read the JSON file as a string
         var settings = System.Text.Json.JsonSerializer.Deserialize<GameRulesSettings>(json); // Deserialize JSON to settings object
@@ -72,7 +73,7 @@ public static class GameRules
     /// <param name="path">Optional path to the settings file. If null, uses the default path.</param>
     public static void SaveSettings(string? path = null)
     {
-        path ??= SettingsFilePath; // Use default path if none provided
+        path ??= SettingsFilePath + defaultSettingsFile; // Use default path if none provided
         // Create a settings object from the current static fields
         var settings = new GameRulesSettings
         {

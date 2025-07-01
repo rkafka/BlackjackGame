@@ -327,8 +327,8 @@ public class UI_TextBased : IGameUI
     public void VictoryMessage(User user)
     {
         UIHelper.PrintSectionHeader(" You Win! ");
-        UIHelper.PrintSlowly($"You started with {user.StartingMoney} and made {user.GetCurrentEarnings()}, ending with a total of {user.CurrentMoney}.", doNewLine:true);
-        UIHelper.PrintSlowly($"Your final record was...   ", doNewLine: true);
+        UIHelper.PrintSlowly($"You started with {user.StartingMoney:C2} and made {user.GetCurrentEarnings():C2}, ending with a total of {user.CurrentMoney:C2}.", doNewLine:true);
+        UIHelper.PrintSlowly($"Your final record was...   ");
         UIHelper.PrintUserRecord_WinLoss(user);
         UIHelper.PrintUserRecord_RoundlyEarnings(user);
     }

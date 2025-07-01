@@ -20,6 +20,7 @@ public class BJGame
         _ui.LaunchScreen();
         Console.Clear();
 
+
         // Main game loop
         bool playAgain;
         do
@@ -27,8 +28,6 @@ public class BJGame
             playAgain = _engine.PlayRound();
 
             // TO-DO: prompt to play again
-
-            //
         } while (playAgain);
 
 
