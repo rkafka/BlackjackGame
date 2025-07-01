@@ -43,14 +43,19 @@ public static class GameRules
         public float SurrenderReturnRatio { get; set; } = 0.5f;
     }
 
+    /// <summary>
+    /// Loads game rule settings from a JSON file and updates the static fields accordingly.
+    /// </summary>
+    /// <param name="path">Optional path to the settings file. If null, uses the default path.</param>
     public static void LoadSettings(string? path = null)
     {
-        path ??= SettingsFilePath;
-        if (!System.IO.File.Exists(path)) return;
-        var json = System.IO.File.ReadAllText(path);
-        var settings = System.Text.Json.JsonSerializer.Deserialize<GameRulesSettings>(json);
+        path ??= SettingsFilePath; // Use default path if none provided
+        if (!System.IO.File.Exists(path)) return; // If file doesn't exist, do nothing
+        var json = System.IO.File.ReadAllText(path); // Read the JSON file as a string
+        var settings = System.Text.Json.JsonSerializer.Deserialize<GameRulesSettings>(json); // Deserialize JSON to settings object
         if (settings != null)
         {
+            // Update static fields with loaded values
             ScoreDealerStop = settings.ScoreDealerStop;
             WinRatioNormal = settings.WinRatioNormal;
             WinRatioNaturalBlackjack = settings.WinRatioNaturalBlackjack;
@@ -59,9 +64,14 @@ public static class GameRules
         }
     }
 
+    /// <summary>
+    /// Saves the current game rule settings to a JSON file.
+    /// </summary>
+    /// <param name="path">Optional path to the settings file. If null, uses the default path.</param>
     public static void SaveSettings(string? path = null)
     {
-        path ??= SettingsFilePath;
+        path ??= SettingsFilePath; // Use default path if none provided
+        // Create a settings object from the current static fields
         var settings = new GameRulesSettings
         {
             ScoreDealerStop = ScoreDealerStop,
@@ -70,7 +80,9 @@ public static class GameRules
             MinimumBet = MinimumBet,
             SurrenderReturnRatio = SurrenderReturnRatio
         };
+        // Serialize the settings object to JSON with indentation
         var json = System.Text.Json.JsonSerializer.Serialize(settings, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        // Write the JSON string to the file
         System.IO.File.WriteAllText(path, json);
     }
 
